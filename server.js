@@ -5063,7 +5063,7 @@ async function sendContactInquiryEmail(data) {
 }
 
 const BURNOUT_INSTRUMENT_BLURB =
-    'O Índice de Burnout é um questionário de rastreio baseado no Copenhagen Burnout Inventory (CBI). Ajuda a identificar sinais de desgaste pessoal e relacionado com o trabalho; a dimensão de sinais no corpo é complementar e não faz parte do CBI original. Não é um diagnóstico e não substitui uma avaliação clínica.';
+    'Este questionário informativo usa perguntas adaptadas do Copenhagen Burnout Inventory (CBI) nas dimensões pessoal e profissional. A pontuação geral é uma média simples e as faixas apresentadas são indicativas, não limiares diagnósticos validados. A dimensão de sintomas físicos é complementar, própria da Lon Clinic e não faz parte do CBI. O resultado não é um diagnóstico e não substitui uma avaliação clínica.';
 
 const BURNOUT_SUB_BLURB =
     'Se já procuras acompanhamento continuado, a Subscrição Anti-Burnout inclui 4 consultas por mês — 216€/mês (54€/sessão, 10% face à avulsa), cancelável.';
@@ -5091,25 +5091,25 @@ function burnoutDominantInsight(personal, work, body) {
     if (max - min <= 8 || leaders.length >= 2) {
         return {
             key: 'balanced',
-            text: 'O que mais se destaca no teu resultado: os resultados das diferentes dimensões estão relativamente equilibrados, sugerindo que o desgaste não está concentrado numa única área.'
+            text: 'As pontuações das dimensões estão relativamente próximas. Isto descreve apenas as respostas a este questionário e não determina a causa dos sinais.'
         };
     }
     const leader = scores.reduce((a, b) => (b.n > a.n ? b : a));
     if (leader.key === 'personal') {
         return {
             key: 'personal',
-            text: 'O que mais se destaca no teu resultado: a dimensão de burnout pessoal apresenta a pontuação mais elevada. Isto pode refletir um nível importante de desgaste geral e dificuldade de recuperação, independentemente de uma situação profissional específica.'
+            text: 'A dimensão de exaustão pessoal tem a pontuação mais elevada entre as dimensões apresentadas. Isto resume as tuas respostas e não determina a causa nem permite fazer um diagnóstico.'
         };
     }
     if (leader.key === 'work') {
         return {
             key: 'work',
-            text: 'O que mais se destaca no teu resultado: a dimensão relacionada com o trabalho apresenta a pontuação mais elevada. Isto pode indicar que as exigências, ritmo ou contexto profissional estão a ter um peso importante no teu nível atual de desgaste.'
+            text: 'A dimensão relacionada com o trabalho tem a pontuação mais elevada entre as dimensões apresentadas. Isto resume as tuas respostas e não determina a causa nem permite fazer um diagnóstico.'
         };
     }
     return {
         key: 'body',
-        text: 'O que mais se destaca no teu resultado: a dimensão relacionada com sinais no corpo apresenta a pontuação mais elevada. Isto significa que, além do desgaste emocional ou relacionado com o trabalho, existem mais sinais físicos associados ao teu estado atual.'
+        text: 'A secção de sintomas físicos tem a pontuação mais elevada entre as dimensões apresentadas. Estes sintomas podem ter várias causas; este questionário não determina a sua origem.'
     };
 }
 
@@ -5117,11 +5117,11 @@ function burnoutQuizBandCopy(band) {
     const copy = {
         BAIXO: {
             subject: 'O teu resultado no Índice de Burnout',
-            levelLabel: 'nível baixo de sinais de desgaste',
+            levelLabel: 'faixa indicativa mais baixa de sinais assinalados',
             accent: '#1f4a3e',
             showProgram: false,
             interpret: [
-                'O teu resultado global apresenta poucos sinais de desgaste neste momento. Ainda assim, as diferentes dimensões podem revelar áreas que merecem atenção, sobretudo se tens sentido alterações recentes na tua energia, motivação, sono ou capacidade de desligar do trabalho.'
+                'As tuas respostas assinalam poucos sinais nas áreas avaliadas. Isto não exclui dificuldades ou a necessidade de apoio, se algo te preocupar.'
             ],
             nextTitle: 'Se te sentes bem',
             next: [
@@ -5138,8 +5138,7 @@ function burnoutQuizBandCopy(band) {
             accent: '#3d7a68',
             showProgram: false,
             interpret: [
-                'O teu resultado sugere sinais ligeiros de desgaste. Ainda não aponta para um quadro instalado, mas algumas dimensões da tua energia podem já estar a pedir atenção.',
-                'Isto não significa, por si só, que tenhas burnout. Nesta fase, mudanças relativamente simples — descanso, limites e recuperação — tendem a ter mais efeito.'
+                'As tuas respostas assinalam alguns sinais de desgaste. A pontuação, por si só, não permite identificar um quadro clínico nem determinar a causa.'
             ],
             nextTitle: 'O que podes fazer agora',
             next: [
@@ -5156,16 +5155,16 @@ function burnoutQuizBandCopy(band) {
             accent: '#c4744a',
             showProgram: true,
             interpret: [
-                'O teu resultado sugere um nível moderado de desgaste. As dimensões com resultados mais elevados podem indicar áreas em que o teu corpo e a tua mente estão a ter mais dificuldade em recuperar das exigências do dia a dia.',
-                'Isto não significa, por si só, que tenhas burnout clínico. É importante considerar também há quanto tempo te sentes assim, a intensidade dos sintomas e o impacto que estão a ter no teu sono, trabalho, relações e vida pessoal.'
+                'As tuas respostas assinalam vários sinais de desgaste nas áreas avaliadas. A pontuação, por si só, não permite identificar um quadro clínico nem determinar a causa.',
+                'Para compreender melhor o que se passa, considera há quanto tempo sentes estes sinais, a sua intensidade e o impacto no teu sono, trabalho, relações e vida pessoal.'
             ],
             nextTitle: 'O que podes fazer agora',
             next: [
                 'Se estes sinais são recentes e ligeiros, pode ser útil observar como evoluem nas próximas semanas, dando atenção ao descanso, sono, recuperação e limites entre trabalho e vida pessoal.',
                 'Se o desgaste tem sido persistente, está a aumentar ou já está a interferir com o teu dia a dia, uma avaliação profissional pode ajudar a perceber o que está a acontecer e quais os próximos passos mais adequados.'
             ],
-            ctaTitle: 'Começa o plano de acompanhamento',
-            ctaLead: 'A subscrição Anti-Burnout — 216€/mês (4 consultas) é o próximo passo. A avaliação única de 60€ fica disponível se quiseres só um primeiro contacto.',
+            ctaTitle: 'Opções de apoio, se fizerem sentido para ti',
+            ctaLead: 'Estas são opções de acompanhamento da clínica, não recomendações determinadas pela pontuação. Também podes procurar apoio junto de um profissional de saúde da tua escolha.',
             emergency: ''
         },
         ELEVADO: {
@@ -5174,15 +5173,15 @@ function burnoutQuizBandCopy(band) {
             accent: '#b4532a',
             showProgram: true,
             interpret: [
-                'O teu resultado apresenta um nível elevado de sinais de desgaste. As pontuações nas diferentes dimensões sugerem que pode estar a existir uma dificuldade significativa em recuperar das exigências do dia a dia.',
-                'Este resultado não permite diagnosticar burnout por si só. No entanto, quando estes sinais são persistentes ou estão a interferir com o sono, energia, concentração, trabalho, relações ou vida pessoal, é importante não os ignorar.'
+                'As tuas respostas assinalam muitos sinais nas áreas avaliadas. A pontuação não permite diagnosticar burnout nem determinar a causa dos sinais.',
+                'Se estes sinais forem persistentes, estiverem a piorar ou afetarem a tua vida, procura aconselhamento de um profissional de saúde.'
             ],
             nextTitle: 'O próximo passo',
             next: [
-                'Neste nível de resultado, recomendamos considerar uma avaliação profissional para perceber a origem e a intensidade destes sintomas e determinar que tipo de acompanhamento poderá ser mais adequado.'
+                'Se os sinais te preocupam ou estão a interferir com o teu dia a dia, uma avaliação profissional pode ajudar a compreender a situação e discutir opções de apoio.'
             ],
-            ctaTitle: 'Começa o plano agora — 216€/mês',
-            ctaLead: 'A subscrição semanal é o caminho em destaque. Na primeira sessão vemos o teu resultado CBI e definimos o plano. A avaliação única de 60€ fica como alternativa.',
+            ctaTitle: 'Opções de apoio, se fizerem sentido para ti',
+            ctaLead: 'Estas são opções de acompanhamento da clínica, não recomendações determinadas pela pontuação. Também podes procurar apoio junto de um profissional de saúde da tua escolha.',
             emergency: 'Se estiveres a passar por sofrimento intenso ou sentires que não estás seguro/a, procura ajuda médica urgente: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.'
         }
     };
@@ -5388,9 +5387,9 @@ ${burnoutEmailParagraphs(copy.next)}
 
 <p style="margin:18px 0 8px;font-size:16px;font-weight:700;color:#1c2a24;">${escapeHtml(copy.ctaTitle)}</p>
 ${copy.ctaLead ? `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3d4a44;">${escapeHtml(copy.ctaLead)}</p>` : ''}
-${burnoutEmailButton(programUrl, 'Começar o plano — 216€/mês', true)}
+${burnoutEmailButton(programUrl, 'Ver subscrição mensal — 216€/mês', true)}
 <p style="margin:16px 0 12px;font-size:14px;line-height:1.6;color:#3d4a44;">${escapeHtml(BURNOUT_SUB_BLURB)}</p>
-${burnoutEmailButton(bookUrl, 'Avaliação única — 60€', false)}
+${burnoutEmailButton(bookUrl, 'Ver avaliação única — 60€', false)}
 ${copy.emergency ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0 0;"><tr><td style="background:#f6e8e4;border-radius:10px;padding:14px 16px;"><p style="margin:0;font-size:13px;line-height:1.55;color:#6b3a2e;">${escapeHtml(copy.emergency)}</p></td></tr></table>` : ''}
 
 </td>

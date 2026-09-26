@@ -13,19 +13,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teste de Burnout Grátis — Resultado em 4 Minutos | Lon Clinic</title>
-    <meta name="description" content="Teste de burnout grátis: Copenhagen Burnout Inventory com resultado imediato. 4 minutos, validação científica, 18 perguntas — sem registo.">
+    <meta name="description" content="Questionário informativo sobre sinais de esgotamento, inspirado no Copenhagen Burnout Inventory. 18 perguntas; resultado enviado por email.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://www.lonclinic.com/burnout/teste">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.lonclinic.com/burnout/teste">
     <meta property="og:title" content="Teste de Burnout Grátis — Resultado em 4 Minutos">
-    <meta property="og:description" content="Teste de burnout grátis: Copenhagen Burnout Inventory com resultado imediato. 4 minutos, validação científica.">
+    <meta property="og:description" content="Questionário informativo sobre sinais de esgotamento, inspirado no Copenhagen Burnout Inventory. Resultado enviado por email.">
     <meta property="og:image" content="https://www.lonclinic.com/image/image2.webp">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Teste de Burnout Grátis — Resultado em 4 Minutos">
-    <meta name="twitter:description" content="Teste de burnout grátis: Copenhagen Burnout Inventory com resultado imediato. 4 minutos, validação científica.">
+    <meta name="twitter:description" content="Questionário informativo sobre sinais de esgotamento, inspirado no Copenhagen Burnout Inventory. Resultado enviado por email.">
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
     <meta name="theme-color" content="#2f453a">
     <script type="application/ld+json">
@@ -63,7 +63,7 @@
     }
     </script>
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-quiz.css?v=20260926e">
+    <link rel="stylesheet" href="/burnout-quiz.css?v=20260926f">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -99,7 +99,7 @@
             <section class="bq-screen is-active" id="intro">
                 <div class="bq-intro">
                     <h1>Ajuda-nos a perceber o teu nível de esgotamento.</h1>
-                    <p>Cansaço normal recupera com descanso. Burnout, não. Este teste baseia-se no Copenhagen Burnout Inventory — com uma secção extra sobre o que o teu corpo já pode estar a dizer.</p>
+                    <p>Este questionário explora sinais de esgotamento pessoal e relacionado com o trabalho, com uma secção complementar sobre sintomas físicos. Pode ajudar-te a refletir, mas não determina se tens burnout.</p>
                     <button type="button" class="bq-btn bq-btn-primary bq-btn-lg" id="startBtn">Começar o teste</button>
                     <p class="bq-intro-more">
                         <a href="/burnout/avaliacao">O que mede o teste →</a>
@@ -133,13 +133,13 @@
                 <div class="bq-card">
                     <p class="bq-step-label">Quase lá</p>
                     <h2>O teu resultado está pronto</h2>
-                    <p class="bq-lead">Mostramos os três índices já a seguir — e enviamos por email a análise detalhada com recomendações práticas.</p>
+                    <p class="bq-lead">Indica o teu email para veres o resultado e receberes uma cópia do relatório detalhado.</p>
                     <div class="bq-field">
-                        <label for="email">O teu email</label>
-                        <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com">
+                        <label for="email">O teu email <span aria-hidden="true">*</span></label>
+                        <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com" required>
                         <p class="bq-error" id="emailError" hidden>Escreve um email válido para continuar.</p>
                     </div>
-                    <p class="bq-privacy">Usamos o teu email apenas para enviar o resultado e conteúdo da Lon Clinic sobre burnout e saúde. Sem spam.</p>
+                    <p class="bq-privacy">Usamos o teu email para enviar o relatório e partilhar o resultado com a equipa clínica da Lon Clinic. Este formulário não pede consentimento para comunicações de marketing.</p>
                     <div class="bq-actions bq-actions--end">
                         <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
                     </div>
@@ -152,13 +152,13 @@
                     <header class="bq-diag">
                         <p class="bq-kicker" id="diagKicker">Sinais no Corpo &amp; Mente · 18 / 18</p>
                         <p class="bq-scoreline"><span id="scoreNum">0</span><span class="bq-score-den">/100</span></p>
-                        <p class="bq-level">Nível de Desgaste: <strong class="bq-pill" id="bandPill"></strong></p>
+                        <p class="bq-level">Faixa indicativa: <strong class="bq-pill" id="bandPill"></strong></p>
                         <h2 id="bandTitle"></h2>
                         <p id="bandText"></p>
                     </header>
 
                     <div class="bq-orient" id="bookNow">
-                        <p class="bq-orient-kicker">Próximo passo recomendado</p>
+                        <p class="bq-orient-kicker">Opção de apoio, se fizer sentido para ti</p>
                         <h3>Sessão de Orientação Inicial (15 min) — Gratuita</h3>
                         <p>Antes de assumires qualquer compromisso financeiro, conversa 15 minutos com um profissional da nossa equipa. Vamos analisar o teu relatório do teste, esclarecer dúvidas e definir o plano ideal para a tua recuperação.</p>
                         <p class="bq-orient-label">O que acontece nesta sessão:</p>
@@ -197,10 +197,10 @@
 
                     <div class="bq-cta">
                         <h3>Prefere começar já o acompanhamento completo?</h3>
-                        <p id="ctaText">Pode escolher diretamente um dos nossos planos. O resultado deste teste será enviado diretamente ao seu profissional na 1.ª sessão.</p>
+                        <p id="ctaText">Estas são opções de acompanhamento da clínica, não recomendações determinadas pela pontuação do questionário. Podes procurar apoio junto de um profissional de saúde da tua escolha.</p>
                         <div class="bq-plan-grid bq-plan-grid--3">
                             <a class="bq-plan-card bq-plan-card--featured js-quiz-book" id="subBtn" href="/marcar/burnout-mensal?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-mensal">
-                                <span class="bq-plan-kicker">Recomendado</span>
+                                <span class="bq-plan-kicker">Opção de acompanhamento</span>
                                 <span class="bq-plan-name">Subscrição mensal</span>
                                 <span class="bq-plan-price">216<span class="bq-plan-currency">€/mês</span></span>
                                 <span class="bq-plan-meta">4 consultas/mês · 54 €/sessão · plano de recuperação e relatório evolutivo</span>
@@ -227,9 +227,7 @@
                     </div>
 
                     <p class="bq-disclaimer">
-                        As secções «Burnout pessoal» e «Burnout no trabalho» baseiam-se no Copenhagen Burnout Inventory (CBI — Kristensen et al., 2005; adaptação Lon Clinic).
-                        A secção «Sinais no corpo» é complementar.
-                        Este teste tem carácter meramente informativo e não substitui um diagnóstico clínico realizado por um profissional de saúde.
+                        As perguntas das secções «Burnout pessoal» e «Burnout no trabalho» foram adaptadas do Copenhagen Burnout Inventory (CBI — Kristensen et al., 2005). A pontuação geral é a média simples destas duas secções; os intervalos e respetivas descrições são indicativos e não constituem limiares diagnósticos validados. «Sinais no corpo» é uma secção complementar própria da Lon Clinic e não faz parte do CBI nem entra na pontuação geral. Este questionário é informativo, não foi apresentado aqui como instrumento diagnóstico e não substitui uma avaliação por um profissional de saúde.
                     </p>
                     <p class="bq-cta-more">
                         <button type="button" class="bq-back" id="restartBtn">↺ Repetir o teste</button>
@@ -271,6 +269,6 @@
 
     <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
-    <script src="/burnout-quiz.js?v=20260926e" defer></script>
+    <script src="/burnout-quiz.js?v=20260926f" defer></script>
 </body>
 </html>

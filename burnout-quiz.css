@@ -2098,3 +2098,138 @@
     -webkit-backdrop-filter: blur(18px);
     color: #f5f8ff;
 }
+
+/* Burnout quiz — deep blue, soft glass and a clear reading surface */
+.bq-page {
+    --bq-ink: #132b4a;
+    --bq-muted: #526982;
+    --bq-paper: #eaf2fb;
+    --bq-mist: #f5f9ff;
+    --bq-surface: rgba(255, 255, 255, 0.9);
+    --bq-line: rgba(255, 255, 255, 0.28);
+    --bq-accent: #2865a8;
+    --bq-accent-soft: rgba(63, 132, 205, 0.13);
+    --bq-accent-hover: #1e508b;
+    background:
+        radial-gradient(ellipse 72% 48% at 8% 0%, rgba(124, 185, 255, 0.32), transparent 58%),
+        radial-gradient(ellipse 55% 45% at 98% 35%, rgba(77, 145, 226, 0.28), transparent 58%),
+        linear-gradient(145deg, #102b50 0%, #174477 48%, #0e315c 100%);
+}
+
+.bq-top {
+    background: rgba(11, 35, 68, 0.48);
+    border-bottom-color: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.bq-brand,
+.bq-login {
+    color: #f5f9ff;
+}
+
+.bq-login {
+    border-color: rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.bq-login:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.72);
+}
+
+.bq-progress-meta,
+.bq-progress-meta b {
+    color: #e3efff;
+}
+
+.bq-seg,
+.bq-progress-fine {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.bq-seg.is-done,
+.bq-seg.is-active,
+.bq-progress-fine b {
+    background: #a9d1ff;
+}
+
+.bq-intro,
+.bq-card:not(.bq-card--results) {
+    background: rgba(247, 251, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(4, 20, 44, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+}
+
+.bq-intro {
+    padding: 44px 34px 32px;
+}
+
+.bq-intro h1,
+.bq-card h2,
+.bq-question {
+    color: #142e4d;
+}
+
+.bq-intro p,
+.bq-lead {
+    color: #526982;
+}
+
+.bq-intro-more a,
+.bq-cta-more a {
+    color: #235f9f;
+}
+
+.bq-card:not(.bq-card--results) {
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0 24px 70px rgba(4, 20, 44, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.bq-opt {
+    background: rgba(239, 246, 254, 0.88);
+    border-color: rgba(40, 101, 168, 0.16);
+    border-radius: 13px;
+}
+
+.bq-opt:hover,
+.bq-opt.is-selected {
+    border-color: #3c83c7;
+}
+
+.bq-btn-primary {
+    background: linear-gradient(135deg, #337cc0, #205b9b);
+    box-shadow: 0 10px 24px rgba(22, 75, 130, 0.28);
+}
+
+.bq-btn-primary:hover {
+    background: linear-gradient(135deg, #2c70b2, #194f8b);
+}
+
+.bq-crisis-foot,
+.bq-crisis-foot a,
+.bq-ssl,
+.bq-footer a,
+.bq-footer p {
+    color: rgba(237, 245, 255, 0.78);
+}
+
+.bq-footer {
+    border-top-color: rgba(255, 255, 255, 0.16);
+}
+
+.bq-page.is-results .bq-brand,
+.bq-page.is-results .bq-login {
+    color: #f5f8ff;
+}
+
+@media (max-width: 520px) {
+    .bq-intro {
+        padding: 34px 22px 26px;
+        border-radius: 20px;
+    }
+}

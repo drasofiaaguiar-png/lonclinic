@@ -38,23 +38,23 @@
     ];
 
     const BANDS = [
-        { max: 24, pill: 'BAIXO', title: 'Energia sob controlo',
-            text: 'O teu resultado apresenta poucos sinais de desgaste neste momento. Podes usá-lo como ponto de referência — e, se algo te preocupar, a porta está aberta.',
+        { max: 24, pill: 'BAIXO', title: 'Poucos sinais assinalados',
+            text: 'As tuas respostas assinalam poucos sinais nas áreas avaliadas neste questionário. Isto não exclui dificuldades ou a necessidade de apoio, se algo te preocupar.',
             cta: 'Não precisas de marcar por causa deste resultado. Se quiseres um plano clínico, a avaliação única é o ponto de entrada; a subscrição é o acompanhamento regular.',
             bookLabel: 'Ver o plano de acompanhamento',
             bookNote: 'Opcional · avaliação 60 € · subscrição 216 €/mês · programa 490 €' },
-        { max: 49, pill: 'LIGEIRO', title: 'Sinais de alerta iniciais',
-            text: 'Ainda não aponta para um quadro instalado, mas algumas dimensões da tua energia podem já estar a pedir atenção. Nesta fase, descanso, limites e recuperação tendem a ter mais efeito.',
+        { max: 49, pill: 'LIGEIRO', title: 'Alguns sinais de desgaste',
+            text: 'Algumas respostas indicam sinais de desgaste. Considera o contexto, há quanto tempo te sentes assim e o impacto na tua vida; a pontuação, por si só, não identifica um quadro clínico.',
             cta: 'Se estes sinais persistirem, o plano clínico começa na avaliação única e ganha regularidade na subscrição semanal — o resultado CBI chega à primeira sessão.',
             bookLabel: 'Começar o plano — 216 €/mês',
             bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' },
-        { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
-            text: 'O teu resultado aponta para um nível moderado de desgaste. Não é um diagnóstico definitivo de burnout, mas indica que a tua capacidade natural de recuperação está comprometida.',
+        { max: 74, pill: 'MODERADO', title: 'Vários sinais de desgaste',
+            text: 'As respostas assinalam vários sinais de desgaste nas áreas avaliadas. Isto não é um diagnóstico; se os sinais persistirem ou afetarem o teu dia a dia, conversa com um profissional de saúde.',
             cta: '',
             bookLabel: 'Agendar sessão gratuita de 15 min',
             bookNote: 'Sem cartão. Cancelamento livre.' },
-        { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
-            text: 'O teu resultado apresenta um nível elevado de sinais de desgaste. Não diagnostica burnout por si só — mas, quando estes sinais são persistentes, não devem ser ignorados.',
+        { max: 100, pill: 'ELEVADO', title: 'Muitos sinais de desgaste assinalados',
+            text: 'As respostas assinalam muitos sinais nas áreas avaliadas. A pontuação não diagnostica burnout. Se estes sinais forem persistentes, estiverem a piorar ou afetarem a tua vida, procura aconselhamento de um profissional de saúde.',
             cta: 'Começa o plano de acompanhamento. Em sofrimento intenso, procura ajuda médica urgente (112 ou SNS 24).',
             bookLabel: 'Começar o plano agora — 216 €/mês',
             bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' }
@@ -67,19 +67,19 @@
 
     const SCALE_COPY = {
         personal: {
-            low: 'A tua exaustão geral está contida. Vale a pena guardar este número como referência.',
-            mid: 'A tua exaustão geral está elevada. O cansaço que sentes já não passa apenas com um fim de semana de descanso — este é o sinal central do burnout e merece atenção.',
-            high: 'A tua exaustão geral está muito elevada. O cansaço já não recupera com descanso e pede apoio agora, não daqui a umas semanas.'
+            low: 'As tuas respostas assinalam poucos sinais de exaustão pessoal neste questionário. Esta pontuação não exclui dificuldades que possas estar a sentir.',
+            mid: 'As tuas respostas indicam maior frequência de sinais de exaustão pessoal. Esta pontuação não permite determinar a causa nem fazer um diagnóstico.',
+            high: 'As tuas respostas indicam frequência elevada de sinais de exaustão pessoal. Se isto te preocupa ou interfere com a tua vida, considera falar com um profissional de saúde.'
         },
         work: {
-            low: 'O trabalho ainda não parece ser o centro do desgaste. Se isto mudar, é dos padrões que mais respondem a limites e recuperação entre dias.',
-            mid: 'O teu esgotamento está diretamente ligado ao contexto laboral. A boa notícia é que este é o padrão mais reversível quando se intervém a tempo (ajuste de carga, limites e recuperação entre dias).',
-            high: 'O esgotamento está fortemente ligado ao trabalho e já pesa no dia. Intervir agora — carga, limites e recuperação — é o que mais muda este padrão.'
+            low: 'Assinalaste poucos sinais de exaustão associados ao trabalho neste questionário. Esta pontuação não determina a causa de eventuais dificuldades.',
+            mid: 'As tuas respostas indicam sinais de exaustão associados ao trabalho. A pontuação não determina a causa nem permite prever a evolução.',
+            high: 'As tuas respostas indicam frequência elevada de sinais associados ao trabalho. Se possível, considera discutir o impacto e as opções de apoio com um profissional de saúde ou alguém de confiança.'
         },
         body: {
-            low: 'O corpo ainda não está a traduzir o stress de forma marcada. Sono, tensão e digestão continuam a ser os primeiros sinais a vigiar.',
-            mid: 'O teu corpo começou a dar os primeiros alertas somáticos de tensão acumulada.',
-            high: 'O corpo já está a pagar a conta: sono, tensão, digestão, pele ou peso estão a acompanhar o desgaste. Isto deixou de ser só cansaço.'
+            low: 'Assinalaste poucos dos sintomas físicos incluídos nesta secção. A pontuação não determina a presença ou ausência de uma condição de saúde.',
+            mid: 'Assinalaste alguns sintomas físicos. Podem ter várias causas e não permitem concluir que sejam provocados por stress.',
+            high: 'Assinalaste vários sintomas físicos. Como podem ter diversas causas, procura aconselhamento clínico se forem persistentes, intensos ou preocupantes.'
         }
     };
 
@@ -92,11 +92,11 @@
     }
 
     const BODY_DETAIL = {
-        pele: 'Nota clínica: a tua pele parece ser o órgão que mais reage ao teu stress — é um padrão real (o eixo cérebro–pele) e tratável.',
-        intestino: 'Nota clínica: o teu intestino parece ser o órgão que mais reage ao teu stress — o eixo intestino–cérebro é dos mecanismos mais estudados do stress crónico.',
-        peso: 'Nota clínica: alterações de apetite e peso sob stress crónico têm explicação hormonal (cortisol) — não é falta de disciplina.',
-        sono: 'Nota clínica: sono que não repara mantém o cortisol elevado e alimenta o ciclo do esgotamento — costuma ser o primeiro alvo do tratamento.',
-        tensao: 'Nota clínica: tensão muscular persistente é das formas mais comuns de o corpo armazenar stress — e das que melhor respondem a intervenção.'
+        pele: 'Assinalaste alterações da pele; este questionário não determina a causa.',
+        intestino: 'Assinalaste alterações digestivas; este questionário não determina a causa.',
+        peso: 'Assinalaste alterações de apetite ou peso; este questionário não determina a causa.',
+        sono: 'Assinalaste sono pouco reparador; este questionário não determina a causa.',
+        tensao: 'Assinalaste tensão física; este questionário não determina a causa.'
     };
 
     const DIM_META = {
