@@ -1321,6 +1321,18 @@
     margin-bottom: 0;
 }
 
+.guide-region-note {
+    margin: 0 0 1.25rem;
+    padding: 1rem 1.15rem 0.15rem;
+    border: 1px solid var(--lon-border, #d9e2dc);
+    border-radius: 16px;
+    background: #f6f8f6;
+}
+
+.guide-region-note p:last-child {
+    margin-bottom: 0.9rem;
+}
+
 .mag-read-time {
     letter-spacing: 0.02em;
 }

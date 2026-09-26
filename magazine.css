@@ -22,7 +22,7 @@ html:has(body.mag-body) {
     font-family: var(--mag-sans);
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
-    overflow-x: clip;
+    overflow-x: visible;
 }
 
 .mag-stage a {
@@ -588,7 +588,6 @@ html:has(body.mag-body) {
     height: auto;
     margin-bottom: 16px;
     border-radius: 0;
-    overflow: hidden;
     background: #f2ecee;
     transition: filter 0.45s ease;
 }
@@ -959,6 +958,22 @@ html:has(body.mag-body) {
     padding: 8px 0 96px;
 }
 
+.mag-body .guide-prose .final-cta,
+.mag-body .guide-prose .alg-final-cta,
+.mag-body .guide-prose .br-final-cta,
+.mag-body .guide-prose .co-final-cta,
+.mag-body .guide-prose .cuf-article .final-cta,
+.mag-body .guide-prose .disclaimer,
+.mag-body .guide-prose .alg-disclaimer,
+.mag-body .guide-prose .br-disclaimer,
+.mag-body .guide-prose .co-disclaimer,
+.mag-body .guide-prose .cuf-article .disclaimer {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .mag-story--html {
     padding: 12px 0 48px;
 }
@@ -1146,10 +1161,10 @@ html:has(body.mag-body) {
 }
 
 .mag-body .mag-story-prose .guide-table-scroll {
-    width: min(1180px, calc(100vw - 48px));
-    max-width: min(1180px, calc(100vw - 48px));
-    margin-left: calc(50% - min(590px, 50vw - 24px));
-    margin-right: 0;
+    width: min(1180px, calc(100% - 48px));
+    max-width: min(1180px, calc(100% - 48px));
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .mag-body .mag-story-prose .guide-table-scroll table,
@@ -1244,6 +1259,17 @@ html:has(body.mag-body) {
     font-style: normal;
     line-height: 1.55;
     color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose .cvi-region-intro .guide-region-note {
+    margin: 0 0 14px;
+    padding: 16px 16px 2px;
+    border: 1px solid var(--mag-line);
+    background: #fff;
+}
+
+.mag-body .mag-story-prose .cvi-region-intro .guide-region-note p:last-child {
+    margin-bottom: 14px;
 }
 
 .mag-body .cvi-center-list {

@@ -87,9 +87,10 @@ Guias com morada e circuito local: [Lisboa](/blog/vacinas-viajante-lisboa), [Por
 
 <h3 id="lisboa-e-vale-do-tejo">Lisboa e Vale do Tejo</h3>
 
-Consulta em Lisboa (SNS, privado e online): [onde fazer consulta de medicina do viajante](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa). Centro de vacinação na cidade: [CVI de Lisboa / Sete Rios](/blog/vacinas-viajante-lisboa).
-
-**Vacinação sem agendamento:** a consulta SNS pede quase sempre horário. A toma, com prescrição, é por ordem de chegada em alguns CVI. Em Lisboa, o caso mais citado é Sete Rios (dias úteis, 9h–15h30) — confirme no dia. No Porto, a consulta de viajante das Doenças Infecciosas do CHP descreve-se sem marcação prévia formal, mas com espera de cerca de dois meses para consulta e vacina juntas. A Lon Clinic não tem sala de vacinas: a consulta é vídeo; a picada é no CVI.
+<aside class="guide-region-note">
+<p>Consulta em Lisboa (SNS, privado e online): <a href="/blog/onde-fazer-consulta-medicina-do-viajante-lisboa">onde fazer consulta de medicina do viajante</a>. Centro de vacinação na cidade: <a href="/blog/vacinas-viajante-lisboa">CVI de Lisboa / Sete Rios</a>.</p>
+<p><strong>Vacinação sem agendamento:</strong> a consulta SNS pede quase sempre horário. A toma, com prescrição, é por ordem de chegada em alguns CVI. Em Lisboa, o caso mais citado é Sete Rios (dias úteis, 9h–15h30) — confirme no dia. No Porto, a consulta de viajante das Doenças Infecciosas do CHP descreve-se sem marcação prévia formal, mas com espera de cerca de dois meses para consulta e vacina juntas. A Lon Clinic não tem sala de vacinas: a consulta é vídeo; a picada é no CVI.</p>
+</aside>
 
 | Centro | Contacto | Horário de consulta | Experiência de contacto |
 |---|---|---|---|

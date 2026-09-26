@@ -181,8 +181,8 @@ function consultAdSpec(kind) {
         },
         travel: {
             theme: 'travel',
-            image: '/image/travel-clinic-mountain-bg.jpg',
-            imageAlt: 'Consulta do viajante',
+            image: '/image/guide/cvi-portugal-hero.png',
+            imageAlt: 'Vila costeira em Portugal',
             tag: 'Consulta do viajante · Lon Clinic',
             glassLbl: 'Hoje ou amanhã',
             glassTtl: '39 € · consulta do viajante online',
@@ -224,7 +224,7 @@ function consultAdHtml(kind, slug, extraClass) {
 <section class="lon-consult-ad lon-consult-ad--${escapeHtml(theme)}${klass}" aria-label="${escapeHtml(spec.kicker)}">
     <div class="lon-consult-ad-visual">
         <figure class="lon-consult-ad-photo">
-            <img src="${escapeHtml(spec.image)}" alt="${escapeHtml(spec.imageAlt)}" width="800" height="1000" loading="lazy" decoding="async">
+            <img src="${escapeHtml(spec.image)}" alt="${escapeHtml(spec.imageAlt)}" width="800" height="1000" decoding="async">
         </figure>
         <span class="lon-consult-ad-tag">${escapeHtml(spec.tag)}</span>
         <div class="lon-consult-ad-glass">
@@ -1424,7 +1424,7 @@ function travelOfferHtml(consult, href, slotWhen) {
 <aside class="guide-book guide-actions guide-travel-offer" aria-label="${escapeHtml(consult.title)}" data-next-slot data-service="${escapeHtml(consult.service)}" data-book-href="${escapeHtml(href)}" data-hydrate="1" data-price="${escapeHtml(consult.price)}">
     <div class="guide-travel-offer-split">
         <div class="guide-travel-offer-photo">
-            <img src="/image/guide/guide-hiker-view.jpg" alt="" width="1280" height="1600" loading="lazy" decoding="async">
+            <img src="/image/guide/guide-group-walk.jpg" alt="" width="1280" height="1600" decoding="async">
         </div>
         <div class="guide-travel-offer-copy">
             <p class="guide-book-chip">${escapeHtml(consult.chip)}</p>
@@ -1989,7 +1989,7 @@ function relatedArticlesHtml(current, articles) {
     const related = pickRelatedArticles(current, articles);
     if (!related.length) return '';
     const copy = actionCopy(articleLangCode(current));
-    const cards = related.map((a) => magCardHtml(a, { kicker: true, cardClass: 'guide-related-card' })).join('');
+    const cards = related.map((a) => magCardHtml(a, { kicker: true, cardClass: 'guide-related-card', eager: true })).join('');
     return `
 <nav class="guide-related" aria-label="${escapeHtml(copy.relatedAria)}">
     <h2 class="guide-related-heading">${escapeHtml(copy.related)}</h2>
@@ -2529,7 +2529,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260926b', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
+        extraCssAfter: ['/guide.css?v=20260926c', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260926a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
@@ -2861,8 +2861,9 @@ function magCardHtml(article, opts) {
         ? `<p class="mag-excerpt">${escapeHtml(article.description)}</p>`
         : '';
     const titleClass = extraClass.includes('guide-related-card') ? ' class="guide-related-title"' : '';
+    const photoOpts = opts && opts.eager ? { eager: true } : null;
     return `<a class="mag-card${extraClass}" href="${magHref(article)}">
-                ${magPhotoHtml(article)}
+                ${magPhotoHtml(article, null, photoOpts)}
                 ${kicker}
                 <h3${titleClass}>${escapeHtml(listingTitle(article.title))}</h3>
                 ${magCardBylineHtml(article)}
@@ -3211,8 +3212,34 @@ function magDate(iso, lang) {
     return `${Number(m[3])} ${month} ${m[1]}`;
 }
 
+const MOUNTAIN_CARD_RE = /(?:travel-clinic-mountain-bg(?:-v2)?|guide-hiker-view|guide-mountain-path|travel-cover(?:-hq)?-\d+|mega-viajante)\.(?:jpe?g|png|webp|avif)$/i;
+
+const TRAVEL_CARD_PHOTOS = [
+    '/image/guide/cvi-portugal-hero.png',
+    '/image/guide/guide-group-walk.jpg'
+];
+
+function pickCardPhoto(article, src) {
+    if (!MOUNTAIN_CARD_RE.test(String(src || ''))) return src;
+    const theme = magTheme(article || {});
+    if (theme === 'travel') {
+        const key = String((article && article.slug) || src);
+        let n = 0;
+        for (let i = 0; i < key.length; i++) n = (n + key.charCodeAt(i)) % TRAVEL_CARD_PHOTOS.length;
+        return TRAVEL_CARD_PHOTOS[n];
+    }
+    if (theme === 'perda-de-peso' || theme === 'livros-saude' || theme === 'bestsellers-saude-intestinal') {
+        return '/image/nutri-hero-scale.webp';
+    }
+    if (theme === 'burnout') return '/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp';
+    if (theme === 'mental' || theme === 'depressao' || theme === 'ansiedade' || theme === 'autoconhecimento' || theme === 'bestsellers-psicologia') {
+        return '/image/psi-choice-individual.webp';
+    }
+    return '/image/funcional-hero-janela.webp';
+}
+
 function magImage(article) {
-    return escapeHtml(resolveGuideImage(article && article.image));
+    return escapeHtml(pickCardPhoto(article, resolveGuideImage(article && article.image)));
 }
 
 function magPhotoHtml(article, className, opts) {
@@ -3932,8 +3959,8 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260926c">
-    <link rel="stylesheet" href="/consult-ad.css?v=20260922a">
+    <link rel="stylesheet" href="/magazine.css?v=20260926e">
+    <link rel="stylesheet" href="/consult-ad.css?v=20260926a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
