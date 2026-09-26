@@ -189,6 +189,7 @@ async function initBookingFlow() {
         burnout: { label: 'Consulta Especializada em Burnout', price: '60 €', cents: 6000 },
         burnout_mensal: { label: 'Subscrição Anti-Burnout', price: '216 €/mês', cents: 21600 },
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
+        burnout_orientacao: { label: 'Sessão de Orientação Inicial (15 min)', price: 'Gratuita', cents: 0 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
         longevidade: { label: 'Consulta de Medicina Funcional', price: '60 €', cents: 6000 },
         nutricao_consulta: { label: 'Consulta de nutrição', price: '45 €', cents: 4500 },
@@ -344,6 +345,11 @@ async function initBookingFlow() {
     }
 
     function formatPayablePrice(cents, serviceKey) {
+        if ((serviceKey || state.service) === 'burnout_orientacao') {
+            const lang = getBookingLocale();
+            if (lang === 'en') return 'Free';
+            return 'Gratuita';
+        }
         const text = formatEurFromCents(cents);
         if (isMonthlySubscription(serviceKey || state.service)) return text + monthlyPriceSuffix();
         return text;
@@ -358,6 +364,7 @@ async function initBookingFlow() {
             discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
         }
         let totalCents = subtotalCents - discountCents;
+        if (state.service === 'burnout_orientacao') return 0;
         if (totalCents < 50) totalCents = 50;
         return totalCents;
     }
@@ -374,6 +381,12 @@ async function initBookingFlow() {
     }
 
     function payButtonLabel(priceText) {
+        if (state.service === 'burnout_orientacao') {
+            const lang = getBookingLocale();
+            if (lang === 'en') return 'Confirm free session';
+            if (lang === 'es') return 'Confirmar sesión gratuita';
+            return 'Confirmar sessão gratuita';
+        }
         const tmpl = bookingString('payCta', 'Pagar {price}');
         return String(tmpl).replace('{price}', priceText);
     }
@@ -2193,7 +2206,10 @@ async function initBookingFlow() {
         let totalCents = subtotalCents - discountCents;
         // Ensure minimum of 50 cents (Stripe minimum for EUR)
         const STRIPE_MINIMUM = 50;
-        if (totalCents < STRIPE_MINIMUM) {
+        if (state.service === 'burnout_orientacao') {
+            totalCents = 0;
+            discountCents = 0;
+        } else if (totalCents < STRIPE_MINIMUM) {
             discountCents = subtotalCents - STRIPE_MINIMUM;
             totalCents = STRIPE_MINIMUM;
         }
@@ -2318,7 +2334,10 @@ async function initBookingFlow() {
         let totalCents = subtotalCents - discountCents;
         // Ensure minimum of 50 cents (Stripe minimum for EUR)
         const STRIPE_MINIMUM = 50;
-        if (totalCents < STRIPE_MINIMUM) {
+        if (state.service === 'burnout_orientacao') {
+            totalCents = 0;
+            discountCents = 0;
+        } else if (totalCents < STRIPE_MINIMUM) {
             discountCents = subtotalCents - STRIPE_MINIMUM;
             totalCents = STRIPE_MINIMUM;
         }
@@ -2389,6 +2408,11 @@ async function initBookingFlow() {
 
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to create payment session');
+            }
+
+            if (data.confirmed) {
+                showBookingConfirmation(data.confirmed);
+                return;
             }
 
             // Redirect to Stripe Checkout
@@ -2559,6 +2583,29 @@ async function initBookingFlow() {
             currency: 'EUR',
             items: data.service ? [{ item_name: String(data.service).slice(0, 80) }] : undefined
         });
+    }
+
+    function showBookingConfirmation(data) {
+        document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step-4').classList.add('active');
+        document.querySelectorAll('.progress-step').forEach(ps => {
+            ps.classList.remove('active');
+            ps.classList.add('completed');
+        });
+        const done = document.querySelector('.progress-step[data-step="4"]');
+        if (done) {
+            done.classList.remove('completed');
+            done.classList.add('active');
+        }
+        document.querySelectorAll('.progress-line').forEach(l => l.classList.add('filled'));
+        document.getElementById('confirmEmail').textContent = data.email || '—';
+        document.getElementById('confirmService').textContent =
+            (services[data.service] && services[data.service].label) || data.serviceLabel || data.service || '—';
+        document.getElementById('confirmDateTime').textContent = `${data.date || ''} · ${data.time || ''}`.trim();
+        document.getElementById('confirmAmount').textContent = Number(data.amount) === 0
+            ? 'Gratuita'
+            : `€${(Number(data.amount) / 100).toFixed(0)}`;
+        document.getElementById('confirmRef').textContent = data.bookingRef || '—';
     }
 
     async function handleStripeReturn(confirmToken) {

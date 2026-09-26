@@ -4328,10 +4328,12 @@ function buildAdminNotificationEmail(data) {
         contactPhone
     } = data;
 
-    const formattedAmount = new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: currency?.toUpperCase() || 'EUR'
-    }).format(amount / 100);
+    const formattedAmount = Number(amount) === 0
+        ? 'Gratuita'
+        : new Intl.NumberFormat('en-GB', {
+            style: 'currency',
+            currency: currency?.toUpperCase() || 'EUR'
+        }).format(amount / 100);
 
     const isTravel = service === 'travel';
     const isMulti = travellerCount > 1;
@@ -7005,6 +7007,8 @@ function getAppointmentStartUtcMs(booking, timeZone) {
 
 function appointmentDurationMinutes(booking) {
     const s = booking && booking.service;
+    if (s === 'burnout_orientacao') return staffBooking.ORIENTATION_DURATION;
+    if (s === 'burnout' || s === 'burnout_mensal' || s === 'burnout_programa') return 60;
     if (s === 'psicologia' || s === 'psicologia_mensal') return 50;
     if (s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
     if (s === 'travel') {
@@ -7366,6 +7370,49 @@ async function listHeldTimesForDate(dateIso, excludeHoldId, professionalId) {
     return times;
 }
 
+async function listHeldIntervalsForDate(dateIso, excludeHoldId) {
+    await purgeSlotHolds();
+    const byId = new Map();
+    for (const hold of slotHoldsById.values()) {
+        if (!hold || hold.dateIso !== dateIso || hold.expiresAt <= Date.now() || hold.id === excludeHoldId) continue;
+        byId.set(hold.id, {
+            id: hold.id,
+            time: String(hold.time || '').slice(0, 5),
+            service: hold.service || '',
+            professionalId: hold.professionalId || null
+        });
+    }
+    if (usePersistentDb && typeof db.listActiveHoldsForDateIso === 'function') {
+        try {
+            const rows = await db.listActiveHoldsForDateIso(dateIso, excludeHoldId || null);
+            for (const row of rows) {
+                if (row && row.id && !byId.has(row.id)) byId.set(row.id, row);
+            }
+        } catch (err) {
+            console.error('listHeldIntervalsForDate:', err.message);
+        }
+    }
+    return [...byId.values()];
+}
+
+function bookingAppliesToProfessional(booking, professionalId) {
+    const proId = Number(professionalId);
+    const pid = Number(booking && booking.professionalId);
+    if (Number.isInteger(proId) && proId > 0 && Number.isInteger(pid) && pid > 0 && pid !== proId) {
+        return false;
+    }
+    return true;
+}
+
+function intervalBlocksStart(startHhmm, durationMinutes, otherStart, otherDuration) {
+    const a0 = staffBooking.timeToMinutes(startHhmm);
+    const b0 = staffBooking.timeToMinutes(otherStart);
+    if (a0 == null || b0 == null) return false;
+    const a1 = a0 + Math.max(1, Number(durationMinutes) || 1);
+    const b1 = b0 + Math.max(1, Number(otherDuration) || 1);
+    return a0 < b1 && b0 < a1;
+}
+
 async function releaseHold(id) {
     if (!id) return;
     slotHoldsById.delete(id);
@@ -7547,7 +7594,8 @@ async function listStaffBookablePeople(service, specialtyId) {
         const avail = availByUser.get(u) || { days: [], weekly: {} };
         const days = normalizeDayOverrides(avail.days);
         const weekly = staffBooking.normalizeWeeklyHours(avail.weekly);
-        if (!staffBooking.hasCrossedBookableHours(weekly, days, publicPlatformHours())) continue;
+        if (!staffBooking.isOrientationService(service)
+            && !staffBooking.hasCrossedBookableHours(weekly, days, publicPlatformHours())) continue;
         let pro = Number.isInteger(Number(profile.professionalId))
             ? byId.get(Number(profile.professionalId))
             : null;
@@ -7655,12 +7703,19 @@ async function ticksHeldForProfessional(dateIso, professionalId, excludeHoldId, 
 }
 
 async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef, forceGoogleRefresh) {
-    const ranges = hoursForStaffOnDate(person, dateIso);
-    if (!ranges.length) return [];
     const step = scheduleStore.slotDuration || 30;
     const duration = appointmentDurationMinutes({ service });
-    const hourly = staffBooking.isPsychologyStaffService(service);
-    const starts = staffBooking.bookableStartsFromRanges(ranges, { step, duration, hourly });
+    const orientation = staffBooking.isOrientationService(service);
+    let starts;
+    if (orientation) {
+        if ((scheduleStore.blockedDates || []).includes(dateIso)) return [];
+        starts = staffBooking.ORIENTATION_STARTS.slice();
+    } else {
+        const ranges = hoursForStaffOnDate(person, dateIso);
+        if (!ranges.length) return [];
+        const hourly = staffBooking.isPsychologyStaffService(service);
+        starts = staffBooking.bookableStartsFromRanges(ranges, { step, duration, hourly });
+    }
     if (!starts.length) return [];
     const blockedTicks = new Set(
         (scheduleStore.blockedTimeSlots || [])
@@ -7672,9 +7727,37 @@ async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId
     blockedTicks.forEach((t) => blocked.add(t));
     const held = await ticksHeldForProfessional(dateIso, person.id, excludeHoldId, duration, step);
     held.forEach((t) => blocked.add(t));
-    const open = starts.filter((start) =>
-        staffBooking.occupiedTimesFromStart(start, duration, step).every((t) => !blocked.has(t))
-    );
+    const heldIntervals = await listHeldIntervalsForDate(dateIso, excludeHoldId);
+    const blockSpan = orientation ? step : duration;
+    let open = starts.filter((start) => {
+        if (!staffBooking.occupiedTimesFromStart(start, duration, step).every((t) => !blocked.has(t))) {
+            return false;
+        }
+        if ((scheduleStore.blockedTimeSlots || []).some((item) => {
+            if (!item || item.date !== dateIso) return false;
+            return intervalBlocksStart(start, duration, item.time, blockSpan);
+        })) {
+            return false;
+        }
+        if (bookings.some((b) => {
+            if (!b || b.cancelled) return false;
+            if (excludeBookingRef && b.bookingRef === excludeBookingRef) return false;
+            if (!bookingAppliesToProfessional(b, person.id)) return false;
+            const startTime = normalizeTimeString(b) || String(b.time || '').slice(0, 5);
+            return intervalBlocksStart(start, duration, startTime, appointmentDurationMinutes(b));
+        })) {
+            return false;
+        }
+        return !heldIntervals.some((hold) => {
+            if (!bookingAppliesToProfessional(hold, person.id)) return false;
+            return intervalBlocksStart(
+                start,
+                duration,
+                hold.time,
+                appointmentDurationMinutes({ service: hold.service })
+            );
+        });
+    });
     if (!open.length) return open;
     const googleBusy = await googleBusyBlocksForStaff(person.username, dateIso, forceGoogleRefresh);
     if (!googleBusy.length) return open;
@@ -7735,6 +7818,23 @@ async function listStaffBookableDates(service, specialty, maxDays, professionalI
         ? all.filter((p) => p.id === wantId)
         : all;
     if (!people.length) return [];
+    if (staffBooking.isOrientationService(service)) {
+        const now = lisbonNowParts();
+        const dates = [];
+        for (let i = 0; i < days; i++) {
+            const dateIso = addDaysIso(now.dateIso, i);
+            if ((scheduleStore.blockedDates || []).includes(dateIso)) continue;
+            if (i === 0) {
+                const stillOpen = staffBooking.ORIENTATION_STARTS.some((t) => {
+                    const mins = staffBooking.timeToMinutes(t);
+                    return mins != null && mins > now.minutes + 15;
+                });
+                if (!stillOpen) continue;
+            }
+            dates.push(dateIso);
+        }
+        return dates;
+    }
     const today = lisbonNowParts().dateIso;
     const step = scheduleStore.slotDuration || 30;
     const duration = appointmentDurationMinutes({ service });
@@ -7842,7 +7942,7 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
         staffPeople = staffPeople.filter((p) => p.id === wantId);
     }
     const staffMode = staffPeople.length > 0;
-    const mustStaff = staffBooking.requiresProfessionalChoice(service);
+    const mustStaff = staffBooking.requiresProfessionalChoice(service) || staffBooking.isOrientationService(service);
     const dayPacks = await Promise.all(Array.from({ length: days }, async (_, i) => {
         const dateIso = addDaysIso(now.dateIso, i);
         let available = [];
@@ -9266,6 +9366,7 @@ const MARCAR_TIPO_TO_SLUG = {
     burnout: 'burnout',
     burnout_mensal: 'burnout-mensal',
     burnout_programa: 'burnout-programa',
+    burnout_orientacao: 'burnout-orientacao',
     longevidade: 'medicina-funcional',
     medicina_funcional: 'medicina-funcional',
     nutricao_consulta: 'nutricao-consulta',
@@ -13054,8 +13155,109 @@ app.post('/api/discount/validate', rateLimitCheckout, async (req, res) => {
 });
 
 // ─── API: Create Checkout Session ───
+async function confirmFreeOrientationBooking(fields) {
+    const paymentId = `comp_${crypto.randomUUID().replace(/-/g, '')}`;
+    const bookingRef = 'LC-' + paymentId.slice(-8).toUpperCase();
+    const intakeToken = newIntakeToken();
+    const emailNorm = String(fields.patientEmail || '').toLowerCase().trim();
+    const service = 'burnout_orientacao';
+    const serviceLabel = String(fields.serviceLabel || '').trim()
+        || 'Sessão de Orientação Inicial (15 min) — Gratuita';
+    const record = {
+        bookingRef,
+        email: emailNorm,
+        service,
+        date: fields.date,
+        time: fields.time,
+        dateIso: fields.dateIso,
+        patientName: fields.patientName,
+        patientPhone: fields.patientPhone || '',
+        travellerCount: 1,
+        amount: 0,
+        currency: 'eur',
+        paymentId,
+        patientLocale: normalizePatientLocale(fields.locale || 'pt'),
+        cancelled: false,
+        rescheduleCount: 0,
+        reminderSent: false,
+        reminder1hSent: false,
+        followupSent: false,
+        intakeToken,
+        intakeCompletedAt: null,
+        intakeReminderSent: false,
+        intake: null,
+        createdAt: new Date().toISOString(),
+        professionalId: Number(fields.professionalId) > 0 ? Number(fields.professionalId) : null,
+        professional: String(fields.professionalName || '').trim() || null
+    };
+    const bookingData = {
+        bookingRef,
+        patientName: fields.patientName,
+        email: emailNorm,
+        service,
+        serviceLabel,
+        date: fields.date,
+        time: fields.time,
+        amount: 0,
+        currency: 'eur',
+        travellerCount: 1,
+        hasInsurance: false,
+        passengers: [fields.patientName],
+        contactPhone: fields.patientPhone || '',
+        locale: fields.locale || 'pt',
+        intakeToken,
+        professional: record.professional
+    };
+    if (usePersistentDb) {
+        let inserted = false;
+        try {
+            inserted = await db.insertBooking(record);
+        } catch (err) {
+            const slotClash = err && (err.code === '23505' || /idx_bookings_active_slot/i.test(String(err.message || '')));
+            if (slotClash) {
+                const clash = new Error('That time slot is not available');
+                clash.status = 409;
+                throw clash;
+            }
+            throw err;
+        }
+        if (!inserted) {
+            const clash = new Error('That time slot is not available');
+            clash.status = 409;
+            throw clash;
+        }
+        try { await db.setBookingIntakeToken(bookingRef, intakeToken); } catch (err) {
+            console.error('orientation intake token:', err.message);
+        }
+    } else {
+        bookingsStore.push(record);
+    }
+    try {
+        await sendConfirmationEmail(bookingData);
+        await sendAdminNotificationEmail(bookingData);
+    } catch (err) {
+        console.error('orientation confirmation email:', err.message);
+    }
+    if (fields.dateIso && fields.time) {
+        await releaseHoldsForSlot(fields.dateIso, fields.time);
+    } else {
+        invalidateNextSlotsCache();
+    }
+    console.log(`   ✅ Free orientation ${bookingRef} for ${emailNorm}`);
+    return {
+        email: emailNorm,
+        service,
+        serviceLabel,
+        date: fields.date,
+        time: fields.time,
+        amount: 0,
+        bookingRef
+    };
+}
+
 app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => {
-        if (!isStripeConfigured) {
+    const incomingFree = bookingServiceTag((req.body && req.body.service) || '') === 'burnout_orientacao';
+        if (!isStripeConfigured && !incomingFree) {
         console.error('❌ Stripe configuration check failed:');
         console.error('   STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
         console.error('   isStripeConfigured:', isStripeConfigured);
@@ -13249,6 +13451,41 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                 if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
                 return res.status(400).json({ error: 'That time slot is not available' });
             }
+        }
+
+        if (bookingServiceTag(service) === 'burnout_orientacao' && priceAmount === 0) {
+            if (!isoCheckout || !normTimeCheckout) {
+                return res.status(400).json({ error: 'Missing date or time' });
+            }
+            const named = patientName || (Array.isArray(passengers) && passengers[0]
+                ? `${passengers[0].firstName || ''} ${passengers[0].lastName || ''}`.trim()
+                : '');
+            try {
+                const confirmed = await confirmFreeOrientationBooking({
+                    serviceLabel,
+                    date,
+                    time: normTimeCheckout,
+                    dateIso: isoCheckout,
+                    patientName: named || String(patientEmail || '').split('@')[0] || 'Paciente',
+                    patientEmail,
+                    patientPhone,
+                    locale,
+                    professionalId: Number(metadata.professional_id) || professionalId || null,
+                    professionalName: metadata.professional_name || ''
+                });
+                return res.json({ confirmed });
+            } catch (orientErr) {
+                const status = orientErr && orientErr.status === 409 ? 409 : 500;
+                return res.status(status).json({
+                    error: status === 409
+                        ? 'Esse horário já não está disponível.'
+                        : 'Não foi possível confirmar a sessão. Tente outro horário.'
+                });
+            }
+        }
+
+        if (!isStripeConfigured) {
+            return res.status(500).json({ error: 'Stripe is not configured. Add your STRIPE_SECRET_KEY to the .env file.' });
         }
 
         // Create Stripe Checkout Session
@@ -18547,7 +18784,9 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                         ? '€224/mês'
                         : service === 'nutricao_quinzenal'
                             ? '€45 / 15 dias'
-                            : service === 'psicologia' ? '€60' : '€39',
+                            : service === 'burnout_orientacao'
+                                ? 'Gratuita'
+                                : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };
         nextSlotsCache.set(cacheKey, { ts: Date.now(), body });
@@ -18596,7 +18835,7 @@ app.get('/api/bookable-days', async (req, res) => {
         const proId = Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null;
         if (staffBooking.usesStaffCalendars(service)) {
             const dates = await listStaffBookableDates(service, specialty, 60, proId);
-            if (dates.length || staffBooking.requiresProfessionalChoice(service)) {
+            if (dates.length || staffBooking.requiresProfessionalChoice(service) || staffBooking.isOrientationService(service)) {
                 return res.json({ dates, service, specialty, mode: 'staff' });
             }
         }
@@ -18634,7 +18873,7 @@ app.get('/api/bookable-slots', async (req, res) => {
                 mode: 'staff'
             });
         }
-        if (staffBooking.requiresProfessionalChoice(service)) {
+        if (staffBooking.requiresProfessionalChoice(service) || staffBooking.isOrientationService(service)) {
             return res.json({
                 available: [],
                 professionalsByTime: {},
@@ -19089,6 +19328,7 @@ const INVITATION_SERVICE_LABEL = {
     burnout: { pt: 'Consulta Especializada em Burnout', en: 'Specialized Burnout Consultation', es: 'Consulta especializada en burnout' },
     burnout_mensal: { pt: 'Subscrição Anti-Burnout', en: 'Anti-Burnout Subscription', es: 'Suscripción Anti-Burnout' },
     burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
+    burnout_orientacao: { pt: 'Sessão de Orientação Inicial (15 min)', en: 'Initial orientation session (15 min)', es: 'Sesión de orientación inicial (15 min)' },
     nutricao_consulta: { pt: 'Consulta de Nutrição', en: 'Nutrition Consultation', es: 'Consulta de nutrición' },
     nutricao_quinzenal: { pt: 'Subscrição de Nutrição · quinzenal', en: 'Nutrition subscription · fortnightly', es: 'Suscripción de nutrición · quincenal' },
     nutricao_programa: { pt: 'Programa de Perda de Peso (6 meses)', en: 'Weight-Loss Program (6 months)', es: 'Programa de pérdida de peso (6 meses)' },

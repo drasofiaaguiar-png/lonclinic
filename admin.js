@@ -389,6 +389,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout: 'Burnout especializada',
         burnout_mensal: 'Anti-burnout (semanal)',
         burnout_programa: 'Programa anti-burnout',
+        burnout_orientacao: 'Orientação burnout (15 min)',
         longevidade: 'Longevidade',
         renovacao: 'Renovação receita',
         psicologia: 'Psicologia',
@@ -3437,6 +3438,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout: 6000,
         burnout_mensal: 21600,
         burnout_programa: 49000,
+        burnout_orientacao: 0,
         longevidade: 7900,
         renovacao: 1900
     };

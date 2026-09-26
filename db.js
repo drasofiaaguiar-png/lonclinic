@@ -2161,6 +2161,25 @@ async function deleteSlotHoldsForSlot(dateIso, time) {
     );
 }
 
+async function listActiveHoldsForDateIso(dateIso, excludeHoldId) {
+    const p = getPool();
+    if (!p) return [];
+    const r = await p.query(
+        `SELECT id, time, service, professional_id
+         FROM slot_holds
+         WHERE date_iso = $1
+           AND expires_at > NOW()
+           AND ($2::text IS NULL OR id <> $2)`,
+        [dateIso, excludeHoldId || null]
+    );
+    return r.rows.map((row) => ({
+        id: row.id,
+        time: String(row.time || '').slice(0, 5),
+        service: row.service || '',
+        professionalId: row.professional_id == null ? null : Number(row.professional_id)
+    }));
+}
+
 async function listActiveHoldTimesForDateIso(dateIso, excludeHoldId, professionalId) {
     const p = getPool();
     if (!p) return [];
@@ -5002,6 +5021,7 @@ module.exports = {
     deleteSlotHoldById,
     deleteSlotHoldsForSlot,
     listActiveHoldTimesForDateIso,
+    listActiveHoldsForDateIso,
     purgeExpiredSlotHolds,
     listBookingsForDateIso,
     insertAnalyticsEvents,

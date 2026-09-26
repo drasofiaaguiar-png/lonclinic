@@ -128,6 +128,15 @@ function isPsychologyStaffService(service) {
     return isIndividualPsychologyService(key) || isCoupleTherapyService(key);
 }
 
+/** Free 15-minute burnout orientation. Fixed window: every day 20:00–21:00. */
+const ORIENTATION_SERVICE = 'burnout_orientacao';
+const ORIENTATION_STARTS = ['20:00', '20:15', '20:30', '20:45'];
+const ORIENTATION_DURATION = 15;
+
+function isOrientationService(service) {
+    return normalizeServiceKey(service) === ORIENTATION_SERVICE;
+}
+
 /**
  * Couples therapy is only offered by named psychologists (default: Dra. Carolina Rocha).
  * Override with COUPLES_THERAPY_PSYCHOLOGISTS="Nome Um, Nome Dois" (matched on full name or username).
@@ -565,6 +574,10 @@ module.exports = {
     isCoupleTherapyService,
     isIndividualPsychologyService,
     isPsychologyStaffService,
+    isOrientationService,
+    ORIENTATION_SERVICE,
+    ORIENTATION_STARTS,
+    ORIENTATION_DURATION,
     isCoupleTherapist,
     requiresProfessionalChoice,
     specialtyForService,

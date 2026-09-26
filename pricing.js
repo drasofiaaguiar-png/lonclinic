@@ -22,6 +22,7 @@ const SERVICE_CENTS = {
     burnout: 6000,
     burnout_mensal: 21600,
     burnout_programa: 49000,
+    burnout_orientacao: 0,
     renovacao: 1900,
     longevidade: 6000, // Consulta de Medicina Funcional (internal key kept as "longevidade")
     psicologia: 6000,
@@ -145,6 +146,10 @@ function computeCheckoutTotalCents(opts) {
         }
     }
 
+    if (key === 'burnout_orientacao') {
+        return { ok: true, subtotalCents: 0, discountCents: 0, totalCents: 0 };
+    }
+
     let discountPercent = 0;
     const noDiscountServices = new Set([
         'burnout_mensal',
@@ -154,7 +159,8 @@ function computeCheckoutTotalCents(opts) {
         'nutricao_quinzenal',
         'nutricao_programa',
         'nutricao_completo',
-        'nutricao_completo_reforcado'
+        'nutricao_completo_reforcado',
+        'burnout_orientacao'
     ]);
     if (!noDiscountServices.has(key)) {
         const pct = Number(discountPercentRaw);
@@ -187,7 +193,8 @@ function discountsAllowedForService(service) {
         'nutricao_quinzenal',
         'nutricao_programa',
         'nutricao_completo',
-        'nutricao_completo_reforcado'
+        'nutricao_completo_reforcado',
+        'burnout_orientacao'
     ].includes(key);
 }
 

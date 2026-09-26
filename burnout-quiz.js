@@ -49,10 +49,10 @@
             bookLabel: 'Começar o plano — 216 €/mês',
             bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' },
         { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
-            text: 'O teu resultado sugere um nível moderado de desgaste. Isto não é, por si só, um diagnóstico de burnout — mas é um sinal de que a recuperação está mais difícil do que deveria.',
-            cta: 'O próximo passo é um plano de acompanhamento, não uma consulta avulsa isolada. A subscrição semanal é a opção em destaque; a avaliação única serve se quiseres um primeiro passo.',
-            bookLabel: 'Começar o plano — 216 €/mês',
-            bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' },
+            text: 'O teu resultado aponta para um nível moderado de desgaste. Não é um diagnóstico definitivo de burnout, mas indica que a tua capacidade natural de recuperação está comprometida.',
+            cta: '',
+            bookLabel: 'Agendar sessão gratuita de 15 min',
+            bookNote: 'Sem cartão. Cancelamento livre.' },
         { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
             text: 'O teu resultado apresenta um nível elevado de sinais de desgaste. Não diagnostica burnout por si só — mas, quando estes sinais são persistentes, não devem ser ignorados.',
             cta: 'Começa o plano de acompanhamento. Em sofrimento intenso, procura ajuda médica urgente (112 ou SNS 24).',
@@ -63,16 +63,33 @@
     const PLAN_MENSAL = '/marcar/burnout-mensal?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste';
     const PLAN_AVULSA = '/marcar/burnout?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste';
     const PLAN_PROGRAMA = '/marcar/burnout-programa?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste';
-    const PRODUCT_URL = PLAN_MENSAL + '&utm_content=results-primary';
+    const PLAN_ORIENT = '/marcar/burnout-orientacao?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-orientacao';
 
-    const SCALE_INSIGHTS = {
-        personal: { title: 'Exaustão pessoal',
-            text: 'A tua exaustão geral está elevada. Cansaço que não melhora com descanso é o sinal central do burnout — e o primeiro a merecer atenção médica, porque raramente se resolve apenas com força de vontade.' },
-        work: { title: 'Exaustão ligada ao trabalho',
-            text: 'O teu esgotamento está fortemente ligado ao trabalho: é aí que a intervenção rende mais — carga, limites, recuperação entre dias. É também o padrão mais reversível quando é apanhado a tempo.' },
-        body: { title: 'O corpo a falar',
-            text: 'O teu corpo já está a traduzir o stress. Pele, intestino, apetite e tensão respondem todos ao mesmo eixo do cortisol — quando o esgotamento aparece no corpo, deixou de ser «só cansaço»: é fisiologia.' }
+    const SCALE_COPY = {
+        personal: {
+            low: 'A tua exaustão geral está contida. Vale a pena guardar este número como referência.',
+            mid: 'A tua exaustão geral está elevada. O cansaço que sentes já não passa apenas com um fim de semana de descanso — este é o sinal central do burnout e merece atenção.',
+            high: 'A tua exaustão geral está muito elevada. O cansaço já não recupera com descanso e pede apoio agora, não daqui a umas semanas.'
+        },
+        work: {
+            low: 'O trabalho ainda não parece ser o centro do desgaste. Se isto mudar, é dos padrões que mais respondem a limites e recuperação entre dias.',
+            mid: 'O teu esgotamento está diretamente ligado ao contexto laboral. A boa notícia é que este é o padrão mais reversível quando se intervém a tempo (ajuste de carga, limites e recuperação entre dias).',
+            high: 'O esgotamento está fortemente ligado ao trabalho e já pesa no dia. Intervir agora — carga, limites e recuperação — é o que mais muda este padrão.'
+        },
+        body: {
+            low: 'O corpo ainda não está a traduzir o stress de forma marcada. Sono, tensão e digestão continuam a ser os primeiros sinais a vigiar.',
+            mid: 'O teu corpo começou a dar os primeiros alertas somáticos de tensão acumulada.',
+            high: 'O corpo já está a pagar a conta: sono, tensão, digestão, pele ou peso estão a acompanhar o desgaste. Isto deixou de ser só cansaço.'
+        }
     };
+
+    function scaleCopy(key, score) {
+        const row = SCALE_COPY[key];
+        if (!row) return '';
+        if (score >= 75) return row.high;
+        if (score >= 50) return row.mid;
+        return row.low;
+    }
 
     const BODY_DETAIL = {
         pele: 'Nota clínica: a tua pele parece ser o órgão que mais reage ao teu stress — é um padrão real (o eixo cérebro–pele) e tratável.',
@@ -117,6 +134,7 @@
             el.hidden = !active;
         });
         $('progressWrap').hidden = (name !== 'quiz');
+        document.body.classList.toggle('is-results', name === 'results');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -219,6 +237,100 @@
         } catch (e) { /* ignore */ }
     }
 
+    function pillPretty(score) {
+        const raw = bandFor(score).pill.toLowerCase();
+        return score + ' (' + raw.charAt(0).toUpperCase() + raw.slice(1) + ')';
+    }
+
+    function orientHref(slot, content) {
+        let href = PLAN_ORIENT.replace('utm_content=results-orientacao', 'utm_content=' + (content || 'results-orientacao'));
+        if (slot && slot.date) href += '&date=' + encodeURIComponent(slot.date);
+        if (slot && slot.time) href += '&time=' + encodeURIComponent(slot.time);
+        return href;
+    }
+
+    function orientDayLabel(dateISO) {
+        const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateISO || ''));
+        if (!parts) return '';
+        const d = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const that = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        const diff = Math.round((that.getTime() - today.getTime()) / 86400000);
+        if (diff === 0) return 'Hoje';
+        if (diff === 1) return 'Amanhã';
+        return d.toLocaleDateString('pt-PT', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+
+    function applyOrientSelection(slot) {
+        const primary = $('bookBtnPrimary');
+        const stickyBtn = $('stickyBookBtn');
+        if (primary) primary.setAttribute('href', orientHref(slot, 'results-orientacao'));
+        if (stickyBtn) stickyBtn.setAttribute('href', orientHref(slot, 'results-sticky'));
+    }
+
+    function loadOrientationSlots() {
+        const host = $('orientDays');
+        if (!host) return;
+        host.innerHTML = '<p class="bq-orient-empty">A procurar horários…</p>';
+        fetch('/api/next-slots?limit=8&withinHours=48&service=burnout_orientacao', { credentials: 'same-origin' })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                const slots = ((data && data.slots) ? data.slots : []).filter(function (slot) {
+                    return slot && (slot.time === '20:00' || slot.time === '20:15' || slot.time === '20:30' || slot.time === '20:45');
+                });
+                host.innerHTML = '';
+                if (!slots.length) {
+                    host.innerHTML = '<p class="bq-orient-empty">Neste momento não há vagas entre as 20:00 e as 21:00. Podes escolher outro dia no calendário.</p>';
+                    applyOrientSelection(null);
+                    return;
+                }
+                const groups = [];
+                const index = {};
+                slots.forEach(function (slot) {
+                    if (!index[slot.date]) {
+                        index[slot.date] = { date: slot.date, slots: [] };
+                        groups.push(index[slot.date]);
+                    }
+                    if (index[slot.date].slots.length < 4) index[slot.date].slots.push(slot);
+                });
+                groups.slice(0, 2).forEach(function (group) {
+                    const block = document.createElement('div');
+                    block.className = 'bq-orient-day';
+                    const label = document.createElement('p');
+                    label.className = 'bq-orient-day-label';
+                    label.textContent = orientDayLabel(group.date);
+                    const row = document.createElement('div');
+                    row.className = 'bq-orient-slots';
+                    group.slots.forEach(function (slot) {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'bq-orient-slot';
+                        btn.textContent = slot.time;
+                        btn.addEventListener('click', function () {
+                            host.querySelectorAll('.bq-orient-slot').forEach(function (el) {
+                                el.classList.remove('is-selected');
+                                el.setAttribute('aria-pressed', 'false');
+                            });
+                            btn.classList.add('is-selected');
+                            btn.setAttribute('aria-pressed', 'true');
+                            applyOrientSelection(slot);
+                        });
+                        row.appendChild(btn);
+                    });
+                    block.appendChild(label);
+                    block.appendChild(row);
+                    host.appendChild(block);
+                });
+                const first = host.querySelector('.bq-orient-slot');
+                if (first) first.click();
+            })
+            .catch(function () {
+                host.innerHTML = '<p class="bq-orient-empty">Não foi possível carregar os horários. Podes escolhê-los no passo seguinte.</p>';
+                applyOrientSelection(null);
+            });
+    }
+
     function renderResults() {
         const s = computeScores();
         const band = bandFor(s.global);
@@ -228,19 +340,7 @@
         $('bandPill').className = 'bq-pill ' + (PILL_CLASS[band.pill] || 'pill--mid');
         $('bandTitle').textContent = band.title;
         $('bandText').textContent = band.text;
-        $('ctaText').textContent = band.cta;
-        const bookPrimary = $('bookBtnPrimary');
-        const bookNote = $('bookNowNote');
-        const stickyBtn = $('stickyBookBtn');
-        if (bookPrimary) {
-            bookPrimary.textContent = band.bookLabel || 'Começar o plano — 216 €/mês';
-            bookPrimary.setAttribute('href', PRODUCT_URL);
-        }
-        if (bookNote) bookNote.textContent = band.bookNote || '';
-        if (stickyBtn) {
-            stickyBtn.textContent = band.pill === 'ELEVADO' || band.pill === 'MODERADO' ? 'Começar o plano agora' : 'Ver o plano';
-            stickyBtn.setAttribute('href', PLAN_MENSAL + '&utm_content=results-sticky');
-        }
+        applyOrientSelection(null);
         const bookCard = $('bookBtn');
         if (bookCard) bookCard.setAttribute('href', PLAN_AVULSA + '&utm_content=results-entry');
         const subCard = $('subBtn');
@@ -248,33 +348,21 @@
         const packCard = $('packBtn');
         if (packCard) packCard.setAttribute('href', PLAN_PROGRAMA + '&utm_content=results-programa');
 
-        $('valPersonal').textContent = s.personal + ' · ' + bandFor(s.personal).pill.toLowerCase();
-        $('valWork').textContent = s.work + ' · ' + bandFor(s.work).pill.toLowerCase();
-        $('valBody').textContent = s.body + ' · ' + bandFor(s.body).pill.toLowerCase();
-
-        const box = $('insights');
-        box.innerHTML = '';
-        const ranked = [['personal', s.personal], ['work', s.work], ['body', s.body]]
-            .filter(function (pair) { return pair[1] >= 50; })
-            .sort(function (a, b) { return b[1] - a[1]; })
-            .slice(0, 2);
-        ranked.forEach(function (pair, i) {
-            const k = pair[0];
-            const ins = SCALE_INSIGHTS[k];
-            let extra = '';
-            if (k === 'body') {
-                const top = Object.entries(s.bodyItems).sort(function (a, b) { return b[1] - a[1]; })[0];
-                if (top && top[1] >= 75) extra = '<p style="margin-top:8px">' + BODY_DETAIL[top[0]] + '</p>';
-            }
-            const div = document.createElement('div');
-            div.className = 'bq-insight';
-            div.style.animationDelay = (i * 80) + 'ms';
-            div.innerHTML = '<h3>' + ins.title + '</h3><p>' + ins.text + '</p>' + extra;
-            box.appendChild(div);
-        });
+        $('valPersonal').textContent = pillPretty(s.personal);
+        $('valWork').textContent = pillPretty(s.work);
+        $('valBody').textContent = pillPretty(s.body);
+        $('textPersonal').textContent = scaleCopy('personal', s.personal);
+        $('textWork').textContent = scaleCopy('work', s.work);
+        let bodyText = scaleCopy('body', s.body);
+        const topBody = Object.entries(s.bodyItems).sort(function (a, b) { return b[1] - a[1]; })[0];
+        if (topBody && topBody[1] >= 75 && BODY_DETAIL[topBody[0]]) {
+            bodyText += ' ' + BODY_DETAIL[topBody[0]];
+        }
+        $('textBody').textContent = bodyText;
 
         storeQuizForBooking(s, band);
         show('results');
+        loadOrientationSlots();
         const sticky = $('stickyBook');
         if (sticky) {
             sticky.hidden = false;
@@ -284,12 +372,12 @@
             window.LonAnalytics.track('quiz_complete', { surface: 'burnout', band: band.pill });
         }
 
-        const ARC = 314.16;
         requestAnimationFrame(function () {
-            $('gaugeArc').style.strokeDashoffset = ARC * (1 - s.global / 100);
-            $('barPersonal').style.width = s.personal + '%';
-            $('barWork').style.width = s.work + '%';
-            $('barBody').style.width = s.body + '%';
+            ['barPersonal', 'barWork', 'barBody'].forEach(function (id, i) {
+                const el = $(id);
+                const val = [s.personal, s.work, s.body][i];
+                if (el) el.style.width = val + '%';
+            });
         });
 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -367,6 +455,14 @@
         if (lastScores) {
             storeQuizForBooking(lastScores, bandFor(lastScores.global));
         }
+        try {
+            sessionStorage.setItem('lonCheckoutDraft', JSON.stringify({
+                email: lastEmail || '',
+                firstName: '',
+                lastName: '',
+                phone: ''
+            }));
+        } catch (e) { /* ignore */ }
     }
 
     document.querySelectorAll('.js-quiz-book').forEach(function (el) {
@@ -390,10 +486,14 @@
         answers.fill(null);
         $('email').value = '';
         $('emailError').hidden = true;
-        $('gaugeArc').style.strokeDashoffset = 314.16;
+        const gauge = $('gaugeArc');
+        if (gauge) gauge.style.strokeDashoffset = 314.16;
         $('scoreNum').textContent = '0';
         $('bandPill').className = 'bq-pill';
-        ['barPersonal', 'barWork', 'barBody'].forEach(function (id) { $(id).style.width = '0%'; });
+        ['barPersonal', 'barWork', 'barBody'].forEach(function (id) {
+            const el = $(id);
+            if (el) el.style.width = '0%';
+        });
         show('intro');
         var stickyEl = $('stickyBook');
         if (stickyEl) stickyEl.hidden = true;

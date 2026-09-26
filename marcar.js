@@ -127,6 +127,16 @@
                     'Dedicated support throughout the 8-session program.'
                 ]
             },
+            burnout_orientacao: {
+                label: 'Initial orientation session (15 min)',
+                duration: '15 min · free',
+                bullets: [
+                    'A 15-minute conversation before any payment.',
+                    'We review your burnout test and suggest the right follow-up.',
+                    'Orientation only: no medication and no lab requests.',
+                    'Every day from 20:00 to 21:00, unless that time is already booked.'
+                ]
+            },
             longevidade: {
                 label: 'Functional Medicine Consultation',
                 duration: '45–60 min',
@@ -302,6 +312,16 @@
                     'Acompañamiento dedicado a lo largo de las 8 sesiones.'
                 ]
             },
+            burnout_orientacao: {
+                label: 'Sesión de orientación inicial (15 min)',
+                duration: '15 min · gratuita',
+                bullets: [
+                    '15 minutos de conversación antes de cualquier pago.',
+                    'Revisamos el test de burnout y recomendamos el seguimiento adecuado.',
+                    'Solo orientación: sin medicación y sin petición de análisis.',
+                    'Todos los días de 20:00 a 21:00, salvo que esa hora ya esté ocupada.'
+                ]
+            },
             longevidade: {
                 label: 'Consulta de Medicina Funcional',
                 duration: '45–60 min',
@@ -367,6 +387,7 @@
         burnout: 'burnout',
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
+        burnout_orientacao: 'burnout-orientacao',
         longevidade: 'medicina-funcional',
         nutricao_consulta: 'nutricao-consulta',
         nutricao_quinzenal: 'nutricao-quinzenal',
@@ -393,6 +414,8 @@
         burnout_mensal: 'burnout_mensal',
         'burnout-programa': 'burnout_programa',
         burnout_programa: 'burnout_programa',
+        'burnout-orientacao': 'burnout_orientacao',
+        burnout_orientacao: 'burnout_orientacao',
         longevidade: 'longevidade',
         'medicina-funcional': 'longevidade',
         medicina_funcional: 'longevidade',
@@ -428,7 +451,9 @@
                 ? 'Programa anti-burnout · subscrição mensal (CBI)'
                 : tipo === 'burnout_programa'
                     ? 'Programa anti-burnout · 8 sessões (CBI)'
-                    : 'Avaliação única anti-burnout (CBI)'
+                    : tipo === 'burnout_orientacao'
+                        ? 'Sessão de orientação inicial (15 min, gratuita)'
+                        : 'Avaliação única anti-burnout (CBI)'
         };
         if (quiz && quiz.band) {
             intent.source = 'cbi';
@@ -733,6 +758,19 @@
                 'Relatório final escrito: avaliação, evolução CBI e plano de manutenção.',
                 'Requisição de análises quando clinicamente indicado.',
                 'Acompanhamento dedicado ao longo das 8 sessões.'
+            ]
+        },
+        burnout_orientacao: {
+            label: 'Sessão de Orientação Inicial (15 min)',
+            price: 'Gratuita',
+            cents: 0,
+            duration: '15 min',
+            serviceKey: 'burnout_orientacao',
+            bullets: [
+                '15 minutos de conversa antes de qualquer compromisso financeiro.',
+                'Analisamos o relatório do teste, esclarecemos dúvidas e indicamos o plano adequado.',
+                'Sessão orientativa: não inclui prescrição de medicação nem pedido de exames.',
+                'Todos os dias entre as 20:00 e as 21:00, salvo horário já ocupado por outra consulta.'
             ]
         },
         longevidade: {
@@ -1781,7 +1819,8 @@
     function isDateAvailable(dateObj) {
         var today = new Date();
         today.setHours(0, 0, 0, 0);
-        if (dateObj <= today) return false;
+        if (dateObj < today) return false;
+        if (tipo !== 'burnout_orientacao' && dateObj.getTime() === today.getTime()) return false;
 
         var dateStr = formatDateLocal(dateObj);
         if (usesStaffSlotCalendar()) {
@@ -2031,11 +2070,13 @@
         var copy = shellCopy();
         var groups = [
             { label: copy.morning, slots: [] },
-            { label: copy.afternoon, slots: [] }
+            { label: copy.afternoon, slots: [] },
+            { label: copy.evening || 'Noite', slots: [] }
         ];
         available.forEach(function (slot) {
             var hour = Number(String(slot).split(':')[0]);
-            groups[hour < 13 ? 0 : 1].slots.push(slot);
+            var idx = hour < 13 ? 0 : (hour >= 18 ? 2 : 1);
+            groups[idx].slots.push(slot);
         });
         groups.forEach(function (group) {
             if (!group.slots.length) return;
@@ -2213,7 +2254,7 @@
             professionalBio: state.professionalBio || null,
             professionalPhotoUrl: state.professionalPhotoUrl || null,
             specialty: state.specialty || null,
-            clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0
+            clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0 || tipo === 'burnout_orientacao'
                 ? burnoutClinicalIntent(tipo)
                 : (NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? nutricaoClinicalIntent() : null)
         };
@@ -2328,6 +2369,10 @@
             readyPay: 'Os dados pessoais e o pagamento são no passo seguinte.',
             morning: 'Manhã',
             afternoon: 'Tarde',
+            evening: 'Noite',
+            orientLead: 'Escolhe um horário entre as 20:00 e as 21:00. A sessão é gratuita e não pede cartão.',
+            orientFoot: 'Sessão orientativa e de conversa. Não inclui prescrição de medicação nem pedido de exames. Sem cartão. Cancelamento livre.',
+            orientNext: 'Continuar',
             summary: 'Resumo',
             rows: { consult: 'Consulta', area: 'Área', objetivo: 'Objectivo', pro: 'Profissional', when: 'Quando', format: 'Formato' },
             video: 'Videochamada',
@@ -2351,6 +2396,10 @@
             readyPay: 'Personal details and payment come in the next step.',
             morning: 'Morning',
             afternoon: 'Afternoon',
+            evening: 'Evening',
+            orientLead: 'Pick a time between 20:00 and 21:00. The session is free and does not ask for a card.',
+            orientFoot: 'Orientation conversation only. No medication and no lab requests. No card. Free cancellation.',
+            orientNext: 'Continue',
             summary: 'Summary',
             rows: { consult: 'Consultation', area: 'Area', objetivo: 'Goal', pro: 'Professional', when: 'When', format: 'Format' },
             video: 'Video call',
@@ -2374,6 +2423,10 @@
             readyPay: 'Los datos personales y el pago vienen en el siguiente paso.',
             morning: 'Mañana',
             afternoon: 'Tarde',
+            evening: 'Noche',
+            orientLead: 'Elige una hora entre las 20:00 y las 21:00. La sesión es gratuita y no pide tarjeta.',
+            orientFoot: 'Sesión orientativa y de conversación. No incluye medicación ni petición de análisis. Sin tarjeta. Cancelación libre.',
+            orientNext: 'Continuar',
             summary: 'Resumen',
             rows: { consult: 'Consulta', area: 'Área', objetivo: 'Objetivo', pro: 'Profesional', when: 'Cuándo', format: 'Formato' },
             video: 'Videollamada',
@@ -2507,9 +2560,14 @@
         var lead = document.getElementById('marcarLead');
         var footnote = document.getElementById('marcarFootnote');
         var scheduleSub = document.getElementById('marcarScheduleSub');
+        var orient = tipo === 'burnout_orientacao';
         if (eyebrow) eyebrow.textContent = copy.eyebrow;
-        if (lead) lead.textContent = (isNutricaoFamily(tipo) && copy.nutriLead) ? copy.nutriLead : copy.lead;
-        if (footnote) footnote.textContent = copy.footnote;
+        if (lead) {
+            lead.textContent = orient
+                ? (copy.orientLead || copy.lead)
+                : ((isNutricaoFamily(tipo) && copy.nutriLead) ? copy.nutriLead : copy.lead);
+        }
+        if (footnote) footnote.textContent = orient ? (copy.orientFoot || copy.footnote) : copy.footnote;
         if (scheduleSub && !isPsychology()) scheduleSub.textContent = copy.scheduleSub;
 
         shellRenderProgress(shellProgressSteps());
@@ -2523,7 +2581,7 @@
         if (back) back.textContent = copy.back;
         var isLast = shell.step === steps.length - 1;
         if (next) {
-            next.textContent = isLast ? copy.toPayment : copy.next;
+            next.textContent = isLast ? (tipo === 'burnout_orientacao' ? (copy.orientNext || copy.toPayment) : copy.toPayment) : copy.next;
             next.disabled = !shellStepDone(current);
         }
         if (hint) hint.textContent = shellHint(current);
