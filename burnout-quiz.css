@@ -2248,6 +2248,130 @@
     color: #f5f8ff;
 }
 
+.bq-calendar {
+    margin: 10px 0 4px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.055);
+}
+
+.bq-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.bq-calendar-title {
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 650;
+    text-transform: capitalize;
+}
+
+.bq-calendar-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.bq-calendar-arrow {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0 0 3px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.bq-calendar-arrow:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.bq-calendar-arrow:disabled {
+    opacity: 0.36;
+    cursor: default;
+}
+
+.bq-calendar-week {
+    display: flex;
+    gap: 8px;
+}
+
+.bq-calendar-date {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 66px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 3px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #f7fbff;
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.bq-calendar-date:hover {
+    background: rgba(255, 255, 255, 0.17);
+    transform: translateY(-1px);
+}
+
+.bq-calendar-date.is-selected {
+    border-color: #fff;
+    background: #fff;
+    color: #264a6a;
+    box-shadow: 0 6px 18px rgba(5, 19, 37, 0.18);
+}
+
+.bq-calendar-weekday {
+    font-size: 0.66rem;
+    line-height: 1.1;
+    text-transform: capitalize;
+    opacity: 0.84;
+}
+
+.bq-calendar-date strong {
+    font-size: 0.96rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.bq-calendar-slots {
+    min-height: 74px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.bq-calendar-day-heading {
+    margin: 0 0 12px;
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 650;
+    text-transform: capitalize;
+}
+
+.bq-calendar-times .bq-orient-slot {
+    min-width: 86px;
+    border-radius: 10px;
+    text-align: center;
+}
+
 @media (max-width: 520px) {
     .bq-main {
         padding-top: 38px;
@@ -2256,5 +2380,22 @@
     .bq-intro {
         padding: 34px 22px 26px;
         border-radius: 20px;
+    }
+
+    .bq-calendar {
+        padding: 12px 10px;
+    }
+
+    .bq-calendar-week {
+        gap: 5px;
+    }
+
+    .bq-calendar-date {
+        min-height: 60px;
+        border-radius: 11px;
+    }
+
+    .bq-calendar-weekday {
+        font-size: 0.6rem;
     }
 }

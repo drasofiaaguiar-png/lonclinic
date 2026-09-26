@@ -272,61 +272,157 @@
     function loadOrientationSlots() {
         const host = $('orientDays');
         if (!host) return;
-        host.innerHTML = '<p class="bq-orient-empty">A procurar horários…</p>';
-        fetch('/api/next-slots?limit=8&withinHours=48&service=burnout_orientacao', { credentials: 'same-origin' })
+        host.innerHTML = '<p class="bq-orient-empty">A carregar o calendário…</p>';
+        fetch('/api/bookable-days?service=burnout_orientacao', { credentials: 'same-origin' })
             .then(function (r) { return r.json(); })
             .then(function (data) {
-                const slots = ((data && data.slots) ? data.slots : []).filter(function (slot) {
-                    return slot && (slot.time === '20:00' || slot.time === '20:15' || slot.time === '20:30' || slot.time === '20:45');
+                const dates = ((data && data.dates) ? data.dates : []).filter(function (date) {
+                    return /^\d{4}-\d{2}-\d{2}$/.test(date);
                 });
-                host.innerHTML = '';
-                if (!slots.length) {
-                    host.innerHTML = '<p class="bq-orient-empty">Neste momento não há vagas entre as 20:00 e as 21:00. Podes escolher outro dia no calendário.</p>';
+                if (!dates.length) {
+                    host.innerHTML = '<p class="bq-orient-empty">Não há datas disponíveis neste momento. Podes consultar outras opções de acompanhamento abaixo.</p>';
                     applyOrientSelection(null);
                     return;
                 }
-                const groups = [];
-                const index = {};
-                slots.forEach(function (slot) {
-                    if (!index[slot.date]) {
-                        index[slot.date] = { date: slot.date, slots: [] };
-                        groups.push(index[slot.date]);
-                    }
-                    if (index[slot.date].slots.length < 4) index[slot.date].slots.push(slot);
-                });
-                groups.slice(0, 2).forEach(function (group) {
-                    const block = document.createElement('div');
-                    block.className = 'bq-orient-day';
-                    const label = document.createElement('p');
-                    label.className = 'bq-orient-day-label';
-                    label.textContent = orientDayLabel(group.date);
-                    const row = document.createElement('div');
-                    row.className = 'bq-orient-slots';
-                    group.slots.forEach(function (slot) {
-                        const btn = document.createElement('button');
-                        btn.type = 'button';
-                        btn.className = 'bq-orient-slot';
-                        btn.textContent = slot.time;
-                        btn.addEventListener('click', function () {
-                            host.querySelectorAll('.bq-orient-slot').forEach(function (el) {
-                                el.classList.remove('is-selected');
-                                el.setAttribute('aria-pressed', 'false');
-                            });
-                            btn.classList.add('is-selected');
-                            btn.setAttribute('aria-pressed', 'true');
-                            applyOrientSelection(slot);
-                        });
-                        row.appendChild(btn);
+
+                const calendar = document.createElement('div');
+                calendar.className = 'bq-calendar';
+                const header = document.createElement('div');
+                header.className = 'bq-calendar-header';
+                const title = document.createElement('h4');
+                title.className = 'bq-calendar-title';
+                const nav = document.createElement('div');
+                nav.className = 'bq-calendar-nav';
+                const previous = document.createElement('button');
+                previous.type = 'button';
+                previous.className = 'bq-calendar-arrow';
+                previous.setAttribute('aria-label', 'Ver semana anterior');
+                previous.textContent = '‹';
+                const next = document.createElement('button');
+                next.type = 'button';
+                next.className = 'bq-calendar-arrow';
+                next.setAttribute('aria-label', 'Ver semana seguinte');
+                next.textContent = '›';
+                nav.append(previous, next);
+                header.append(title, nav);
+                const week = document.createElement('div');
+                week.className = 'bq-calendar-week';
+                week.setAttribute('role', 'group');
+                week.setAttribute('aria-label', 'Escolher dia');
+                const slotsPanel = document.createElement('div');
+                slotsPanel.className = 'bq-calendar-slots';
+                calendar.append(header, week, slotsPanel);
+                host.replaceChildren(calendar);
+
+                let pageStart = 0;
+                let requestId = 0;
+                let dateButtons = [];
+
+                function dateAt(index) {
+                    const parts = dates[index].split('-');
+                    return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12);
+                }
+
+                function updateTitle() {
+                    const first = dateAt(pageStart);
+                    const last = dateAt(Math.min(pageStart + 6, dates.length - 1));
+                    const monthOpts = { month: 'short' };
+                    const firstMonth = first.toLocaleDateString('pt-PT', monthOpts);
+                    const lastMonth = last.toLocaleDateString('pt-PT', monthOpts);
+                    const year = last.getFullYear();
+                    title.textContent = first.getMonth() === last.getMonth()
+                        ? first.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' })
+                        : firstMonth + ' – ' + lastMonth + ' ' + year;
+                    previous.disabled = pageStart === 0;
+                    next.disabled = pageStart + 7 >= dates.length;
+                }
+
+                function selectDate(index) {
+                    const date = dates[index];
+                    dateButtons.forEach(function (button, buttonIndex) {
+                        const active = pageStart + buttonIndex === index;
+                        button.classList.toggle('is-selected', active);
+                        button.setAttribute('aria-pressed', active ? 'true' : 'false');
                     });
-                    block.appendChild(label);
-                    block.appendChild(row);
-                    host.appendChild(block);
-                });
-                const first = host.querySelector('.bq-orient-slot');
-                if (first) first.click();
+                    slotsPanel.innerHTML = '<p class="bq-orient-empty">A procurar horários disponíveis…</p>';
+                    applyOrientSelection(null);
+                    const thisRequest = ++requestId;
+                    fetch('/api/bookable-slots?service=burnout_orientacao&date=' + encodeURIComponent(date), { credentials: 'same-origin' })
+                        .then(function (r) { return r.json(); })
+                        .then(function (result) {
+                            if (thisRequest !== requestId) return;
+                            const allowed = ['20:00', '20:15', '20:30', '20:45'];
+                            const times = (Array.isArray(result.available) ? result.available : [])
+                                .filter(function (time) { return allowed.indexOf(time) !== -1; });
+                            const label = document.createElement('p');
+                            label.className = 'bq-calendar-day-heading';
+                            label.textContent = dateAt(index).toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' });
+                            slotsPanel.replaceChildren(label);
+                            if (!times.length) {
+                                const empty = document.createElement('p');
+                                empty.className = 'bq-orient-empty';
+                                empty.textContent = 'Não há horários livres neste dia. Escolhe outra data.';
+                                slotsPanel.appendChild(empty);
+                                return;
+                            }
+                            const row = document.createElement('div');
+                            row.className = 'bq-orient-slots bq-calendar-times';
+                            times.forEach(function (time) {
+                                const button = document.createElement('button');
+                                button.type = 'button';
+                                button.className = 'bq-orient-slot';
+                                button.textContent = time;
+                                button.setAttribute('aria-pressed', 'false');
+                                button.addEventListener('click', function () {
+                                    row.querySelectorAll('.bq-orient-slot').forEach(function (el) {
+                                        el.classList.remove('is-selected');
+                                        el.setAttribute('aria-pressed', 'false');
+                                    });
+                                    button.classList.add('is-selected');
+                                    button.setAttribute('aria-pressed', 'true');
+                                    applyOrientSelection({ date: date, time: time });
+                                });
+                                row.appendChild(button);
+                            });
+                            slotsPanel.appendChild(row);
+                        })
+                        .catch(function () {
+                            if (thisRequest !== requestId) return;
+                            slotsPanel.innerHTML = '<p class="bq-orient-empty">Não foi possível carregar os horários. Podes escolhê-los no passo seguinte.</p>';
+                        });
+                }
+
+                function renderWeek(selectedIndex) {
+                    pageStart = Math.floor(selectedIndex / 7) * 7;
+                    updateTitle();
+                    week.replaceChildren();
+                    dateButtons = dates.slice(pageStart, pageStart + 7).map(function (date, offset) {
+                        const index = pageStart + offset;
+                        const day = dateAt(index);
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'bq-calendar-date';
+                        button.setAttribute('aria-pressed', index === selectedIndex ? 'true' : 'false');
+                        const weekday = document.createElement('span');
+                        weekday.className = 'bq-calendar-weekday';
+                        weekday.textContent = day.toLocaleDateString('pt-PT', { weekday: 'short' }).replace('.', '');
+                        const dayNumber = document.createElement('strong');
+                        dayNumber.textContent = String(day.getDate()).padStart(2, '0');
+                        button.append(weekday, dayNumber);
+                        button.classList.toggle('is-selected', index === selectedIndex);
+                        button.addEventListener('click', function () { selectDate(index); });
+                        week.appendChild(button);
+                        return button;
+                    });
+                    selectDate(selectedIndex);
+                }
+
+                previous.addEventListener('click', function () { renderWeek(Math.max(0, pageStart - 7)); });
+                next.addEventListener('click', function () { renderWeek(Math.min(dates.length - 1, pageStart + 7)); });
+                renderWeek(0);
             })
             .catch(function () {
-                host.innerHTML = '<p class="bq-orient-empty">Não foi possível carregar os horários. Podes escolhê-los no passo seguinte.</p>';
+                host.innerHTML = '<p class="bq-orient-empty">Não foi possível carregar o calendário. Podes escolher um horário no passo seguinte.</p>';
                 applyOrientSelection(null);
             });
     }
