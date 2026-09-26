@@ -243,10 +243,24 @@
     }
 
     function orientHref(slot, content) {
-        let href = PLAN_ORIENT.replace('utm_content=results-orientacao', 'utm_content=' + (content || 'results-orientacao'));
-        if (slot && slot.date) href += '&date=' + encodeURIComponent(slot.date);
-        if (slot && slot.time) href += '&time=' + encodeURIComponent(slot.time);
-        return href;
+        const utmContent = content || 'results-orientacao';
+        if (!slot || !slot.date || !slot.time) {
+            return PLAN_ORIENT.replace('utm_content=results-orientacao', 'utm_content=' + encodeURIComponent(utmContent));
+        }
+        const date = String(slot.date);
+        const time = String(slot.time).length === 4 ? '0' + slot.time : String(slot.time);
+        const params = new URLSearchParams({
+            slot: date.replace(/-/g, '') + '-' + time.replace(':', ''),
+            service: 'burnout_orientacao',
+            date: date,
+            time: time,
+            ref: 'burnout-quiz',
+            utm_source: 'quiz',
+            utm_medium: 'owned',
+            utm_campaign: 'burnout-teste',
+            utm_content: utmContent
+        });
+        return '/book-consultation?' + params.toString();
     }
 
     function orientDayLabel(dateISO) {
