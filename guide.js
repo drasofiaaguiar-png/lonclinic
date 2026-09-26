@@ -1418,6 +1418,26 @@ function applyTalkCta(consult, kind, lang, slug) {
     return next;
 }
 
+function travelOfferHtml(consult, href, slotWhen) {
+    const talkAttr = consult.talkRole ? ` data-talk-cta="${escapeHtml(consult.talkRole)}"` : '';
+    return `
+<aside class="guide-book guide-actions guide-travel-offer" aria-label="${escapeHtml(consult.title)}" data-next-slot data-service="${escapeHtml(consult.service)}" data-book-href="${escapeHtml(href)}" data-hydrate="1" data-price="${escapeHtml(consult.price)}">
+    <div class="guide-travel-offer-split">
+        <div class="guide-travel-offer-photo">
+            <img src="/image/guide/guide-hiker-view.jpg" alt="" width="1280" height="1600" loading="lazy" decoding="async">
+        </div>
+        <div class="guide-travel-offer-copy">
+            <p class="guide-book-chip">${escapeHtml(consult.chip)}</p>
+            <h3 class="guide-book-title">${escapeHtml(consult.title)}</h3>
+            <p class="guide-book-price">${escapeHtml(consult.price)}</p>
+            <p class="guide-travel-offer-note">${escapeHtml(consult.note)}</p>
+            <p class="guide-travel-offer-when" data-next-slot-when aria-live="polite">${escapeHtml(slotWhen)}</p>
+        </div>
+    </div>
+    <a class="guide-travel-offer-cta" data-next-slot-cta${talkAttr} href="${escapeHtml(href)}">${escapeHtml(consult.cta)}</a>
+</aside>`;
+}
+
 function actionCardsHtml(kind, tone, lang, slug) {
     const copy = actionCopy(lang);
     const consult = applyTalkCta(consultSpec(kind, lang), kind, lang, slug);
@@ -1435,6 +1455,7 @@ function actionCardsHtml(kind, tone, lang, slug) {
         : copy.slotNote;
     const consultHref = withLangHref(consult.href, lang);
     const quizHref = withLangHref(quiz.href, lang);
+    if (isTravel) return travelOfferHtml(consult, consultHref, slotWhen);
     const consultCard = bookCardHtml({
         ...consult,
         href: consultHref
@@ -2508,7 +2529,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260925a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
+        extraCssAfter: ['/guide.css?v=20260926b', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
@@ -3911,7 +3932,7 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260922b">
+    <link rel="stylesheet" href="/magazine.css?v=20260926c">
     <link rel="stylesheet" href="/consult-ad.css?v=20260922a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -3927,7 +3948,7 @@ function layoutMagazinePage(opts) {
     <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
-    <script src="/guide-actions.js?v=20260925a" defer></script>
+    <script src="/guide-actions.js?v=20260926c" defer></script>
 </body>
 </html>`;
 }

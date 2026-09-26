@@ -427,7 +427,18 @@
 }
 
 .guide-prose table .alg-semaforo {
-    margin: 0 0 6px;
+    margin: 0 0 8px;
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.guide-prose td.alg-semaforo-cell {
+    min-width: 11rem;
+}
+
+.guide-prose td.alg-semaforo-cell .alg-badge-ok,
+.guide-prose td.alg-semaforo-cell .alg-badge-pending {
+    display: inline-block;
 }
 
 .alg-prazo-section {
@@ -847,6 +858,122 @@
 
 .guide-book-cta:hover {
     opacity: 0.72;
+}
+
+.guide-travel-offer {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 0;
+    border: 1px solid #eadfe1;
+    background: #f7f1f2;
+    overflow: hidden;
+}
+
+.guide-travel-offer-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 300px;
+}
+
+.guide-travel-offer-photo {
+    position: relative;
+    min-height: 260px;
+    background: #e7dfdf;
+}
+
+.guide-travel-offer-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.guide-travel-offer-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 28px 32px;
+}
+
+.guide-prose .guide-travel-offer-copy .guide-book-chip {
+    margin: 0 0 10px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    color: #9c4a56;
+}
+
+.guide-prose .guide-travel-offer-copy .guide-book-title {
+    margin: 0 0 10px;
+    font-size: 1.7rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-transform: none;
+    color: #1c1416;
+}
+
+.guide-prose .guide-travel-offer-copy .guide-book-price,
+.guide-prose .guide-travel-offer-note,
+.guide-prose .guide-travel-offer-when {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #6a585c;
+}
+
+.guide-prose .guide-travel-offer-copy .guide-book-price {
+    margin: 0 0 12px;
+    font-weight: 600;
+    color: #1c1416;
+}
+
+.guide-prose .guide-travel-offer-when {
+    margin-top: 8px;
+    color: #1c1416;
+}
+
+.guide-prose a.guide-travel-offer-cta,
+.guide-prose a.guide-travel-offer-cta:hover {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 16px 20px;
+    background: #1c1416;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.guide-prose a.guide-travel-offer-cta:hover {
+    background: #7a3843;
+}
+
+@media (max-width: 700px) {
+    .guide-travel-offer-split {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .guide-travel-offer-photo {
+        aspect-ratio: 16 / 10;
+        min-height: 200px;
+    }
+
+    .guide-travel-offer-copy {
+        padding: 22px 20px 20px;
+    }
 }
 
 .guide-travel-book {

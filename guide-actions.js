@@ -119,4 +119,47 @@
     }
 
     document.querySelectorAll('[data-next-slot]').forEach(hydrateCard);
+
+    document.querySelectorAll('[data-cvi-regions]').forEach(function (root) {
+        var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-cvi-tab]'));
+        var panels = Array.prototype.slice.call(root.querySelectorAll('[data-cvi-panel]'));
+        if (!tabs.length) return;
+
+        function show(id) {
+            var known = tabs.some(function (tab) { return tab.getAttribute('data-cvi-tab') === id; });
+            if (!known) id = tabs[0].getAttribute('data-cvi-tab');
+            tabs.forEach(function (tab) {
+                var on = tab.getAttribute('data-cvi-tab') === id;
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+                tab.tabIndex = on ? 0 : -1;
+            });
+            panels.forEach(function (panel) {
+                if (panel.getAttribute('data-cvi-panel') === id) panel.removeAttribute('hidden');
+                else panel.setAttribute('hidden', '');
+            });
+            return id;
+        }
+
+        tabs.forEach(function (tab, index) {
+            tab.addEventListener('click', function () {
+                var id = show(tab.getAttribute('data-cvi-tab'));
+                if (history.replaceState) history.replaceState(null, '', '#' + id);
+                tab.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+            });
+            tab.addEventListener('keydown', function (event) {
+                var next = index;
+                if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+                else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+                else return;
+                event.preventDefault();
+                tabs[next].focus();
+                tabs[next].click();
+            });
+        });
+
+        var hash = (window.location.hash || '').replace(/^#/, '');
+        var id = show(hash);
+        var active = root.querySelector('[data-cvi-tab="' + id + '"]');
+        if (active && hash) active.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    });
 })();

@@ -938,27 +938,29 @@ function matchRowFromTableInner(inner, byPhone, rows) {
     }) || null;
 }
 
+function semaforoCellHtml(pub) {
+    const badge = pub.verified
+        ? `<span class="alg-badge-ok">${pub.verifiedAt ? `Confirmado em ${escapeHtml(formatDatePt(pub.verifiedAt))}` : 'Confirmado'}</span>`
+        : '<span class="alg-badge-pending">Sujeito a confirmação</span>';
+    return `<td class="alg-semaforo-cell">${semaforoHtml(pub.priority)}${badge}</td>`;
+}
+
 function annotateTableRows(html, byPhone, rows) {
-    return html.replace(/<tr>([\s\S]*?)<\/tr>/gi, (full, inner) => {
-        if (/<th\b/i.test(inner) && !/<td\b/i.test(inner)) return full;
-        if (!/<td\b/i.test(inner)) return full;
-        if (/alg-semaforo/.test(inner)) return full;
-        const row = matchRowFromTableInner(inner, byPhone, rows);
-        if (!row && !/href="tel:/i.test(inner) && !/href="mailto:/i.test(inner)) return full;
-        const pub = row ? publicView(row) : { verified: false, verifiedAt: null, priority: 'unknown' };
-        const light = semaforoHtml(pub.priority);
-        let next = inner.replace(/<td([^>]*)>/i, `<td$1>${light}`);
-        if (!/alg-badge-ok|alg-badge-pending/.test(next)) {
-            const badge = pub.verified
-                ? `<br><span class="alg-badge-ok">${pub.verifiedAt ? `Confirmado em ${escapeHtml(formatDatePt(pub.verifiedAt))}` : 'Confirmado'}</span>`
-                : '<br><span class="alg-badge-pending">Sujeito a confirmação</span>';
-            if (/<\/td>\s*$/i.test(next.trim())) {
-                next = next.replace(/(<\/td>\s*)$/i, `${badge}$1`);
-            } else {
-                next += badge;
+    return html.replace(/<table\b[\s\S]*?<\/table>/gi, (table) => {
+        if (!/Experiência de contacto|Experiencia de contacto/i.test(table)) return table;
+        if (/alg-semaforo-cell/.test(table)) return table;
+        return table.replace(/<tr>([\s\S]*?)<\/tr>/gi, (full, inner) => {
+            if (/<th\b/i.test(inner) && !/<td\b/i.test(inner)) {
+                if (/Semáforo/i.test(inner)) return full;
+                return `<tr>${inner}<th>Semáforo</th></tr>`;
             }
-        }
-        return `<tr>${next}</tr>`;
+            if (!/<td\b/i.test(inner)) return full;
+            if (/alg-semaforo/.test(inner)) return full;
+            const row = matchRowFromTableInner(inner, byPhone, rows);
+            if (!row && !/href="tel:/i.test(inner) && !/href="mailto:/i.test(inner)) return full;
+            const pub = row ? publicView(row) : { verified: false, verifiedAt: null, priority: 'unknown' };
+            return `<tr>${inner}${semaforoCellHtml(pub)}</tr>`;
+        });
     });
 }
 
@@ -1245,6 +1247,120 @@ function injectSemaforoFaq(html) {
     return html;
 }
 
+function tableCells(rowHtml) {
+    const cells = [];
+    const re = /<td\b[^>]*>([\s\S]*?)<\/td>/gi;
+    let match;
+    while ((match = re.exec(rowHtml))) cells.push(match[1]);
+    return cells;
+}
+
+function parseContactTable(table) {
+    const cards = [];
+    const re = /<tr>([\s\S]*?)<\/tr>/gi;
+    let match;
+    while ((match = re.exec(table))) {
+        if (/<th\b/i.test(match[1]) && !/<td\b/i.test(match[1])) continue;
+        const cells = tableCells(match[1]);
+        if (cells.length < 4) continue;
+        cards.push({
+            name: cells[0],
+            contact: cells[1],
+            hours: cells[2],
+            experience: cells[3],
+            semaforo: cells[4] || ''
+        });
+    }
+    return cards;
+}
+
+function regionTabLabel(title) {
+    const text = String(title || '').replace(/\s+/g, ' ').trim();
+    if (/lisboa/i.test(text)) return 'Lisboa';
+    return text.replace(/^Região\s+/i, '');
+}
+
+function centerCardHtml(row) {
+    return `<article class="cvi-center-card">
+        <header class="cvi-center-head">
+            <h3 class="cvi-center-name">${row.name}</h3>
+            <div class="cvi-center-light">${row.semaforo}</div>
+        </header>
+        <dl class="cvi-center-facts">
+            <div><dt>Contacto</dt><dd>${row.contact}</dd></div>
+            <div><dt>Horário</dt><dd>${row.hours}</dd></div>
+            <div><dt>Experiência de contacto</dt><dd>${row.experience}</dd></div>
+        </dl>
+    </article>`;
+}
+
+function regionTablesToCards(html) {
+    const heads = [];
+    const re = /<h3\b([^>]*)>([\s\S]*?)<\/h3>/gi;
+    let match;
+    while ((match = re.exec(html))) {
+        heads.push({
+            index: match.index,
+            end: match.index + match[0].length,
+            attrs: match[1],
+            title: match[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+        });
+    }
+    const sections = [];
+    heads.forEach((head, i) => {
+        const nextHead = i + 1 < heads.length ? heads[i + 1].index : html.length;
+        const rest = html.slice(head.end, nextHead);
+        const h2At = rest.search(/<h2\b/i);
+        const end = h2At === -1 ? nextHead : head.end + h2At;
+        const chunk = html.slice(head.end, end);
+        const tableMatch = chunk.match(/<table\b[\s\S]*?<\/table>/i);
+        if (!tableMatch || !/alg-semaforo-cell|Experiência de contacto/i.test(tableMatch[0])) return;
+        const cards = parseContactTable(tableMatch[0]);
+        if (!cards.length) return;
+        let intro = chunk.slice(0, tableMatch.index).replace(/<div class="guide-table-scroll">\s*$/i, '').trim();
+        let tail = chunk.slice(tableMatch.index + tableMatch[0].length).replace(/^\s*<\/div>/, '').trim();
+        const idMatch = head.attrs.match(/\bid="([^"]+)"/i);
+        sections.push({
+            id: idMatch ? idMatch[1] : `regiao-${sections.length + 1}`,
+            label: regionTabLabel(head.title),
+            intro,
+            tail,
+            cards
+        });
+    });
+    if (sections.length < 2) return html;
+    const first = sections[0];
+    const last = sections[sections.length - 1];
+    const firstHead = heads.find((head) => html.slice(head.index, head.end).includes(`id="${first.id}"`)) || heads[0];
+    const lastHeadIndex = heads.findIndex((head) => html.slice(head.index, head.end).includes(`id="${last.id}"`));
+    const afterLastHead = lastHeadIndex + 1 < heads.length ? heads[lastHeadIndex + 1].index : html.length;
+    const afterChunk = html.slice(heads[lastHeadIndex].end, afterLastHead);
+    const h2At = afterChunk.search(/<h2\b/i);
+    const blockEnd = h2At === -1 ? afterLastHead : heads[lastHeadIndex].end + h2At;
+    const tabs = sections.map((section, i) => {
+        const selected = i === 0 ? 'true' : 'false';
+        const tabIndex = i === 0 ? '0' : '-1';
+        return `<button type="button" class="cvi-region-tab" role="tab" id="tab-${escapeHtml(section.id)}" data-cvi-tab="${escapeHtml(section.id)}" aria-selected="${selected}" aria-controls="${escapeHtml(section.id)}" tabindex="${tabIndex}">${escapeHtml(section.label)}<span class="cvi-region-count">${section.cards.length}</span></button>`;
+    }).join('');
+    const panels = sections.map((section, i) => {
+        const hidden = i === 0 ? '' : ' hidden';
+        const intro = section.intro ? `<div class="cvi-region-intro">${section.intro}</div>` : '';
+        const tail = section.tail ? `<div class="cvi-region-tail">${section.tail}</div>` : '';
+        return `<div class="cvi-region-panel" role="tabpanel" id="${escapeHtml(section.id)}" data-cvi-panel="${escapeHtml(section.id)}" aria-labelledby="tab-${escapeHtml(section.id)}"${hidden}>
+            ${intro}
+            <div class="cvi-center-list">${section.cards.map(centerCardHtml).join('\n')}</div>
+            ${tail}
+        </div>`;
+    }).join('\n');
+    const widget = `<div class="cvi-regions" data-cvi-regions>
+        <div class="cvi-region-tabs" role="tablist" aria-label="Regiões">${tabs}</div>
+        ${panels}
+    </div>`;
+    let before = html.slice(0, firstHead.index);
+    before = before.replace(/<nav class="guide-region-index"[\s\S]*?<\/nav>\s*/i, '');
+    return before + widget + html.slice(blockEnd);
+}
+
 function annotatePublicArticle(html, slug, opts) {
     if (!html || !isCviPublicArticle(slug)) return html;
     const articleDate = isoDay(opts && opts.articleDate);
@@ -1255,6 +1371,7 @@ function annotatePublicArticle(html, slug, opts) {
     let out = annotateTableRows(loc.html, byPhone, rows);
     out = appendExtraVerified(out, slug, rows, loc.usedPhones);
     out = injectSemaforoLegend(out);
+    if (isCviDirectoryArticle(slug)) out = regionTablesToCards(out);
     if (!isCviDirectoryArticle(slug)) {
         out = injectPrazoSection(out, slug);
         out = injectPrazoFaq(out, dataDate, slug);

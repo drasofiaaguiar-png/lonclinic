@@ -1158,6 +1158,198 @@ html:has(body.mag-body) {
     min-width: 0;
 }
 
+.mag-body .mag-story-prose table .alg-semaforo {
+    margin: 0 0 8px;
+    font-family: var(--mag-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.35;
+    color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose td.alg-semaforo-cell {
+    min-width: 11rem;
+}
+
+.mag-body .mag-story-prose td.alg-semaforo-cell .alg-badge-ok,
+.mag-body .mag-story-prose td.alg-semaforo-cell .alg-badge-pending {
+    display: inline-block;
+    font-size: 0.72rem;
+    line-height: 1.3;
+}
+
+.mag-body .cvi-regions {
+    margin: 1.6rem 0 2.2rem;
+}
+
+.mag-body .cvi-region-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 16px;
+    padding: 8px 0 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    position: sticky;
+    top: var(--mag-topbar-h, 72px);
+    z-index: 4;
+    background: #fff;
+}
+
+.mag-body .cvi-region-tab {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 1px solid var(--mag-line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--mag-ink);
+    font-family: var(--mag-sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.mag-body .cvi-region-tab[aria-selected="true"] {
+    background: var(--mag-ink);
+    border-color: var(--mag-ink);
+    color: #fff;
+}
+
+.mag-body .cvi-region-count {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    opacity: 0.72;
+}
+
+.mag-body .cvi-region-panel[hidden] {
+    display: none !important;
+}
+
+.mag-body .mag-story-prose .cvi-region-intro,
+.mag-body .mag-story-prose .cvi-region-intro p,
+.mag-body .mag-story-prose .cvi-region-tail,
+.mag-body .mag-story-prose .cvi-region-tail p {
+    margin: 0 0 14px;
+    font-family: var(--mag-sans);
+    font-size: 0.98rem;
+    font-style: normal;
+    line-height: 1.55;
+    color: var(--mag-ink);
+}
+
+.mag-body .cvi-center-list {
+    display: grid;
+    gap: 12px;
+}
+
+.mag-body .cvi-center-card {
+    border: 1px solid var(--mag-line);
+    background: var(--mag-blush);
+    padding: 16px 16px 14px;
+}
+
+.mag-body .cvi-center-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 16px;
+    margin-bottom: 14px;
+}
+
+.mag-body .mag-story-prose .cvi-center-name {
+    margin: 0;
+    font-family: var(--mag-serif);
+    font-size: 1.45rem;
+    font-weight: 500;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-transform: none;
+    color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose .cvi-center-name a {
+    color: inherit;
+    text-decoration-color: var(--mag-gold);
+}
+
+.mag-body .cvi-center-light {
+    flex: 0 0 auto;
+    max-width: 46%;
+}
+
+.mag-body .mag-story-prose .cvi-center-card .alg-semaforo {
+    margin: 0 0 6px;
+    font-family: var(--mag-sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.3;
+    color: var(--mag-ink);
+}
+
+.mag-body .cvi-center-facts {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+}
+
+.mag-body .cvi-center-facts div {
+    display: grid;
+    gap: 2px;
+}
+
+.mag-body .cvi-center-facts dt {
+    font-family: var(--mag-sans);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mag-rose);
+}
+
+.mag-body .mag-story-prose .cvi-center-facts dd {
+    margin: 0;
+    font-family: var(--mag-sans);
+    font-size: 0.95rem;
+    font-style: normal;
+    line-height: 1.45;
+    color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose .cvi-center-card a[href^="tel:"],
+.mag-body .mag-story-prose .cvi-center-card a[href^="mailto:"] {
+    display: inline-block;
+    padding: 4px 0;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+    .mag-body .cvi-center-head {
+        flex-direction: column;
+    }
+
+    .mag-body .cvi-center-light {
+        max-width: none;
+    }
+
+    .mag-body .cvi-region-tabs {
+        margin-right: -20px;
+        padding-right: 20px;
+    }
+}
+
 @media (min-width: 900px) {
     .mag-body .mag-story-prose .guide-table-scroll {
         overflow-x: visible;
@@ -1350,6 +1542,141 @@ html:has(body.mag-body) {
     color: #ffffff;
     text-decoration: none;
     background: var(--mag-rose-deep);
+}
+
+.mag-body .guide-travel-offer {
+    display: flex;
+    flex-direction: column;
+    margin: 2.4rem 0 2.8rem;
+    border: 1px solid var(--mag-line);
+    background: var(--mag-blush);
+    overflow: hidden;
+}
+
+.mag-body .guide-travel-offer-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 320px;
+}
+
+.mag-body .guide-travel-offer-photo {
+    position: relative;
+    min-height: 280px;
+    background: #e7dfdf;
+}
+
+.mag-body .guide-travel-offer-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mag-body .guide-travel-offer-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 36px;
+}
+
+.mag-body .mag-story-prose .guide-travel-offer-copy .guide-book-chip,
+.mag-body .guide-travel-offer-copy .guide-book-chip {
+    margin: 0 0 10px;
+    font-family: var(--mag-sans);
+    font-size: 0.64rem;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    color: var(--mag-rose);
+}
+
+.mag-body .mag-story-prose .guide-travel-offer-copy h3,
+.mag-body .guide-travel-offer-copy .guide-book-title {
+    margin: 0 0 10px;
+    font-family: var(--mag-serif);
+    font-size: clamp(1.8rem, 2.4vw, 2.35rem);
+    font-weight: 500;
+    font-style: italic;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    text-transform: none;
+    color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose .guide-travel-offer-copy .guide-book-price,
+.mag-body .guide-travel-offer-copy .guide-book-price {
+    margin: 0 0 12px;
+    font-family: var(--mag-sans);
+    font-size: 1.05rem;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.3;
+    color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose .guide-travel-offer-note,
+.mag-body .guide-travel-offer-note,
+.mag-body .mag-story-prose .guide-travel-offer-when,
+.mag-body .guide-travel-offer-when {
+    margin: 0;
+    font-family: var(--mag-sans);
+    font-size: 0.98rem;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.45;
+    color: var(--mag-ink-soft);
+}
+
+.mag-body .guide-travel-offer-when {
+    margin-top: 8px;
+    color: var(--mag-ink);
+}
+
+.mag-body .mag-story-prose a.guide-travel-offer-cta,
+.mag-body a.guide-travel-offer-cta {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 16px 20px;
+    background: var(--mag-ink);
+    color: #ffffff;
+    font-family: var(--mag-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 0.16em;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.mag-body .mag-story-prose a.guide-travel-offer-cta:hover,
+.mag-body a.guide-travel-offer-cta:hover {
+    background: var(--mag-rose-deep);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+@media (max-width: 700px) {
+    .mag-body .guide-travel-offer-split {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .mag-body .guide-travel-offer-photo {
+        aspect-ratio: 16 / 10;
+        min-height: 200px;
+    }
+
+    .mag-body .guide-travel-offer-copy {
+        padding: 22px 20px 20px;
+    }
 }
 
 .mag-body .guide-related {
