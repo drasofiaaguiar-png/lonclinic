@@ -3616,26 +3616,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         const date = inviteDate.value;
         const hint = document.getElementById('inviteTimeHint');
         if (!date) {
-            fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
+            fillTimeDatalist('inviteTimeSlots', [], ['21:30']);
             inviteTime.value = '';
-            if (hint) hint.textContent = 'Every slot from 07:00 to 21:00 can be booked manually.';
+            if (hint) hint.textContent = 'Any time of day can be booked, including outside clinic hours.';
             return;
         }
         try {
             const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(date)}&allSlots=1`);
             const data = await res.json();
             const slots = data.available || [];
-            fillTimeDatalist('inviteTimeSlots', slots, ['21:00']);
+            fillTimeDatalist('inviteTimeSlots', slots, ['21:30']);
             if (!inviteTime.value) {
                 inviteTime.value = slots.includes('07:00') ? '07:00' : (slots[0] || '07:00');
             }
             if (hint) {
-                hint.textContent = 'Every slot from 07:00 to 21:00 can be booked manually.';
+                hint.textContent = 'Any time of day can be booked, including outside clinic hours.';
             }
         } catch (err) {
             console.error('Load invite times error:', err);
-            fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
-            if (hint) hint.textContent = 'Could not load slots — you can still type 07:00, 08:00 or 21:00.';
+            fillTimeDatalist('inviteTimeSlots', [], ['21:30']);
+            if (hint) hint.textContent = 'Could not load slots — you can still type any time, including 21:30.';
         }
     }
 
@@ -3835,7 +3835,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (inviteWithoutInvoice) inviteWithoutInvoice.checked = false;
                 if (inviteCustomPrice) inviteCustomPrice.disabled = false;
                 inviteTime.value = '';
-                fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
+                fillTimeDatalist('inviteTimeSlots', [], ['21:30']);
                 refreshInvitePriceUI();
                 fillInviteProfessionalSelect();
                 await loadInvitations();

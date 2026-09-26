@@ -3370,10 +3370,10 @@ function timeToMinutes(hhmm) {
     return Number(m[1]) * 60 + Number(m[2]);
 }
 
-/** Full grid an admin may book by hand: 07:00–21:00 on a 30-minute step. */
+/** Suggested grid when an admin books by hand: any half-hour of the day. */
 function adminManualSlotTimes() {
     const out = [];
-    for (let mins = 7 * 60; mins <= 21 * 60; mins += 30) {
+    for (let mins = 0; mins < 24 * 60; mins += 30) {
         const h = Math.floor(mins / 60);
         const m = mins % 60;
         out.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
@@ -3382,7 +3382,8 @@ function adminManualSlotTimes() {
 }
 
 function isAdminManualSlot(normTime) {
-    return adminManualSlotTimes().includes(String(normTime || ''));
+    const mins = timeToMinutes(normTime);
+    return mins != null && mins >= 0 && mins < 24 * 60;
 }
 
 /** Invitation-only times outside weekly hours: 07:00–08:30 and 21:00 (30-min grid). */
@@ -4127,6 +4128,9 @@ const CONFIRMATION_EMAIL_I18N = {
         htmlLang: 'en',
         subject: 'Your teleconsultation link – LON Clinic',
         greeting: 'Dear Patient,',
+        dateLabel: 'Date',
+        timeLabel: 'Time',
+        professionalLabel: 'Professional',
         linkLead: 'Here is the link for your teleconsultation:',
         linkLabel: 'Open teleconsultation',
         instructions: 'At the time of your appointment, just open the link in your browser (preferably Chrome or Safari) and allow access to your camera and microphone. No installation is needed.',
@@ -4139,6 +4143,9 @@ const CONFIRMATION_EMAIL_I18N = {
         htmlLang: 'pt',
         subject: 'O link da sua teleconsulta – LON Clinic',
         greeting: 'Caro(a) paciente,',
+        dateLabel: 'Data',
+        timeLabel: 'Hora',
+        professionalLabel: 'Profissional',
         linkLead: 'Aqui está o link para a sua teleconsulta:',
         linkLabel: 'Abrir a teleconsulta',
         instructions: 'À hora da consulta, basta abrir o link no browser (de preferência Chrome ou Safari) e permitir o acesso à câmara e ao microfone. Não é necessária qualquer instalação.',
@@ -4151,6 +4158,9 @@ const CONFIRMATION_EMAIL_I18N = {
         htmlLang: 'es',
         subject: 'El enlace de su teleconsulta – LON Clinic',
         greeting: 'Estimado/a paciente,',
+        dateLabel: 'Fecha',
+        timeLabel: 'Hora',
+        professionalLabel: 'Profesional',
         linkLead: 'Aquí tiene el enlace de su teleconsulta:',
         linkLabel: 'Abrir la teleconsulta',
         instructions: 'A la hora de su cita, abra el enlace en el navegador (preferiblemente Chrome o Safari) y permita el acceso a la cámara y al micrófono. No es necesario instalar nada.',
@@ -4166,10 +4176,36 @@ function confirmationEmailStrings(locale) {
     return CONFIRMATION_EMAIL_I18N[k] || CONFIRMATION_EMAIL_I18N.en;
 }
 
+function confirmationWhenLine(label, value) {
+    const text = String(value || '').trim();
+    if (!text) return '';
+    return `${label}: ${text}`;
+}
+
 function buildConfirmationEmail(data) {
     const t = confirmationEmailStrings(data && data.locale);
     const room = patientDoxyRoomUrl(doxyUrlFromEmailData(data)) || DEFAULT_DOXY_ROOM_URL || DOXY_DEFAULT_PATIENT_ROOM;
     const href = escapeHtml(room);
+    const locale = normalizePatientLocale(data && data.locale);
+    const rawDate = String((data && (data.dateLabel || data.date)) || '').trim();
+    const dateText = /^\d{4}-\d{2}-\d{2}$/.test(rawDate)
+        ? formatInvitationDateLabel(rawDate, locale)
+        : rawDate;
+    const rawTime = String((data && data.time) || '').trim();
+    const timeMatch = /^(\d{1,2}:\d{2})/.exec(rawTime);
+    const timeText = timeMatch ? timeMatch[1] : rawTime;
+    let professionalText = String((data && data.professional) || '').trim();
+    if (!professionalText && bookingServiceTag(data && data.service) === 'travel') {
+        professionalText = 'Dr.ª Rita Aguiar';
+    }
+    const whenLines = [
+        confirmationWhenLine(t.dateLabel, dateText),
+        confirmationWhenLine(t.timeLabel, timeText),
+        confirmationWhenLine(t.professionalLabel, professionalText)
+    ].filter(Boolean);
+    const whenHtml = whenLines.length
+        ? `<p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${whenLines.map((line) => escapeHtml(line)).join('<br>')}</p>`
+        : '';
 
     const html = `<!DOCTYPE html>
 <html lang="${t.htmlLang}">
@@ -4186,6 +4222,7 @@ function buildConfirmationEmail(data) {
                     <tr>
                         <td style="background:#ffffff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
                             <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.greeting}</p>
+                            ${whenHtml}
                             <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.linkLead}</p>
                             <p style="margin:0 0 20px;">
                                 <a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#255235;font-size:15px;font-weight:600;text-decoration:underline;">${t.linkLabel}</a>
@@ -4209,6 +4246,8 @@ function buildConfirmationEmail(data) {
     const text = [
         t.greeting,
         '',
+        ...whenLines,
+        whenLines.length ? '' : null,
         t.linkLead,
         t.linkLabel,
         room,
@@ -4221,7 +4260,7 @@ function buildConfirmationEmail(data) {
         '',
         t.signName,
         t.signClinic
-    ].join('\n');
+    ].filter((line) => line !== null).join('\n');
 
     return { html, text, subject: t.subject };
 }
@@ -17950,7 +17989,7 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
         }
 
         if (!isAdminManualSlot(time)) {
-            return res.status(400).json({ error: 'Choose a time between 07:00 and 21:00.' });
+            return res.status(400).json({ error: 'Invalid time' });
         }
 
         const travellerCount = (() => {
@@ -19468,7 +19507,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
         // Manual admin booking ignores public availability (grouping, holds,
         // pending invites, and existing appointments).
         if (!isAdminManualSlot(normTime)) {
-            return res.status(400).json({ error: 'Choose a time between 07:00 and 21:00.' });
+            return res.status(400).json({ error: 'Invalid time' });
         }
 
         const id = crypto.randomUUID();

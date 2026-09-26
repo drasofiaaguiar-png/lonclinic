@@ -276,8 +276,9 @@
                             </div>
                             <div class="admin-form-group">
                                 <label for="scheduleNextTime">Time</label>
-                                <input type="time" id="scheduleNextTime" class="admin-input" required min="07:00" max="17:00" step="1800" list="scheduleNextTimeSlots">
+                                <input type="time" id="scheduleNextTime" class="admin-input" required list="scheduleNextTimeSlots">
                                 <datalist id="scheduleNextTimeSlots"></datalist>
+                                <small style="display:block;margin-top:6px;opacity:.7;">Any time of day, including outside clinic hours.</small>
                             </div>
                             <div class="admin-form-group">
                                 <label for="scheduleNextPrice">Custom price (€) <span style="font-weight:400;opacity:.7;">— optional</span></label>
@@ -536,9 +537,9 @@
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteTime">Time</label>
-                            <input type="time" id="inviteTime" class="admin-input" required min="07:00" max="21:00" step="1800" list="inviteTimeSlots">
+                            <input type="time" id="inviteTime" class="admin-input" required list="inviteTimeSlots">
                             <datalist id="inviteTimeSlots"></datalist>
-                            <small id="inviteTimeHint" style="display:block;margin-top:6px;opacity:.7;">07:00, 08:00 and 21:00 are available on open weekdays.</small>
+                            <small id="inviteTimeHint" style="display:block;margin-top:6px;opacity:.7;">Any time of day can be booked, including outside clinic hours.</small>
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteLocale">Email language</label>
@@ -1312,7 +1313,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=auth-1"></script>
+    <script src="/admin.js?v=any-time"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
