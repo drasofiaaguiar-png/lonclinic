@@ -2111,13 +2111,13 @@
     --bq-accent-soft: rgba(63, 132, 205, 0.13);
     --bq-accent-hover: #1e508b;
     background:
-        radial-gradient(ellipse 72% 48% at 8% 0%, rgba(124, 185, 255, 0.32), transparent 58%),
-        radial-gradient(ellipse 55% 45% at 98% 35%, rgba(77, 145, 226, 0.28), transparent 58%),
-        linear-gradient(145deg, #102b50 0%, #174477 48%, #0e315c 100%);
+        radial-gradient(ellipse 72% 48% at 8% 0%, rgba(174, 207, 239, 0.25), transparent 58%),
+        radial-gradient(ellipse 55% 45% at 98% 35%, rgba(138, 177, 216, 0.22), transparent 58%),
+        linear-gradient(145deg, #294663 0%, #355b7e 48%, #294d70 100%);
 }
 
 .bq-top {
-    background: rgba(11, 35, 68, 0.48);
+    background: rgba(29, 58, 86, 0.42);
     border-bottom-color: rgba(255, 255, 255, 0.16);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -2157,7 +2157,7 @@
 
 .bq-intro,
 .bq-card:not(.bq-card--results) {
-    background: rgba(247, 251, 255, 0.92);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.58);
     border-radius: 24px;
     box-shadow: 0 24px 70px rgba(4, 20, 44, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.85);
@@ -2188,6 +2188,27 @@
 .bq-card:not(.bq-card--results) {
     border-color: rgba(255, 255, 255, 0.65);
     box-shadow: 0 24px 70px rgba(4, 20, 44, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.bq-main {
+    padding-top: 52px;
+}
+
+.bq-page.is-results {
+    background:
+        radial-gradient(ellipse 76% 52% at 10% 0%, rgba(177, 208, 239, 0.3), transparent 58%),
+        radial-gradient(ellipse 58% 45% at 100% 8%, rgba(134, 177, 220, 0.24), transparent 56%),
+        linear-gradient(155deg, #244460 0%, #315779 48%, #254a6c 100%);
+}
+
+.bq-page.is-results .bq-main {
+    padding-top: 48px;
+}
+
+.bq-page.is-results::before {
+    background:
+        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.1), transparent 26%),
+        radial-gradient(circle at 82% 68%, rgba(207, 226, 247, 0.1), transparent 30%);
 }
 
 .bq-opt {
@@ -2228,6 +2249,10 @@
 }
 
 @media (max-width: 520px) {
+    .bq-main {
+        padding-top: 38px;
+    }
+
     .bq-intro {
         padding: 34px 22px 26px;
         border-radius: 20px;
