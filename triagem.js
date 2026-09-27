@@ -958,6 +958,43 @@
         return label + ' · ' + time;
     }
 
+    function appendOfferCards(wrap, fallbackHref) {
+        // Do not place promotional CTAs beside urgent-care guidance.
+        if (state.riskFlagged) return;
+        var casal = isCasal();
+        var introPrice = casal ? '75€' : '35€';
+        var subscriptionPrice = casal ? '65€ por sessão' : '56€ por sessão';
+        var monthlyPrice = casal ? '260 €/mês · 4 sessões' : '224 €/mês · 4 sessões';
+        var subscriptionName = casal ? 'Terapia de casal' : 'Psicologia individual';
+        var introMessage = casal ? 'Olá, gostaria de pedir uma sessão avulsa de terapia de casal por 75€' : 'Olá, gostaria de pedir a primeira consulta de psicologia individual por 35€';
+        var introLabel = casal ? 'Sessão avulsa' : 'Primeira consulta · oferta exclusiva';
+        var introNote = casal ? 'Uma sessão sem subscrição. O preço especial de 35€ aplica-se apenas à primeira consulta individual.' : 'Uma sessão sem subscrição. Preço especial válido apenas na primeira consulta individual.';
+        var introCardClass = casal ? 'triagem-offer-card' : 'triagem-offer-card triagem-offer-card--intro';
+        var whatsappHref = 'https://wa.me/351928372775?text=' + encodeURIComponent(introMessage + '.');
+        var section = document.createElement('section');
+        section.className = 'triagem-offers';
+        section.setAttribute('aria-label', 'Opções de acompanhamento');
+        section.innerHTML =
+            '<h3>Como queres começar?</h3>' +
+            '<div class="triagem-offers-grid">' +
+                '<article class="triagem-offer-card">' +
+                    '<p class="triagem-offer-kicker">Subscrição semanal</p>' +
+                    '<h4>' + subscriptionName + '</h4>' +
+                    '<strong class="triagem-offer-price">' + subscriptionPrice + '</strong>' +
+                    '<p>' + monthlyPrice + '. Compromisso mínimo de um mês; depois podes cancelar.</p>' +
+                    '<a class="lon-btn lon-btn-primary" href="' + fallbackHref + '">Ver subscrição</a>' +
+                '</article>' +
+                '<article class="' + introCardClass + '">' +
+                    '<p class="triagem-offer-kicker">' + introLabel + '</p>' +
+                    '<h4>' + subscriptionName + '</h4>' +
+                    '<strong class="triagem-offer-price">' + introPrice + '</strong>' +
+                    '<p>' + introNote + '</p>' +
+                    '<a class="lon-btn lon-btn-soft" href="' + whatsappHref + '" target="_blank" rel="noopener noreferrer">Pedir pelo WhatsApp</a>' +
+                '</article>' +
+            '</div>';
+        wrap.appendChild(section);
+    }
+
     function renderMatch(match) {
         var wrap = document.getElementById('triagemMatch');
         var card = document.querySelector('.tri-quiz--done');
@@ -1009,6 +1046,7 @@
                     : 'Ainda não há um horário publicado neste momento. Podes ver a agenda da equipa e escolher o psicólogo.') + '</p>' +
                 '<a class="lon-btn lon-btn-primary" href="' + fallbackHref + '">Ver horários</a>' +
                 '</article>';
+            appendOfferCards(wrap, fallbackHref);
             return;
         }
 
@@ -1056,6 +1094,7 @@
         wrap.appendChild(noslot);
         var cta = document.getElementById('noSlotCta');
         if (cta) cta.addEventListener('click', requestNoSlotFollowup);
+        appendOfferCards(wrap, fallbackHref);
     }
 
     function requestNoSlotFollowup() {

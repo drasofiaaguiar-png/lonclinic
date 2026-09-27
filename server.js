@@ -9804,18 +9804,16 @@ app.get('/psicologia/teste', (req, res) => {
     res.redirect(301, `/teste-personalidade${qs}`);
 });
 
-// Deprecated: /triagem redirects to quizzes (funnel entry point)
+// Psychology triage funnel: retain the selected service from the landing page.
 app.get('/triagem', (req, res) => {
-    const query = req.url.split('?')[1];
-    const suffix = query ? `?${query}` : '';
-    console.log('⚠️ /triagem deprecated access, redirecting to /quizzes');
-    res.redirect(301, `/quizzes${suffix}`);
+    const filePath = path.join(__dirname, 'triagem.html');
+    sendHtmlNoCache(res, filePath, 'Error loading psychology triage');
 });
 
 app.get('/triagem.html', (req, res) => {
-    res.redirect(301, '/quizzes');
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, `/triagem${query}`);
 });
-
 app.get('/recrutamento/psicologia', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'recrutamento-psicologia.html'), 'Error loading recrutamento psicologia page');
 });

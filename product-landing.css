@@ -821,3 +821,6 @@ body.nx-page.urgent-landing {
 .page-psychology .psi-hero-choices { margin-inline: auto; text-align: left; }
 .page-psychology .nx-hero-trust { justify-content: center; margin-inline: auto; }
 .page-psychology .nx-alert { justify-content: center; margin-inline: auto; text-align: center; }
+
+/* Keep the individual first-session offer card centered when shown alone. */
+.page-psychology .psi-first-grid { grid-template-columns: minmax(0, 1fr); max-width: 480px; margin-inline: auto; }

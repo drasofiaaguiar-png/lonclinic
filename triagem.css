@@ -1232,6 +1232,22 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     background: #24362e;
 }
 
+.triagem-offers { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--tri-line); }
+.triagem-offers > h3 { margin: 0 0 16px; font-size: 1.1rem; text-align: left; }
+.triagem-offers-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.triagem-offer-card { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; padding: 20px; border: 1px solid var(--tri-line); border-radius: 16px; background: #fff; text-align: left; }
+.triagem-offer-card--intro { background: #f7f5ef; }
+.triagem-offer-kicker { margin: 0 !important; color: var(--tri-signal) !important; font-size: 0.72rem !important; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.triagem-offer-card h4 { margin: 0; font-size: 1rem; }
+.triagem-offer-price { color: var(--tri-ink); font-size: 1.35rem; }
+.triagem-offer-card > p:not(.triagem-offer-kicker) { margin: 0 0 4px !important; color: var(--tri-muted); font-size: 0.84rem; line-height: 1.5; }
+.triagem-offer-card .lon-btn { width: 100%; justify-content: center; margin-top: auto; }
+
+@media (max-width: 640px) {
+    .triagem-offers-grid { grid-template-columns: 1fr; }
+    .triagem-offer-card { padding: 18px; }
+}
+
 .triagem-noslot {
     text-align: center;
 }
