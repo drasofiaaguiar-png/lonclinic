@@ -441,7 +441,7 @@ function quizSlotsHtml(def) {
     if (def.booking && def.booking.hideSlots) return '';
     const pack = quizSlotMeta(def);
     return `
-                        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}"${def.booking && def.booking.slotTimeFrom ? ` data-time-from="${escapeHtml(def.booking.slotTimeFrom)}" data-time-to="${escapeHtml(def.booking.slotTimeTo || '23:59')}"` : ''} data-book-href="${escapeHtml(pack.href)}" data-surface="quiz-${escapeHtml(def.id)}" hidden>
+                        <div${def.id === 'tfeq' ? ' id="quiz-slots"' : ''} class="dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}"${def.booking && def.booking.slotTimeFrom ? ` data-time-from="${escapeHtml(def.booking.slotTimeFrom)}" data-time-to="${escapeHtml(def.booking.slotTimeTo || '23:59')}"` : ''} data-book-href="${escapeHtml(pack.href)}" data-surface="quiz-${escapeHtml(def.id)}" hidden>
                             <p class="dr-live-slots-kicker">${escapeHtml(pack.kicker)}</p>
                             <div class="dr-live-slots-row" data-next-slots-row></div>
                             <a href="${escapeHtml(pack.href)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
@@ -787,7 +787,7 @@ function renderQuizPage(origin, def) {
                             <p class="bq-hold-time" id="quizHoldLabel">A carregar o próximo horário…</p>
                             <p class="bq-hold-timer">Reservável durante <b id="quizHoldClock">15:00</b></p>
                         </div>
-                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" data-cta="book" href="${consultHref}">${escapeHtml(b.consultName || 'Marcar consulta')}</a>
+                        <a class="bq-btn bq-btn-primary bq-btn-lg${def.id === 'tfeq' ? '' : ' js-quiz-book'}" id="bookBtnPrimary" data-cta="book" href="${def.id === 'tfeq' ? '#quiz-slots' : consultHref}">${escapeHtml(b.consultName || 'Marcar consulta')}</a>
                         ${quizSlotsHtml(def)}
                         <p class="bq-book-now-note" id="bookNowNote">Videoconsulta · o resultado do teste fica associado à marcação</p>
                         <p class="bq-buy-trust" id="quizTrust">🔒 Pagamento seguro via Stripe<br>🩺 Consulta agendada imediatamente após o pagamento</p>
