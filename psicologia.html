@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
     <link rel="stylesheet" href="/landing.css?v=20260921m">
     <link rel="stylesheet" href="/pillar-colors.css?v=20260921d">
-    <link rel="stylesheet" href="/product-landing.css?v=20260926a">
+    <link rel="stylesheet" href="/product-landing.css?v=20260927a">
     <link rel="preload" as="image" href="/image/psi-choice-individual.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -234,19 +234,23 @@
                     <div class="nx-hero-left">
                         <span class="nx-hero-pill"><i aria-hidden="true"></i>Consulta de psicologia online · OPP</span>
                         <h1 id="psi-hero-title">Consulta de psicologia <em>online</em></h1>
-                        <p class="nx-hero-lead">Videochamada de 50 minutos, sem lista de espera. Avulsa 60 €, ou subscrição semanal a 56 € — 16 € abaixo de quatro sessões avulsas no mesmo mês. Com o seu consentimento, o histórico articula-se com médico e nutricionista da mesma clínica.</p>
+                        <p class="nx-hero-lead">Consultas por videochamada, sem lista de espera. Escolha o tipo de acompanhamento e responda a algumas perguntas rápidas para encontrar a opção certa para si.</p>
 
-                        <div class="nx-hero-price">
-                            <strong>desde 56€</strong>
-                            <span><b>por sessão</b>avulsa 60€ · subscrição 56€/sessão · casal desde 65€</span>
-                        </div>
-
-                        <div class="nx-hero-btns">
-                            <a href="/marcar/psicologia" class="nx-btn nx-btn--white js-psi-cta" data-psi-cta="hero">
-                                Marcar — desde 56€
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                        <div class="psi-hero-choices" aria-label="Escolha o tipo de acompanhamento">
+                            <a href="/marcar/psicologia" class="psi-hero-choice js-psi-cta" data-psi-cta="hero-individual">
+                                <span class="psi-hero-choice-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                                </span>
+                                <span class="psi-hero-choice-copy"><strong>Individual</strong><small>Psicologia individual · desde 56 €/sessão</small></span>
+                                <svg class="psi-hero-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                             </a>
-                            <a href="#preco" class="nx-btn nx-btn--ghost">Ver planos</a>
+                            <a href="/marcar/terapia-casal" class="psi-hero-choice js-psi-cta" data-psi-cta="hero-casal">
+                                <span class="psi-hero-choice-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20v-1a5.5 5.5 0 0 1 11 0v1M14 15.5a4.5 4.5 0 0 1 7 3.5v1"/></svg>
+                                </span>
+                                <span class="psi-hero-choice-copy"><strong>Terapia de casal</strong><small>Acompanhamento a dois · desde 65 €/sessão</small></span>
+                                <svg class="psi-hero-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
                         </div>
 
                         <ul class="nx-hero-trust">
@@ -267,44 +271,10 @@
                             <span class="nx-hero-tag">Psicologia · Lon Clinic</span>
                             <img src="/image/psi-choice-individual.webp" alt="Sessão de psicologia online num espaço tranquilo" loading="eager" fetchpriority="high" decoding="async">
                         </figure>
-                        <div class="nx-glass-card">
-                            <div>
-                                <p class="lbl">Psicologia</p>
-                                <p class="ttl">Desde 56€ / sessão</p>
-                                <p class="sub">Avulsa 60€ · subscrição 56€</p>
-                            </div>
-                            <a href="/marcar/psicologia" class="nx-btn nx-btn--accent js-psi-cta" data-psi-cta="hero-card">Marcar</a>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <nav class="nx-hero-row" aria-label="Opções de psicologia">
-                <a href="/marcar/psicologia?plan=avulsa" class="js-psi-cta" data-psi-cta="row-individual">
-                    <span class="ico" aria-hidden="true">🧠</span>
-                    <span class="lbl">Avulsa</span>
-                    <span class="ttl">Sessão pontual</span>
-                    <span class="dsc">60€ · 50 min · sem compromisso.</span>
-                </a>
-                <a href="/marcar/psicologia-mensal">
-                    <span class="ico" aria-hidden="true">🗓️</span>
-                    <span class="lbl">Subscrição</span>
-                    <span class="ttl">Acompanhamento semanal</span>
-                    <span class="dsc">56€ por sessão, cobrada ao mês, com o mesmo psicólogo.</span>
-                </a>
-                <a href="/marcar/terapia-casal" class="js-psi-cta" data-psi-cta="row-casal">
-                    <span class="ico" aria-hidden="true">💞</span>
-                    <span class="lbl">A dois</span>
-                    <span class="ttl">Terapia de casal</span>
-                    <span class="dsc">Sessão pontual 75€ · semanal 65€ por sessão.</span>
-                </a>
-                <a href="#queixas">
-                    <span class="ico" aria-hidden="true">🎯</span>
-                    <span class="lbl">Por queixa</span>
-                    <span class="ttl">Consultas específicas</span>
-                    <span class="dsc">Burnout, ansiedade, pânico, pós-parto e mais.</span>
-                </a>
-            </nav>
         </section>
 
         <div class="nx-trust" aria-label="Garantias">
