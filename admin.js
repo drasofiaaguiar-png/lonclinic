@@ -4367,10 +4367,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminProfessionalCreateDetails = document.getElementById('adminProfessionalCreateDetails');
     const adminProfessionalCreateForm = document.getElementById('adminProfessionalCreateForm');
     if (adminProfessionalCreateBtn && adminProfessionalCreateDetails) {
+        const syncProfessionalCreateToggle = () => {
+            const isOpen = adminProfessionalCreateDetails.open;
+            adminProfessionalCreateBtn.setAttribute('aria-expanded', String(isOpen));
+            adminProfessionalCreateBtn.textContent = isOpen ? 'Fechar formulário' : 'Adicionar profissional';
+        };
+        adminProfessionalCreateDetails.addEventListener('toggle', syncProfessionalCreateToggle);
         adminProfessionalCreateBtn.addEventListener('click', () => {
-            adminProfessionalCreateDetails.open = true;
-            adminProfessionalCreateDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            adminProfessionalCreateForm?.querySelector('[name="fullName"]')?.focus();
+            adminProfessionalCreateDetails.open = !adminProfessionalCreateDetails.open;
+            syncProfessionalCreateToggle();
+            if (adminProfessionalCreateDetails.open) {
+                adminProfessionalCreateDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                adminProfessionalCreateForm?.querySelector('[name="fullName"]')?.focus({ preventScroll: true });
+            }
         });
     }
     if (adminProfessionalCreateForm) {
