@@ -2555,7 +2555,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260926c', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260926a'],
+        extraCssAfter: ['/guide.css?v=20260927a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260926a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
