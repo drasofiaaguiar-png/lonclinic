@@ -14,7 +14,7 @@ const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
 const CSS_V = '20260923a';
-const JS_V = '20260923a';
+const JS_V = '20260927a';
 
 const CBI = {
     id: 'cbi',
@@ -659,12 +659,13 @@ function renderQuizPage(origin, def) {
     ${jsonLdScripts}
     <link rel="stylesheet" href="/landing.css?v=20260621b">
     <link rel="stylesheet" href="/burnout-quiz.css?v=${CSS_V}">
+    ${def.id === 'tfeq' ? `<link rel="stylesheet" href="/tfeq-modern.css?v=20260927a">` : ''}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
 </head>
-<body class="bq-page">
+<body class="bq-page${def.id === 'tfeq' ? ' bq-page--tfeq' : ''}">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="bq-top">
         <a href="${brandHref}" class="bq-brand" aria-label="${brandLabel}">LON Clinic</a>
