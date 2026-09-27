@@ -1311,6 +1311,9 @@ function sendStaffHtmlNoCache(res, filePath, onErrorMessage) {
 }
 
 function sendHtmlNoCacheString(res, html, statusCode) {
+    // Cloudflare may cache anonymous HTML despite the no-cache headers. This
+    // short-lived marker makes the response dynamic, as it does for staff pages.
+    res.append('Set-Cookie', 'lon_nocache=1; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly');
     res.status(statusCode || 200).set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
         'Pragma': 'no-cache',
@@ -10217,7 +10220,12 @@ app.use(express.static(path.join(__dirname), {
             res.setHeader('Cache-Control', 'no-store');
             return;
         }
-        if (base === 'burnout-quiz.css' || base === 'burnout-quiz.js') {
+        if (
+            base === 'burnout-quiz.css' ||
+            base === 'burnout-quiz.js' ||
+            base === 'clinical-quiz.js' ||
+            base === 'clinical-quiz-score.js'
+        ) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
             res.setHeader('CDN-Cache-Control', 'no-store');
             res.setHeader('Cloudflare-CDN-Cache-Control', 'no-store');
