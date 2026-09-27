@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
     <link rel="stylesheet" href="/landing.css?v=20260921m">
     <link rel="stylesheet" href="/pillar-colors.css?v=20260921d">
-    <link rel="stylesheet" href="/product-landing.css?v=20260927a">
+    <link rel="stylesheet" href="/product-landing.css?v=20260927c">
     <link rel="preload" as="image" href="/image/psi-choice-individual.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -228,7 +228,6 @@
 
     <main id="conteudo-principal">
         <section class="nx-hero" id="inicio" aria-labelledby="psi-hero-title">
-            <div class="nx-hero-bg" style="background-image:url('/image/psi-choice-individual.webp')" aria-hidden="true"></div>
             <div class="nx-inner">
                 <div class="nx-hero-grid">
                     <div class="nx-hero-left">
@@ -238,18 +237,18 @@
 
                         <div class="psi-hero-choices" aria-label="Escolha o tipo de acompanhamento">
                             <a href="/marcar/psicologia" class="psi-hero-choice js-psi-cta" data-psi-cta="hero-individual">
-                                <span class="psi-hero-choice-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20v-1.5a7 7 0 0 1 14 0V20z"/></svg>
+                                <img class="psi-hero-choice-image" src="/image/psi-choice-individual.webp" alt="" width="680" height="1020" fetchpriority="high" decoding="async">
+                                <span class="psi-hero-choice-body">
+                                    <span class="psi-hero-choice-copy"><strong>Individual</strong><small>Psicologia individual · desde 56 €/sessão</small></span>
+                                    <svg class="psi-hero-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                                 </span>
-                                <span class="psi-hero-choice-copy"><strong>Individual</strong><small>Psicologia individual · desde 56 €/sessão</small></span>
-                                <svg class="psi-hero-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                             </a>
                             <a href="/marcar/terapia-casal" class="psi-hero-choice js-psi-cta" data-psi-cta="hero-casal">
-                                <span class="psi-hero-choice-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 20v-1a5.5 5.5 0 0 1 11 0v1M14 15.5a4.5 4.5 0 0 1 7 3.5v1"/></svg>
+                                <img class="psi-hero-choice-image" src="/image/psi-choice-casal.webp" alt="" width="680" height="1020" loading="lazy" decoding="async">
+                                <span class="psi-hero-choice-body">
+                                    <span class="psi-hero-choice-copy"><strong>Terapia de casal</strong><small>Acompanhamento a dois · desde 65 €/sessão</small></span>
+                                    <svg class="psi-hero-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                                 </span>
-                                <span class="psi-hero-choice-copy"><strong>Terapia de casal</strong><small>Acompanhamento a dois · desde 65 €/sessão</small></span>
-                                <svg class="psi-hero-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                             </a>
                         </div>
 
@@ -266,12 +265,6 @@
                         </p>
                     </div>
 
-                    <div class="nx-hero-visual">
-                        <figure class="nx-hero-photo">
-                            <span class="nx-hero-tag">Psicologia · Lon Clinic</span>
-                            <img src="/image/psi-choice-individual.webp" alt="Sessão de psicologia online num espaço tranquilo" loading="eager" fetchpriority="high" decoding="async">
-                        </figure>
-                    </div>
                 </div>
             </div>
 

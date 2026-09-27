@@ -302,13 +302,13 @@ body.nx-page.urgent-landing {
 /* Psychology landing: give the longer offer and floating nav enough room. */
 .page-psychology .nx-hero { padding-top: 156px; }
 .page-psychology .nx-hero-grid {
-    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
-    gap: clamp(52px, 6vw, 88px);
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    align-items: start;
     padding-bottom: 58px;
 }
-.page-psychology .nx-hero-left { max-width: 620px; }
-.page-psychology .nx-hero h1 { max-width: 610px; margin-bottom: 22px; }
+.page-psychology .nx-hero-left { max-width: 980px; }
+.page-psychology .nx-hero h1 { max-width: 760px; margin-bottom: 22px; }
 .page-psychology .nx-hero-lead { max-width: 560px; line-height: 1.65; margin-bottom: 22px; }
 .page-psychology .nx-hero-price { margin-bottom: 26px; }
 .page-psychology .nx-hero-btns { margin-bottom: 30px; }
@@ -318,60 +318,44 @@ body.nx-page.urgent-landing {
 .page-psychology .psi-hero-choices {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 18px;
+    max-width: 850px;
     margin: 0 0 26px;
 }
 .page-psychology .psi-hero-choice {
-    min-height: 132px;
+    min-width: 0;
     display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 13px;
-    padding: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    border-radius: var(--nx-r-lg);
-    background: rgba(255, 255, 255, 0.12);
+    grid-template-rows: minmax(180px, 22vw) 1fr;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: var(--nx-r-xl);
+    background: rgba(255, 255, 255, 0.96);
     color: #fff;
     text-decoration: none;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 .page-psychology .psi-hero-choice:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.56);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 22px 52px rgba(0, 0, 0, 0.27);
+    transform: translateY(-3px);
 }
 .page-psychology .psi-hero-choice:focus-visible {
     outline: 3px solid var(--nx-accent-soft);
     outline-offset: 3px;
 }
-.page-psychology .psi-hero-choice-icon {
-    width: 34px;
-    height: 34px;
-    display: grid;
-    place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    border-radius: 11px;
-    color: var(--nx-accent-soft);
-}
-.page-psychology .psi-hero-choice-icon svg { width: 21px; height: 21px; }
+.page-psychology .psi-hero-choice-image { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; display: block; transition: transform 300ms ease; }
+.page-psychology .psi-hero-choice:hover .psi-hero-choice-image { transform: scale(1.025); }
+.page-psychology .psi-hero-choice-body { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 17px 20px 19px; }
 .page-psychology .psi-hero-choice-copy { display: grid; gap: 5px; }
-.page-psychology .psi-hero-choice-copy strong { font-size: 16px; font-weight: 600; }
-.page-psychology .psi-hero-choice-copy small { color: rgba(255, 255, 255, 0.76); font-size: 11.5px; line-height: 1.45; }
-.page-psychology .psi-hero-choice-arrow { width: 19px; height: 19px; justify-self: end; color: var(--nx-accent-soft); }
-.page-psychology .nx-hero-row { gap: 16px; padding: 18px clamp(18px, 3vw, 48px) 28px; }
-.page-psychology .nx-hero-row a { padding: 24px 26px; }
-
+.page-psychology .psi-hero-choice-copy strong { color: var(--nx-ink); font-size: 17px; font-weight: 600; }
+.page-psychology .psi-hero-choice-copy small { color: var(--nx-ink-soft); font-size: 12px; line-height: 1.45; }
+.page-psychology .psi-hero-choice-arrow { width: 20px; height: 20px; flex: 0 0 auto; color: var(--nx-deep); }
 @media (max-width: 900px) {
     .page-psychology .nx-hero { padding-top: 120px; }
-    .page-psychology .nx-hero-grid {
-        grid-template-columns: 1fr;
-        gap: 42px;
-        padding-bottom: 48px;
-    }
-    .page-psychology .nx-hero-left { max-width: 680px; }
-    .page-psychology .nx-hero-visual { max-width: 420px; }
-    .page-psychology .nx-hero-row { padding: 16px 20px 22px; }
+    .page-psychology .nx-hero-grid { grid-template-columns: 1fr; gap: 0; padding-bottom: 48px; }
+    .page-psychology .nx-hero-left { max-width: 100%; }
+    .page-psychology .psi-hero-choices { max-width: 100%; }
 }
 @media (max-width: 600px) {
     .page-psychology .nx-hero { padding-top: 104px; }
@@ -379,19 +363,16 @@ body.nx-page.urgent-landing {
     .page-psychology .nx-hero-pill { margin-bottom: 18px; }
     .page-psychology .nx-hero h1 { font-size: clamp(36px, 10vw, 48px); line-height: 1.04; margin-bottom: 16px; }
     .page-psychology .nx-hero-lead { font-size: 15.5px; line-height: 1.62; margin-bottom: 18px; }
-    .page-psychology .psi-hero-choices { grid-template-columns: 1fr; gap: 10px; margin-bottom: 22px; }
-    .page-psychology .psi-hero-choice { min-height: 0; grid-template-columns: auto 1fr auto; grid-template-rows: auto; align-items: center; gap: 12px; padding: 15px; }
-    .page-psychology .psi-hero-choice-arrow { grid-column: 3; grid-row: 1; }
-    .page-psychology .psi-hero-choice-copy strong { font-size: 15px; }
+    .page-psychology .psi-hero-choices { grid-template-columns: 1fr; gap: 14px; margin-bottom: 22px; }
+    .page-psychology .psi-hero-choice { grid-template-rows: minmax(180px, 55vw) auto; border-radius: var(--nx-r-lg); }
+    .page-psychology .psi-hero-choice-body { padding: 15px 17px 17px; }
+    .page-psychology .psi-hero-choice-copy strong { font-size: 16px; }
     .page-psychology .nx-hero-price { gap: 10px; margin-bottom: 22px; }
     .page-psychology .nx-hero-price strong { font-size: 42px; }
     .page-psychology .nx-hero-btns { gap: 10px; margin-bottom: 24px; }
     .page-psychology .nx-hero-trust { display: grid; grid-template-columns: 1fr; gap: 11px; }
     .page-psychology .nx-alert { margin-top: 20px; }
     .page-psychology .nx-glass-card { left: 10px; right: 10px; bottom: -22px; padding: 14px 16px; }
-    .page-psychology .nx-hero-row { grid-template-columns: 1fr; gap: 10px; padding: 14px 16px 20px; }
-    .page-psychology .nx-hero-row a { padding: 18px 20px; }
-    .page-psychology .nx-hero-row .ico { margin-bottom: 7px; }
 }
 
 /* ==========================================================================
