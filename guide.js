@@ -882,7 +882,15 @@ const TRAVEL_GROUPS = [
         'vacinas-viajante-angola',
         'vacinas-para-viajar-a-mocambique',
         'vacinas-viajante-mocambique',
-        'vacinas-viajante-cabo-verde'
+        'vacinas-viajante-cabo-verde',
+        'paises-vacina-febre-amarela-obrigatoria',
+        'febre-amarela-brasileiros-viagem-brasil',
+        'vacinas-para-viajar-ao-gana',
+        'vacinas-para-viajar-ao-uganda',
+        'vacinas-para-viajar-a-guiana-francesa',
+        'vacinas-para-viajar-a-costa-do-marfim',
+        'vacinas-para-viajar-aos-camaroes',
+        'vacinas-para-viajar-ao-senegal'
     ],
     [
         'travel-vaccines-by-country',
@@ -958,6 +966,14 @@ function travelMapLinks(slug) {
     }
     const countries = {
         'vacinas-para-viajar-ao-brasil': [TRAVEL_YF_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-ao-gana': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-ao-uganda': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-a-guiana-francesa': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-a-costa-do-marfim': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-aos-camaroes': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-ao-senegal': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
+
+        'febre-amarela-brasileiros-viagem-brasil': [{ href: '/blog/paises-vacina-febre-amarela-obrigatoria', text: 'países onde a febre amarela é obrigatória' }, TRAVEL_PILLAR_LINK],
         'vacinas-viajante-brasil': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
         'vacinas-para-viajar-a-angola': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_PILLAR_LINK],
         'vacinas-viajante-angola': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
@@ -2332,7 +2348,7 @@ function renderBlogArticle(origin, slug) {
     }
     articleHtml = injectArticleChrome(articleHtml, meta, manifest.articles, format);
     const relatedHtml = relatedArticlesHtml(meta, manifest.articles);
-    const og = `${o}${resolveGuideImage(meta.image)}`;
+    const og = `${o}${resolveGuideImage(meta.ogImage || meta.image)}`;
     const hasPart = cviParts[0] && Array.isArray(cviParts[0].itemListElement)
         ? cviParts[0].itemListElement.map((el) => ({
             '@type': 'WebPageElement',
@@ -2465,7 +2481,7 @@ function renderBlogArticle(origin, slug) {
     })();
     const bio = isVerifiedArticle(meta) ? authors.authorBioHtml(o, meta.author, dateMod || datePub) : '';
     const leadFigure = meta.image
-        ? guideLeadFigureHtml(meta.image, title)
+        ? guideLeadFigureHtml(meta.image, meta.imageAlt || title)
         : '';
 
     const kicker = magThemeLabel(meta);
@@ -2555,7 +2571,7 @@ function renderBlogArticle(origin, slug) {
 
     const html = layoutMagazinePage({
         origin: o,
-        title: `${title} | LON Magazine`,
+        title: meta.seoTitle || `${title} | LON Magazine`,
         description,
         canonicalPath,
         ogImage: og,

@@ -116,3 +116,6 @@ Sim. Quem vive fora há algum tempo perde parte da protecção natural contra a 
 - [CDC Yellow Book — Yellow Fever](https://www.cdc.gov/yellow-book/hcp/travel-associated-infections-diseases/yellow-fever.html)
 
 Este artigo é informativo e não substitui uma consulta médica. Os requisitos de entrada podem mudar; confirme sempre antes de viajar.
+
+
+Veja também: [países onde a vacina da febre amarela é obrigatória](/blog/paises-vacina-febre-amarela-obrigatoria).

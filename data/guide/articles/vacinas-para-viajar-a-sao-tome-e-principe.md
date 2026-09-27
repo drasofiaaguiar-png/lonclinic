@@ -83,3 +83,6 @@ Se o itinerário tiver escala em Acra e ainda não tiver o certificado de febre 
 
 
 {{cta}}
+
+
+Veja também: [países onde a vacina da febre amarela é obrigatória](/blog/paises-vacina-febre-amarela-obrigatoria).

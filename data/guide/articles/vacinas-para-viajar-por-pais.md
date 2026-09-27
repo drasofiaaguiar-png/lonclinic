@@ -76,3 +76,15 @@ Consulta em Lisboa (não só a vacina): [onde fazer consulta de medicina do viaj
 - [OMS — International travel and health](https://www.who.int/travel-advice)
 - [DGS](https://www.dgs.pt/)
 - Mapas de febre amarela e malária actualizam-se: use a consulta e as fontes oficiais na data da viagem
+
+
+## Febre amarela e novos destinos
+
+- [Febre amarela: países que a exigem a brasileiros ou a quem esteve no Brasil](/blog/febre-amarela-brasileiros-viagem-brasil)
+- [Em que países é obrigatória a vacina da febre amarela?](/blog/paises-vacina-febre-amarela-obrigatoria)
+- [Que vacinas preciso para viajar para o Gana?](/blog/vacinas-para-viajar-ao-gana)
+- [Que vacinas preciso para viajar para o Uganda?](/blog/vacinas-para-viajar-ao-uganda)
+- [Que vacinas preciso para viajar para a Guiana Francesa?](/blog/vacinas-para-viajar-a-guiana-francesa)
+- [Que vacinas preciso para viajar para a Costa do Marfim?](/blog/vacinas-para-viajar-a-costa-do-marfim)
+- [Que vacinas preciso para viajar para os Camarões?](/blog/vacinas-para-viajar-aos-camaroes)
+- [Que vacinas preciso para viajar para o Senegal?](/blog/vacinas-para-viajar-ao-senegal)

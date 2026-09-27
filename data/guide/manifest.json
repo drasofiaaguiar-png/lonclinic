@@ -11712,6 +11712,360 @@
                     "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
                 }
             ]
+        },
+        {
+            "slug": "paises-vacina-febre-amarela-obrigatoria",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Em que países é obrigatória a vacina da febre amarela?",
+            "description": "Países que exigem certificado de febre amarela a todos os viajantes ou após escala. Veja idades mínimas, validade e prazo para vacinar antes de viajar.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/febre-amarela-certificado.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-gana",
+                "vacinas-para-viajar-ao-uganda",
+                "vacinas-para-viajar-a-guiana-francesa",
+                "vacinas-para-viajar-a-costa-do-marfim",
+                "vacinas-para-viajar-aos-camaroes",
+                "vacinas-para-viajar-ao-senegal",
+                "febre-amarela-brasileiros-viagem-brasil"
+            ],
+            "faq": [
+                {
+                    "q": "Em que países é obrigatória a vacina da febre amarela para quem vai de Portugal?",
+                    "a": "Em 20 países, quase todos na África Ocidental e Central, entre eles Angola, Guiné-Bissau, Gana, Costa do Marfim, Camarões e Uganda, além da Guiana Francesa."
+                },
+                {
+                    "q": "O Brasil exige a vacina da febre amarela?",
+                    "a": "Não para entrar. Mas há risco em várias regiões e a vacina é recomendada conforme o roteiro. Veja o guia do Brasil."
+                },
+                {
+                    "q": "Quanto tempo antes da viagem tenho de tomar a vacina?",
+                    "a": "Pelo menos 10 dias antes de chegar ao destino. É a partir daí que o certificado é válido."
+                },
+                {
+                    "q": "A vacina da febre amarela precisa de reforço?",
+                    "a": "Para efeitos de entrada, não. O certificado é válido para toda a vida."
+                },
+                {
+                    "q": "Posso fazer a consulta online?",
+                    "a": "Sim. A consulta do viajante online avalia o roteiro e emite a prescrição, válida em qualquer CVI de Portugal. Custa 39 €."
+                }
+            ],
+            "seoTitle": "Países onde a vacina da febre amarela é obrigatória (2026)",
+            "imageAlt": "Ilustração editorial de passaporte, certificado internacional de vacinação e rota aérea.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-gana",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o Gana?",
+            "description": "Vai viajar para o Gana? Saiba que vacinas considerar, quando é exigido o certificado da febre amarela e como funciona uma escala em Acra.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/viagem-gana.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-ao-uganda",
+                "vacinas-para-viajar-aos-camaroes",
+                "vacinas-para-viajar-a-costa-do-marfim"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é obrigatória para o Gana?",
+                    "a": "Sim, para todos os viajantes a partir dos 9 meses."
+                },
+                {
+                    "q": "Vou só fazer escala em Acra. Preciso da vacina?",
+                    "a": "O Gana não a pede em trânsito, mas o destino seguinte pode exigi-la por ter passado num país de risco. Confirme a regra do destino final."
+                },
+                {
+                    "q": "Há malária em Acra?",
+                    "a": "Sim. O risco é elevado em todo o país, incluindo a capital."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas e a medicação pagam-se à parte."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Vacinas para viajar para o Gana: febre amarela e malária",
+            "imageAlt": "Ilustração editorial de um forte costeiro e palmeiras numa viagem ao Gana.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-uganda",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o Uganda?",
+            "description": "Guia de vacinas para o Uganda: certificado da febre amarela, prevenção da malária e cuidados para safari e trekking de gorilas.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/viagem-uganda.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-ao-gana",
+                "vacinas-para-viajar-aos-camaroes"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é obrigatória para o Uganda?",
+                    "a": "Sim, para todos os viajantes a partir de 1 ano."
+                },
+                {
+                    "q": "Há malária nos parques de gorilas?",
+                    "a": "Sim. O risco existe em quase todo o país, incluindo os parques. A profilaxia é recomendada."
+                },
+                {
+                    "q": "Posso fazer o trekking de gorilas se estiver constipado?",
+                    "a": "Possivelmente não. Os parques podem impedir visitantes com sintomas respiratórios, para proteger os animais."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas e a medicação pagam-se à parte."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Vacinas para viajar para o Uganda: gorilas e safari",
+            "imageAlt": "Ilustração editorial de montanhas verdes e floresta numa viagem de safari ao Uganda.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-a-guiana-francesa",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para a Guiana Francesa?",
+            "description": "Saiba que vacinas considerar para a Guiana Francesa, quem precisa do certificado da febre amarela e como varia o risco de malária entre costa e interior.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/viagem-guiana-francesa.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-ao-brasil",
+                "febre-amarela-brasileiros-viagem-brasil",
+                "vacinas-para-viajar-a-costa-do-marfim"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso da vacina da febre amarela para a Guiana Francesa, sendo europeu?",
+                    "a": "Sim. É obrigatória para todos os viajantes a partir de 1 ano, independentemente da nacionalidade."
+                },
+                {
+                    "q": "Há malária em Caiena?",
+                    "a": "O risco é baixo na costa. Está sobretudo no interior e nos rios de fronteira."
+                },
+                {
+                    "q": "Vou trabalhar em Kourou. O que preciso?",
+                    "a": "Febre amarela obrigatória, hepatite A e tétano em dia, e repelente. A profilaxia da malária decide-se conforme as deslocações ao interior."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Vacinas para viajar para a Guiana Francesa",
+            "imageAlt": "Ilustração editorial de floresta tropical e foguetão na Guiana Francesa.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-a-costa-do-marfim",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para a Costa do Marfim?",
+            "description": "Febre amarela, malária e outras vacinas para a Costa do Marfim: veja quem precisa do certificado, os prazos e os cuidados por roteiro.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/viagem-costa-marfim.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-ao-gana",
+                "vacinas-para-viajar-ao-senegal",
+                "vacinas-para-viajar-aos-camaroes"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é obrigatória para a Costa do Marfim?",
+                    "a": "Sim, para todos os viajantes a partir dos 9 meses."
+                },
+                {
+                    "q": "Vou três dias a Abidjan em trabalho. Preciso de profilaxia da malária?",
+                    "a": "Sim. O risco é elevado em todo o país, incluindo a capital, mesmo em estadias curtas."
+                },
+                {
+                    "q": "Viajo várias vezes por ano. Tenho de repetir tudo?",
+                    "a": "Não. A febre amarela e várias outras vacinas duram anos ou toda a vida. Vale a pena fazer um plano completo uma vez."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa. As vacinas e a medicação pagam-se à parte."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Vacinas para viajar para a Costa do Marfim",
+            "imageAlt": "Ilustração editorial de cidade costeira africana e palmeiras numa viagem à Costa do Marfim.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-aos-camaroes",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para os Camarões?",
+            "description": "Guia de saúde para viajar para os Camarões: certificado da febre amarela, prevenção da malária e vacinas a avaliar conforme o itinerário.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/viagem-camaroes.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-ao-gana",
+                "vacinas-para-viajar-a-costa-do-marfim",
+                "vacinas-para-viajar-ao-uganda"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é obrigatória para os Camarões?",
+                    "a": "Sim, para todos os viajantes a partir de 1 ano."
+                },
+                {
+                    "q": "Há malária em Douala e Yaoundé?",
+                    "a": "Sim. O risco é elevado em todo o país, incluindo as cidades."
+                },
+                {
+                    "q": "Vou subir o monte Camarões. Muda alguma coisa?",
+                    "a": "Sim: acrescenta o risco de altitude. Discuta a subida e a medicação na consulta."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa. As vacinas e a medicação pagam-se à parte."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Vacinas para viajar para os Camarões: febre amarela",
+            "imageAlt": "Ilustração editorial do monte Camarões acima de uma paisagem tropical.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-senegal",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o Senegal?",
+            "description": "Vai ao Senegal? Saiba quando a febre amarela é exigida, que vacinas considerar e como variam os cuidados de malária entre Dakar e outras regiões.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/viagem-senegal.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-a-guine-bissau",
+                "vacinas-para-viajar-ao-gana",
+                "vacinas-para-viajar-a-costa-do-marfim"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é obrigatória para o Senegal?",
+                    "a": "Não num voo directo de Portugal. É obrigatória se chegar de um país de risco ou fizer escala num deles. Como há risco no Senegal, a vacina é recomendada na maioria das viagens."
+                },
+                {
+                    "q": "Há malária em Dakar?",
+                    "a": "O risco é menor do que no resto do país, mas existe. A decisão sobre a profilaxia faz-se em consulta."
+                },
+                {
+                    "q": "Vou combinar o Senegal com a Guiné-Bissau. O que preciso?",
+                    "a": "A febre amarela passa a ser obrigatória, porque a Guiné-Bissau a exige a todos. Tome-a pelo menos 10 dias antes."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas e a medicação pagam-se à parte."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Vacinas para viajar para o Senegal: febre amarela e malária",
+            "imageAlt": "Ilustração editorial de um baobá junto à costa do Senegal.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
+        },
+        {
+            "slug": "febre-amarela-brasileiros-viagem-brasil",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Febre amarela: que países exigem certificado a quem esteve no Brasil?",
+            "description": "Viajou do Brasil ou fez escala no país? Veja destinos que podem exigir o certificado da febre amarela e como obter o CIVP em Portugal ou no Brasil.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/febre-amarela-brasil-rota.svg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "paises-vacina-febre-amarela-obrigatoria",
+                "vacinas-para-viajar-ao-brasil",
+                "vacinas-viajante-brasil",
+                "vacinas-para-viajar-a-guiana-francesa"
+            ],
+            "faq": [
+                {
+                    "q": "Tenho passaporte brasileiro. Preciso da vacina da febre amarela para viajar de Portugal?",
+                    "a": "Não por causa do passaporte. Depende do destino e de ter estado recentemente no Brasil ou noutro país de risco."
+                },
+                {
+                    "q": "Vou do Brasil para Cabo Verde. Preciso do certificado?",
+                    "a": "Em geral, sim. Cabo Verde exige-o a quem chega de um país com risco de febre amarela. Confirme sempre a regra antes da viagem."
+                },
+                {
+                    "q": "Fui vacinado no Brasil em criança. Estou protegido?",
+                    "a": "Para efeitos de fronteira, uma dose válida chega para toda a vida. Precisa do certificado internacional (CIVP), não só do cartão do SUS."
+                },
+                {
+                    "q": "Vale a pena vacinar-me mesmo sem ser obrigatório?",
+                    "a": "Para quem viaja com frequência entre o Brasil e outros destinos, pode valer a pena, desde que não tenha contra-indicações. A decisão deve ser avaliada clinicamente."
+                },
+                {
+                    "q": "Posso fazer a consulta online?",
+                    "a": "Sim. A consulta do viajante online avalia o itinerário e emite a prescrição, válida em qualquer CVI de Portugal. Custa 39 €."
+                }
+            ],
+            "series": "vacinas-por-destino",
+            "seoTitle": "Febre amarela: países que exigem certificado a quem esteve no Brasil",
+            "imageAlt": "Ilustração editorial de rota aérea entre o Brasil e outros destinos com passaporte de viagem.",
+            "ogImage": "/image/guide/guide-hiker-view.jpg"
         }
     ]
 }

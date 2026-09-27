@@ -83,3 +83,6 @@ Idealmente 4 a 6 semanas antes. O prazo mínimo que importa é o da febre amarel
 
 
 {{cta}}
+
+
+Veja também: [países onde a vacina da febre amarela é obrigatória](/blog/paises-vacina-febre-amarela-obrigatoria).

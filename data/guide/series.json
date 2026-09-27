@@ -4,7 +4,7 @@
       "id": "vacinas-por-destino",
       "slug": "vacinas-para-viajar-por-pais",
       "title": "Vacinas para viajar por país",
-      "description": "Respostas directas a «que vacinas preciso para viajar para [país]?»: Brasil, Tailândia, Índia, Quénia, Angola, Moçambique, Cabo Verde e mais onze destinos — orientação clínica por itinerário.",
+      "description": "Guias de vacinas por país para viajantes que partem de Portugal, com orientação por itinerário e ligações às regras de febre amarela.",
       "parts": [
         { "slug": "vacinas-viajante-brasil", "navLabel": "Brasil (guia 2026)" },
         { "slug": "vacinas-viajante-tailandia", "navLabel": "Tailândia" },
@@ -24,7 +24,15 @@
         { "slug": "vacinas-para-viajar-ao-peru", "navLabel": "Peru" },
         { "slug": "vacinas-para-viajar-a-colombia", "navLabel": "Colômbia" },
         { "slug": "vacinas-para-viajar-a-marrocos", "navLabel": "Marrocos" },
-        { "slug": "vacinas-para-viajar-ao-egipto", "navLabel": "Egipto" }
+        { "slug": "vacinas-para-viajar-ao-egipto", "navLabel": "Egipto" },
+        {"slug":"vacinas-para-viajar-ao-gana","navLabel":"Gana"},
+        {"slug":"vacinas-para-viajar-ao-uganda","navLabel":"Uganda"},
+        {"slug":"vacinas-para-viajar-a-guiana-francesa","navLabel":"Guiana Francesa"},
+        {"slug":"vacinas-para-viajar-a-costa-do-marfim","navLabel":"Costa do Marfim"},
+        {"slug":"vacinas-para-viajar-aos-camaroes","navLabel":"Camarões"},
+        {"slug":"vacinas-para-viajar-ao-senegal","navLabel":"Senegal"},
+        {"slug":"paises-vacina-febre-amarela-obrigatoria","navLabel":"Febre amarela: países"},
+        {"slug":"febre-amarela-brasileiros-viagem-brasil","navLabel":"Febre amarela e Brasil"}
       ]
     },
     {

@@ -97,3 +97,6 @@ Precisa do certificado de febre amarela para entrar em Cabo Verde — e da vacin
 - Organização Mundial da Saúde — certificação de Cabo Verde como país livre de malária (2024)
 
 Este artigo é informativo e não substitui uma consulta médica. Os requisitos de entrada podem mudar; confirme sempre antes de viajar.
+
+
+Veja também: [países onde a vacina da febre amarela é obrigatória](/blog/paises-vacina-febre-amarela-obrigatoria).

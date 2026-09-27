@@ -125,3 +125,6 @@ Só se for à região amazónica. Para as grandes cidades e zonas costeiras tur�
 - [CDC Travelers' Health — Brazil](https://wwwnc.cdc.gov/travel/destinations/traveler/none/brazil)
 
 Este artigo é informativo e não substitui uma consulta médica. As recomendações podem mudar; confirme sempre antes de viajar.
+
+
+Veja também: [países onde a vacina da febre amarela é obrigatória](/blog/paises-vacina-febre-amarela-obrigatoria).

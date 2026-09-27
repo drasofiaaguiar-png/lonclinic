@@ -45,3 +45,6 @@ Febre no Quénia ou ao regressar: urgência, com a palavra **malária** dita à 
 - [CDC Yellow Book — Kenya](https://wwwnc.cdc.gov/travel/destinations/traveler/none/kenya)
 - [OMS](https://www.who.int/travel-advice)
 - [DGS](https://www.dgs.pt/)
+
+
+Veja também: [países onde a vacina da febre amarela é obrigatória](/blog/paises-vacina-febre-amarela-obrigatoria).
