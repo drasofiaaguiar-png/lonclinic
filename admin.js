@@ -5513,6 +5513,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? escapeHtml(p.loginEmail)
                 : '<span class="admin-dir-login-warn">Sem email na conta — o código OTP não pode ser enviado até o guardar</span>'}</dd></div>`
             : '';
+        const emailEditor = p.username && !p.isClinicAdmin
+            ? `<form class="admin-dir-edit-form" data-pro-email-form data-pro-username="${escapeHtml(p.username)}" data-pro-id="${escapeHtml(String(p.id || ''))}" style="margin:12px 0;">
+                    <label class="is-wide"><span>${p.hasLogin ? 'Email de login' : 'Email da ficha'}</span>
+                        <input type="email" name="email" class="admin-input" value="${escapeHtml(p.hasLogin ? (p.loginEmail || p.email || '') : (p.email || ''))}" placeholder="nome@email.com" inputmode="email" autocomplete="off" required>
+                    </label>
+                    <button type="submit" class="btn btn-primary btn-sm">Guardar email</button>
+               </form>`
+            : '';
         adminDirDetail.hidden = false;
         if (dirEditing && canEdit) {
             adminDirDetail.innerHTML = `
@@ -5551,6 +5559,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div><dt>Seguro</dt><dd>${dashText([p.insurer, p.insurancePolicy, p.insuranceValidUntil].filter(Boolean).join(' · '))}</dd></div>
                 <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
             </dl>
+            ${emailEditor}
             ${p.bio ? `<div class="admin-staff-profile-block"><h4>Bio</h4><p>${dashText(p.bio)}</p></div>` : ''}
             ${p.credentials ? `<div class="admin-staff-profile-block"><h4>Credenciais</h4><p>${dashText(p.credentials)}</p></div>` : ''}
             ${areaTagsHtml(p.consultLanguages) ? `<div class="admin-staff-profile-block"><h4>Idiomas</h4>${areaTagsHtml(p.consultLanguages)}</div>` : ''}
@@ -5765,6 +5774,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    async function submitDirectoryEmail(form) {
+        const username = form.getAttribute('data-pro-username') || '';
+        const id = form.getAttribute('data-pro-id') || '';
+        const p = professionalByKey(selectedProfessionalKey) || {};
+        const email = String(new FormData(form).get('email') || '').trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+            showProfessionalError('Email inválido.');
+            return;
+        }
+        const submit = form.querySelector('button[type="submit"]');
+        if (submit) submit.disabled = true;
+        showProfessionalError('');
+        try {
+            const hasAccount = !!(p.hasLogin && id && !p.isClinicAdmin);
+            const url = hasAccount
+                ? `/api/admin/professionals/${encodeURIComponent(id)}`
+                : `/api/admin/staff-profiles/${encodeURIComponent(username)}`;
+            const res = await fetch(url, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showProfessionalError(data.error || 'Não foi possível guardar o email.');
+                return;
+            }
+            await loadAdminProfessionals();
+            showProfessionalError(`Email associado: ${email}`);
+        } catch (err) {
+            showProfessionalError('Erro de rede. Tente novamente.');
+        } finally {
+            if (submit) submit.disabled = false;
+        }
+    }
+
     function renderAdminProfessionals() {
         if (!adminProfessionalsBody) return;
         const all = directoryProfessionals();
@@ -5913,6 +5958,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             openSendLoginEmailModal(pro);
         });
         adminDirDetail.addEventListener('submit', (e) => {
+            const emailForm = e.target.closest('[data-pro-email-form]');
+            if (emailForm) {
+                e.preventDefault();
+                void submitDirectoryEmail(emailForm);
+                return;
+            }
             const form = e.target.closest('[data-pro-edit-form]');
             if (!form) return;
             e.preventDefault();
