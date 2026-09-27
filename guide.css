@@ -1386,6 +1386,43 @@
     border: 1px solid #cfe6d8;
 }
 
+.guide-vaccine-booking {
+    margin: 2rem 0;
+    padding: clamp(18px, 3vw, 30px);
+    border: 1px solid #cfe2d6;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f2f8f3 0%, #fbfaf6 100%);
+    box-shadow: 0 12px 32px rgba(35, 77, 58, .08);
+}
+.guide-vaccine-booking-kicker {
+    margin: 0 0 6px;
+    color: #39745b;
+    font-size: .78rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.guide-prose .guide-vaccine-booking h2,
+.mag-story-body .guide-vaccine-booking h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    line-height: 1.18;
+}
+.guide-vaccine-booking-copy {
+    max-width: 68ch;
+    margin: 0 0 14px;
+    color: #3b4e45;
+    font-size: .98rem;
+}
+.guide-vaccine-booking .guide-live-slots {
+    margin: 0;
+    padding: 14px 0 0;
+    border: 0;
+    border-top: 1px solid #d7e6dc;
+    border-radius: 0;
+    background: transparent;
+}
+
 .guide-series {
     margin: 2.2rem 0 0.4rem;
     padding-top: 1.4rem;

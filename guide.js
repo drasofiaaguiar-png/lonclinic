@@ -1534,6 +1534,14 @@ function insertAfterFirstParagraph(html, block) {
     return `${html.slice(0, end)}${block}${html.slice(end)}`;
 }
 
+function insertAtArticleMidpoint(html, block) {
+    const paragraphs = [...String(html || '').matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/gi)];
+    if (paragraphs.length < 3) return insertAfterFirstH2(html, block);
+    const paragraph = paragraphs[Math.floor(paragraphs.length / 2)];
+    const end = paragraph.index + paragraph[0].length;
+    return `${html.slice(0, end)}${block}${html.slice(end)}`;
+}
+
 function articleWantsLiveSlots(meta) {
     if (!meta) return false;
     if (meta.liveSlots === true) return true;
@@ -1638,9 +1646,9 @@ function slotServicePack(slug, rawKind) {
     return packs[key] || packs.general;
 }
 
-function liveSlotsWidgetHtml(slug, pack) {
+function liveSlotsWidgetHtml(slug, pack, limit) {
     return `
-<aside class="guide-live-slots dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="blog-${escapeHtml(slug)}" hidden>
+<aside class="guide-live-slots dr-live-slots" data-next-slots data-limit="${Number(limit) || 3}" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="blog-${escapeHtml(slug)}" hidden>
     <p class="dr-live-slots-kicker">${escapeHtml(pack.kicker)}</p>
     <div class="dr-live-slots-row" data-next-slots-row></div>
     <a href="${escapeHtml(pack.href)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
@@ -1651,6 +1659,18 @@ function articleLiveSlotsHtml(meta) {
     const slug = String((meta && meta.slug) || 'artigo');
     const kind = (meta && meta.slotService) || defaultCtaKind(meta);
     return liveSlotsWidgetHtml(slug, slotServicePack(slug, kind));
+}
+
+function travelVaccineBookingHtml(meta) {
+    const slug = String((meta && meta.slug) || 'artigo');
+    const pack = slotServicePack(slug, 'travel');
+    return `
+<section class="guide-vaccine-booking" aria-label="Marcar consulta de medicina do viajante">
+    <p class="guide-vaccine-booking-kicker">Consulta do viajante · videoconsulta</p>
+    <h2>Prepare a viagem com um plano de vacinas personalizado</h2>
+    <p class="guide-vaccine-booking-copy"><strong>39 €</strong> · Consulta por videochamada, com receita e plano de vacinas no próprio dia, quando indicados. As vacinas são pagas à parte e administradas num Centro de Vacinação Internacional.</p>
+    ${liveSlotsWidgetHtml(slug, { ...pack, kicker: 'Escolha um dia e horário disponíveis' }, 8)}
+</section>`;
 }
 
 function expandLonSlotsTokens(html, meta) {
@@ -1894,8 +1914,12 @@ function injectArticleChrome(html, meta, articles, format) {
         }
     }
     const backlinks = isHub || designedClusterNav || clusterMap ? '' : seriesBacklinksHtml(meta, articles);
-    const slots = !skipBookCards && articleWantsLiveSlots(meta) && !out.includes('data-next-slots')
+    const travelVaccine = isTravelVaccineArticle(meta);
+    const slots = !travelVaccine && !skipBookCards && articleWantsLiveSlots(meta) && !out.includes('data-next-slots')
         ? articleLiveSlotsHtml(meta)
+        : '';
+    const vaccineBooking = travelVaccine && !out.includes('guide-vaccine-booking')
+        ? travelVaccineBookingHtml(meta)
         : '';
     const mentionsBurnout = /\/burnout|burnout|s[ií]ndrome de exaust|stress laboral/i.test(out);
     const note = mentionsBurnout && articleCluster(meta) !== 'burnout' && articleCluster(meta) !== 'livros-saude' && articleCluster(meta) !== 'bestsellers-psicologia' && articleCluster(meta) !== 'bestsellers-saude-intestinal' && !out.includes('guide-burnout-note')
@@ -1903,6 +1927,7 @@ function injectArticleChrome(html, meta, articles, format) {
         : '';
     if (format === 'html') {
         if (slots) out = insertAfterFirstParagraph(out, slots);
+        if (vaccineBooking) out = insertAtArticleMidpoint(out, vaccineBooking);
         if (note) out = insertAfterFirstParagraph(out, note);
         if (!skipBookCards && !out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang, meta && meta.slug);
         if (layerCta && !out.includes('guide-burnout-layer-cta')) out += layerCta;
@@ -1916,6 +1941,7 @@ function injectArticleChrome(html, meta, articles, format) {
         out = expandCtaTokens(out, kind, lang, meta && meta.slug);
     }
     if (slots) out = insertAfterFirstParagraph(out, slots);
+    if (vaccineBooking) out = insertAtArticleMidpoint(out, vaccineBooking);
     if (note) out = insertAfterFirstParagraph(out, note);
     if (layerCta && !out.includes('guide-burnout-layer-cta')) {
         out = insertAfterFirstH2(out, layerCta);
@@ -2058,7 +2084,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/guide.css?v=20260922s">
+    <link rel="stylesheet" href="/guide.css?v=20260927a">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
