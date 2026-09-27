@@ -9540,6 +9540,11 @@ app.get('/blog/', (req, res) => {
 
 app.get('/blog/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
+    const articleRedirect = guide.articleRedirect(slug);
+    if (articleRedirect) {
+        const query = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+        return res.redirect(301, `${articleRedirect}${query}`);
+    }
     if (!guide.isValidSlug(slug)) {
         return sendHtmlNoCacheString(res, guide.renderNotFound(seo.SITE_ORIGIN), 404);
     }

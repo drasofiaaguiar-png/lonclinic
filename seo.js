@@ -431,7 +431,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
     try {
         const articles = guide.sortArticles(guide.loadManifest().articles || []);
         for (const a of articles) {
-            if (!a || !guide.isValidSlug(a.slug) || a.listed === false) continue;
+            if (!a || !guide.isValidSlug(a.slug) || a.listed === false || a.redirectTo) continue;
             if (isBurnoutAuthoritySpoke(`/blog/${a.slug}`)) continue;
             const lastmod = String(a.dateModified || a.datePublished || today).slice(0, 10);
             const alternates = guide.articleSitemapAlternates(o, a, articles);

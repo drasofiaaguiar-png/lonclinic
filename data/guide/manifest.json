@@ -10325,9 +10325,9 @@
             "slug": "vacinas-para-viajar-por-pais",
             "group": "vacinas-para-viajar-por-pais",
             "title": "Que vacinas preciso para viajar? Guia por país (2026)",
-            "description": "Lista orientativa de vacinas por destino a partir de Portugal: Brasil, Tailândia, Índia, Quénia, Angola, Moçambique. A lista exacta sai da consulta do viajante, 39 €.",
+            "description": "Guia de vacinas por destino para quem parte de Portugal: recomendações, malária e requisitos de entrada em 18 destinos. Prepare o itinerário com consulta, 39 €.",
             "datePublished": "2026-09-06",
-            "dateModified": "2026-09-06",
+            "dateModified": "2026-09-27",
             "format": "markdown",
             "image": "/image/guide/travel-cover-hq-2.webp",
             "about": "Medicina do viajante",
@@ -10359,6 +10359,8 @@
         },
         {
             "slug": "vacinas-para-viajar-ao-brasil",
+            "redirectTo": "vacinas-viajante-brasil",
+            "listed": false,
             "title": "Que vacinas preciso para viajar para o Brasil?",
             "description": "Febre amarela em muitas regiões, hepatite A, e malária na Amazónia — não no Rio turístico. Consulta do viajante em Portugal, 39 €, com prescrição para o CVI.",
             "datePublished": "2026-09-06",
@@ -10438,7 +10440,8 @@
         },
         {
             "slug": "vacinas-para-viajar-a-tailandia",
-            "canonicalSlug": "vacinas-viajante-tailandia",
+            "redirectTo": "vacinas-viajante-tailandia",
+            "listed": false,
             "title": "Que vacinas preciso para viajar para a Tailândia?",
             "description": "Resposta curta. O guia principal é Vacinas para a Tailândia (2026): hepatite A, tifóide e malária só em focos florestais. Consulta do viajante, 39 €.",
             "datePublished": "2026-09-06",
@@ -10473,6 +10476,8 @@
         },
         {
             "slug": "vacinas-para-viajar-a-india",
+            "redirectTo": "vacinas-viajante-india",
+            "listed": false,
             "title": "Que vacinas preciso para viajar para a Índia?",
             "description": "Hepatite A e febre tifóide na maior parte dos itinerários. Malária é focal. Consulta do viajante em Portugal, 39 €, com prescrição para o CVI.",
             "datePublished": "2026-09-06",
@@ -10586,6 +10591,8 @@
         },
         {
             "slug": "vacinas-para-viajar-a-angola",
+            "redirectTo": "vacinas-viajante-angola",
+            "listed": false,
             "title": "Que vacinas preciso para viajar para Angola?",
             "description": "Febre amarela muitas vezes obrigatória à entrada, malária em quase todo o país, hepatite A e tifóide. Consulta do viajante em Portugal, 39 €.",
             "datePublished": "2026-09-06",
@@ -10661,6 +10668,8 @@
         },
         {
             "slug": "vacinas-para-viajar-a-mocambique",
+            "redirectTo": "vacinas-viajante-mocambique",
+            "listed": false,
             "title": "Que vacinas preciso para viajar para Moçambique?",
             "description": "Malária em quase todo o país, hepatite A e muitas vezes tifóide. Febre amarela se o voo o exigir. Consulta do viajante em Portugal, 39 €.",
             "datePublished": "2026-09-06",
@@ -11232,6 +11241,477 @@
             "dateModified": "2026-04-15",
             "format": "html",
             "image": "/image/image1_files/CoventGarden_Large_Desktop.jpg"
+        },
+        {
+            "slug": "vacinas-para-viajar-a-sao-tome-e-principe",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para São Tomé e Príncipe?",
+            "description": "Malária em todo o país, hepatite A e febre tifóide. Febre amarela só se fizer escala em país de risco. Consulta do viajante online, 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-guine-bissau"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso da vacina da febre amarela para ir a São Tomé?",
+                    "a": "Só se chegar de um país com risco de febre amarela ou fizer escala num aeroporto desse país, como Acra. Num voo directo de Lisboa, o certificado não é exigido."
+                },
+                {
+                    "q": "Há malária em São Tomé e Príncipe?",
+                    "a": "Sim, o risco é elevado em todo o país. A profilaxia com receita é recomendada para todos os viajantes, incluindo quem vai visitar família."
+                },
+                {
+                    "q": "Quem tem família em São Tomé também precisa de profilaxia?",
+                    "a": "Sim. Quem cresceu num país com malária perde a protecção ao viver fora. Os viajantes que visitam família estão entre os que têm mais risco."
+                },
+                {
+                    "q": "Posso fazer a consulta do viajante online?",
+                    "a": "Sim. A avaliação e as receitas fazem-se por videoconsulta; as vacinas tomam-se depois num CVI. A consulta custa 39 €."
+                },
+                {
+                    "q": "Quanto tempo antes devo marcar?",
+                    "a": "Idealmente 4 a 6 semanas antes. Com pouco tempo, marque na mesma: a profilaxia da malária ainda se consegue organizar."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-guine-bissau",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para a Guiné-Bissau?",
+            "description": "Febre amarela obrigatória à entrada, malária em todo o país, hepatite A, tifóide e meningite em alguns casos. Consulta do viajante online, 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-7.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-sao-tome-e-principe",
+                "vacinas-para-viajar-a-republica-dominicana"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é obrigatória para a Guiné-Bissau?",
+                    "a": "Sim, para todos os viajantes com mais de 1 ano, mesmo num voo directo de Lisboa. O certificado só é válido 10 dias após a vacina."
+                },
+                {
+                    "q": "Há malária em Bissau?",
+                    "a": "Sim. O risco é elevado em todo o país, incluindo a capital e os Bijagós. A profilaxia é recomendada para todos."
+                },
+                {
+                    "q": "Vou visitar família. Preciso mesmo de tudo isto?",
+                    "a": "Sim. Quem visita família tem, em regra, mais risco de malária, febre tifóide e meningite, porque fica mais tempo e mais perto da comunidade."
+                },
+                {
+                    "q": "Onde tomo a vacina da febre amarela?",
+                    "a": "Num Centro de Vacinação Internacional, com prescrição. A consulta do viajante online passa a prescrição, válida em qualquer CVI de Portugal."
+                },
+                {
+                    "q": "Quanto custa a consulta?",
+                    "a": "39 € por pessoa, ou 69 € para duas. As vacinas e a medicação da malária pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-republica-dominicana",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para a República Dominicana (Punta Cana)?",
+            "description": "Nenhuma vacina obrigatória a partir de Portugal. Hepatite A e tifóide recomendadas; malária baixa, sem comprimidos em Punta Cana. Consulta 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-guine-bissau",
+                "vacinas-para-viajar-ao-mexico"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de alguma vacina obrigatória para Punta Cana?",
+                    "a": "Não, se viajar de Portugal. A febre amarela só é exigida a quem chega de quatro estados do Brasil."
+                },
+                {
+                    "q": "Preciso de tomar comprimidos para a malária em Punta Cana?",
+                    "a": "Na maioria dos casos, não. O risco é baixo e a recomendação é evitar picadas. Casos especiais, como grávidas ou estadias longas, avaliam-se em consulta."
+                },
+                {
+                    "q": "Vou ficar num resort. Preciso mesmo da vacina da hepatite A?",
+                    "a": "É recomendada para todos os viajantes não vacinados. A hepatite A transmite-se por alimentos e água contaminados, e os resorts não eliminam esse risco."
+                },
+                {
+                    "q": "Posso viajar grávida para a República Dominicana?",
+                    "a": "Deve discutir a viagem com o seu médico antes de marcar, por causa do Zika e do Oropouche."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa; 69 € para duas pessoas e 107 € para três. As vacinas pagam-se à parte no CVI ou na farmácia."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-mexico",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o México (Cancún, Riviera Maya)?",
+            "description": "Nenhuma vacina obrigatória. Hepatite A, tifóide e sarampo em dia; malária muito baixa, sem comprimidos. Surto de sarampo em 2026. Consulta 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-republica-dominicana",
+                "vacinas-para-viajar-a-cuba"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de vacinas obrigatórias para ir a Cancún?",
+                    "a": "Não. O México não exige nenhuma vacina para entrar. As recomendadas são hepatite A, febre tifóide e sarampo em dia."
+                },
+                {
+                    "q": "Há malária em Cancún ou na Riviera Maya?",
+                    "a": "O risco é muito baixo e não são precisos comprimidos. Basta evitar picadas de mosquito."
+                },
+                {
+                    "q": "Preciso de me vacinar contra o sarampo?",
+                    "a": "Se não tem duas doses registadas, sim. O México teve um surto grande em 2026."
+                },
+                {
+                    "q": "Posso viajar grávida para o México?",
+                    "a": "Deve falar com o seu médico antes de marcar, por causa do Zika e do sarampo."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa; 69 € para duas e 136 € para uma família de quatro. As vacinas pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-cuba",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para Cuba?",
+            "description": "Nenhuma vacina obrigatória a partir de Portugal e sem malária. Hepatite A recomendada; chikungunya, dengue e Oropouche em alta. Consulta 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-ao-mexico",
+                "vacinas-para-viajar-ao-vietname"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de vacinas obrigatórias para ir a Cuba?",
+                    "a": "Não, se viajar de Portugal. A febre amarela só é exigida a quem chega de um país de risco."
+                },
+                {
+                    "q": "Há malária em Cuba?",
+                    "a": "Não. Não são necessários comprimidos para a malária."
+                },
+                {
+                    "q": "Devo tomar a vacina da chikungunya para Cuba?",
+                    "a": "Pode fazer sentido para estadias longas ou durante surtos, a partir dos 12 anos. Discuta-a em consulta; não é recomendada para todos."
+                },
+                {
+                    "q": "Posso viajar grávida para Cuba?",
+                    "a": "Deve falar com o seu médico antes de marcar, por causa do Zika e do Oropouche."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-vietname",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o Vietname?",
+            "description": "Nenhuma vacina obrigatória. Hepatite A e tifóide para quase todos; encefalite japonesa e raiva conforme o roteiro. Malária baixa. Consulta 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-cuba",
+                "vacinas-para-viajar-a-indonesia-bali"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de vacinas obrigatórias para o Vietname?",
+                    "a": "Não. Nenhuma vacina é exigida para entrar no país."
+                },
+                {
+                    "q": "Preciso da vacina da encefalite japonesa?",
+                    "a": "Depende do roteiro. É recomendada para estadias longas ou viagens com muito tempo em zonas rurais e arrozais. Para duas semanas entre cidades, em regra não."
+                },
+                {
+                    "q": "Preciso de comprimidos para a malária?",
+                    "a": "Na maioria das viagens, não. Não há risco em Hanói, Ho Chi Minh, Halong ou Phu Quoc, e o risco é baixo no resto do país."
+                },
+                {
+                    "q": "Vou alugar mota. Muda alguma coisa?",
+                    "a": "Sim: aumenta o risco de acidentes e de contacto com cães. Discuta a vacina da raiva e confirme que o seguro de viagem cobre condução de mota."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-indonesia-bali",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para Bali e a Indonésia?",
+            "description": "Hepatite A e tifóide são consideradas para Bali; há baixo risco de malária e risco de raiva. Veja recomendações, itinerário e consulta do viajante, 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-ao-vietname",
+                "vacinas-para-viajar-ao-peru"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de vacinas obrigatórias para Bali?",
+                    "a": "Não, se viajar de Portugal. A febre amarela só é exigida a quem chega de um país de risco."
+                },
+                {
+                    "q": "Preciso da vacina da raiva para Bali?",
+                    "a": "É muito recomendada para quem anda de mota, faz surf ou trilhos, fica mais de um mês ou viaja com crianças."
+                },
+                {
+                    "q": "Há malária em Bali?",
+                    "a": "Não. O risco existe noutras ilhas da Indonésia, sobretudo na Papua."
+                },
+                {
+                    "q": "E para Lombok ou Komodo?",
+                    "a": "O risco de malária é baixo nas zonas turísticas, mas a decisão depende do roteiro. Discuta-o na consulta."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-peru",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o Peru (Machu Picchu e Amazónia)?",
+            "description": "Nenhuma vacina obrigatória. Febre amarela e malária só na Amazónia, não em Lima nem Machu Picchu. Hepatite A, tifóide e altitude. Consulta 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-4.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-indonesia-bali",
+                "vacinas-para-viajar-a-colombia"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso da vacina da febre amarela para Machu Picchu?",
+                    "a": "Em regra, não. Só é recomendada se o roteiro incluir a Amazónia ou outras zonas de selva."
+                },
+                {
+                    "q": "Há malária em Cusco ou Machu Picchu?",
+                    "a": "Não. A malária concentra-se na Amazónia, sobretudo em Loreto."
+                },
+                {
+                    "q": "Como evito o mal de altitude em Cusco?",
+                    "a": "Suba de forma gradual, descanse nos primeiros dias e beba bastante água. Em alguns casos, pode ser receitada medicação preventiva."
+                },
+                {
+                    "q": "Vou a Iquitos. O que muda?",
+                    "a": "Passa a ser recomendada a vacina da febre amarela e, provavelmente, a profilaxia da malária. Marque a consulta com pelo menos 2 semanas de antecedência."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas e a medicação pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-colombia",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para a Colômbia?",
+            "description": "Febre amarela recomendada em certos roteiros, hepatite A e tifóide para muitos viajantes; malária em algumas zonas. Veja regras, vacinas e consulta, 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-ao-peru",
+                "vacinas-para-viajar-a-marrocos"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso da vacina da febre amarela para a Colômbia?",
+                    "a": "Para entrar no país vindo de Portugal, em regra não. Mas é recomendada para a maioria dos roteiros fora das grandes cidades, e exigida para entrar em parques como o Tayrona."
+                },
+                {
+                    "q": "Vou só a Cartagena e Medellín. Preciso de alguma vacina?",
+                    "a": "Hepatite A e febre tifóide são recomendadas. A febre amarela decide-se em consulta, conforme as excursões que fizer."
+                },
+                {
+                    "q": "Há malária em Cartagena?",
+                    "a": "Não. O risco de malária está na costa do Pacífico, na Amazónia e noutras zonas rurais."
+                },
+                {
+                    "q": "Tenho mais de 60 anos. Posso fazer a vacina da febre amarela?",
+                    "a": "Pode, mas o risco de efeitos graves é maior. A decisão deve ser feita em consulta, pesando o roteiro."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-marrocos",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para Marrocos?",
+            "description": "Nenhuma vacina obrigatória e sem malária. Hepatite A recomendada; tifóide e raiva conforme a viagem. Sarampo em dia. Consulta do viajante 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-country-road.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-colombia",
+                "vacinas-para-viajar-ao-egipto"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de vacinas obrigatórias para Marrocos?",
+                    "a": "Não. Marrocos não exige nenhuma vacina a quem viaja de Portugal."
+                },
+                {
+                    "q": "Há malária em Marrocos?",
+                    "a": "Não. Não são precisos comprimidos para a malária."
+                },
+                {
+                    "q": "Vou só uma semana a Marraquexe. Preciso de alguma vacina?",
+                    "a": "A hepatite A é recomendada. Confirme também o sarampo e o tétano."
+                },
+                {
+                    "q": "Preciso da vacina da raiva para Marrocos?",
+                    "a": "Para uma viagem curta em cidade, em regra não. Faz sentido para trekking, bicicleta, estadias longas e crianças."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-egipto",
+            "group": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar para o Egipto?",
+            "description": "Nenhuma vacina obrigatória a partir de Portugal e sem malária. Hepatite A recomendada; tifóide e raiva conforme a viagem. Consulta do viajante 39 €.",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "format": "markdown",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "consulta-do-viajante-online",
+                "vacinas-para-viajar-a-marrocos"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de vacinas obrigatórias para o Egipto?",
+                    "a": "Não, se viajar directamente de Portugal. A febre amarela só é exigida a quem chega de países de risco."
+                },
+                {
+                    "q": "Há malária no Egipto?",
+                    "a": "Não nas zonas turísticas. Não são precisos comprimidos para Cairo, Luxor, Assuão ou o mar Vermelho."
+                },
+                {
+                    "q": "Posso nadar no Nilo?",
+                    "a": "Não é recomendado, por causa da schistosomíase. O mar Vermelho e as piscinas são seguros."
+                },
+                {
+                    "q": "Vou fazer um cruzeiro no Nilo. Que vacinas preciso?",
+                    "a": "Hepatite A e tétano em dia. A febre tifóide pode ser considerada, conforme a duração e as refeições fora do barco."
+                },
+                {
+                    "q": "Quanto custa a consulta do viajante?",
+                    "a": "39 € por pessoa, 69 € para duas. As vacinas pagam-se à parte."
+                }
+            ]
         }
     ]
 }

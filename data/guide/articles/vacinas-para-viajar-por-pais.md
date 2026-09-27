@@ -21,6 +21,18 @@ A [consulta do viajante online](/travel-clinic) da Lon Clinic (39 €) cruza des
 English, for people living in Portugal and travelling from here: [Travel vaccines by country](/blog/travel-vaccines-by-country).
 
 ## Guias por destino (2026)
+- [Que vacinas preciso para viajar para São Tomé e Príncipe?](/blog/vacinas-para-viajar-a-sao-tome-e-principe)
+- [Que vacinas preciso para viajar para a Guiné-Bissau?](/blog/vacinas-para-viajar-a-guine-bissau)
+- [Que vacinas preciso para viajar para a República Dominicana (Punta Cana)?](/blog/vacinas-para-viajar-a-republica-dominicana)
+- [Que vacinas preciso para viajar para o México (Cancún, Riviera Maya)?](/blog/vacinas-para-viajar-ao-mexico)
+- [Que vacinas preciso para viajar para Cuba?](/blog/vacinas-para-viajar-a-cuba)
+- [Que vacinas preciso para viajar para o Vietname?](/blog/vacinas-para-viajar-ao-vietname)
+- [Que vacinas preciso para viajar para Bali e a Indonésia?](/blog/vacinas-para-viajar-a-indonesia-bali)
+- [Que vacinas preciso para viajar para o Peru (Machu Picchu e Amazónia)?](/blog/vacinas-para-viajar-ao-peru)
+- [Que vacinas preciso para viajar para a Colômbia?](/blog/vacinas-para-viajar-a-colombia)
+- [Que vacinas preciso para viajar para Marrocos?](/blog/vacinas-para-viajar-a-marrocos)
+- [Que vacinas preciso para viajar para o Egipto?](/blog/vacinas-para-viajar-ao-egipto)
+- [Guia rápido: vacinas para viajar ao Quénia](/blog/vacinas-para-viajar-ao-quenia)
 
 - [Vacinas para o Brasil](/blog/vacinas-viajante-brasil)
 - [Vacinas para Angola](/blog/vacinas-viajante-angola)
@@ -42,11 +54,11 @@ English, for people living in Portugal and travelling from here: [Travel vaccine
 | [Tanzânia / Zanzibar](/blog/vacinas-viajante-quenia-tanzania) | Hepatite A, tifóide; febre amarela se vier do Quénia ou de escala &gt;12 h | Abaixo de 1800 m, incluindo Zanzibar | Só Tanzânia, sem escala longa: vacina em geral não exigida |
 | [Tailândia](/blog/vacinas-viajante-tailandia) | Hepatite A, hepatite B; tifóide e raiva conforme o roteiro | Fronteiras florestais, não Phuket nem Koh Samui | Encefalite japonesa: um mês ou mais, ou muito tempo rural |
 | [Índia](/blog/vacinas-viajante-india) | Febre tifoide, hepatite A (mesmo em viagens curtas) | Grande parte do país, incluindo Deli e Mumbai; sem risco acima de 2000 m | Febre amarela se vier de país com risco |
-| Peru | Febre amarela (selva/Amazónia), hepatite A | Selva; não o circuito clássico de Cusco da mesma forma | Altitude é outro problema (não é vacina) |
-| Colômbia | Febre amarela em algumas regiões, hepatite A | Focal | Confirme o itinerário, não só «Colômbia» |
+| [Peru](/blog/vacinas-para-viajar-ao-peru) | Febre amarela (selva/Amazónia), hepatite A | Selva; não o circuito clássico de Cusco da mesma forma | Altitude é outro problema (não é vacina) |
+| [Colômbia](/blog/vacinas-para-viajar-a-colombia) | Febre amarela em algumas regiões, hepatite A | Focal | Confirme o itinerário, não só «Colômbia» |
 | África do Sul | Hepatite A; febre amarela sobretudo se o voo passa por país endémico | Nordeste (Kruger e arredores), não a Cidade do Cabo | Malária não é «o país todo» |
-| Vietname | Hepatite A, tifóide | Focal, não o circuito urbano típico | Encefalite japonesa se rural/longo |
-| México / Jamaica / Maldivas / Uruguai / Japão | Rotina + hepatite A em vários destes | Geralmente não (excepções focais no México) | Risco alimentar ≠ paludismo |
+| [Vietname](/blog/vacinas-para-viajar-ao-vietname) | Hepatite A, tifóide | Focal, não o circuito urbano típico | Encefalite japonesa se rural/longo |
+| [México](/blog/vacinas-para-viajar-ao-mexico) / Jamaica / Maldivas / Uruguai / Japão | Rotina + hepatite A em vários destes | Geralmente não (excepções focais no México) | Risco alimentar ≠ paludismo |
 
 ## Onde vacinar depois da consulta
 

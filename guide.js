@@ -455,14 +455,23 @@ function articleLangMeta(meta) {
 }
 
 function isListedArticle(article) {
-    return article && article.listed !== false;
+    return article && article.listed !== false && !article.redirectTo;
+}
+
+function articleRedirect(slug) {
+    const manifest = loadManifest();
+    const article = (manifest.articles || []).find((item) => item && item.slug === slug);
+    const target = String((article && article.redirectTo) || '');
+    if (!isValidSlug(target) || target === slug) return '';
+    const exists = (manifest.articles || []).some((item) => item && item.slug === target && !item.redirectTo);
+    return exists ? `/blog/${encodeURIComponent(target)}` : '';
 }
 
 function siblingArticles(current, articles) {
     const group = current && current.group;
     if (!group) return [];
     return (Array.isArray(articles) ? articles : []).filter(
-        (a) => a && a.group === group && isValidSlug(a.slug)
+        (a) => a && a.group === group && isValidSlug(a.slug) && isListedArticle(a)
     );
 }
 
@@ -4351,6 +4360,7 @@ function injectHomeEditorialHtml(html) {
 module.exports = {
     escapeHtml,
     isValidSlug,
+    articleRedirect,
     renderBlogIndex,
     renderMagazineIndex,
     renderBlogArticle,
