@@ -525,6 +525,72 @@ body.nx-page.urgent-landing {
 .nx-plan--soon { border-style: dashed; background: #fff; }
 .nx-plan--soon .nx-plan-price strong { color: var(--nx-ghost); font-size: 40px; letter-spacing: -0.5px; }
 
+/* Psychology prices: two continuous-care plans, followed by two intro-session choices. */
+.psi-subscription-grid { max-width: 980px; margin: 0 auto; gap: 24px; }
+.psi-subscription-grid .nx-plan { padding: 34px 32px; }
+.psi-subscription-grid .nx-plan-badge { position: static; display: inline-block; align-self: flex-start; margin-bottom: 14px; }
+.psi-subscription-grid .nx-plan-title { min-height: 2.2em; }
+.psi-first-visit {
+    margin: 64px auto 0;
+    max-width: 980px;
+    padding: clamp(24px, 4vw, 40px);
+    border: 1px solid var(--nx-border-mid);
+    border-radius: var(--nx-r-xl);
+    background: var(--nx-paper);
+}
+.psi-first-head { max-width: 640px; margin: 0 auto 26px; text-align: center; }
+.psi-first-head .nx-kicker { margin-bottom: 10px; }
+.psi-first-head h3 { margin: 0 0 10px; color: var(--nx-ink); font: 600 clamp(26px, 3vw, 34px)/1.15 var(--nx-display); }
+.psi-first-head h3 em { color: var(--nx-text-accent); }
+.psi-first-head > p:last-child { margin: 0; color: var(--nx-ink-soft); font-size: 14px; line-height: 1.6; }
+.psi-first-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.psi-first-card { display: flex; flex-direction: column; gap: 12px; padding: 22px; border: 1px solid var(--nx-border-mid); border-radius: var(--nx-r-lg); background: #fff; }
+.psi-first-card-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.psi-first-card-top span { color: var(--nx-ink-soft); font-size: 13px; font-weight: 600; }
+.psi-first-card-top strong { color: var(--nx-ink); font: 600 34px/1 var(--nx-display); }
+.psi-first-card > p { flex: 1; margin: 0 0 4px; color: var(--nx-ink-soft); font-size: 13px; line-height: 1.5; }
+.psi-first-card .nx-btn { min-height: 46px; }
+@media (max-width: 860px) {
+    .psi-subscription-grid, .psi-first-grid { grid-template-columns: 1fr; }
+    .psi-subscription-grid .nx-plan-title { min-height: 0; }
+    .psi-first-visit { margin-top: 42px; }
+}
+
+/* Integrated care: short introduction and one card per specialty. */
+.psi-integrated .nx-head { max-width: 760px; margin: 0 auto 34px; }
+.psi-integrated-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+.psi-integrated-card { padding: 26px; border: 1px solid var(--nx-border-mid); border-radius: var(--nx-r-lg); background: #fff; box-shadow: 0 10px 28px rgba(var(--nx-deep-rgb), 0.06); }
+.psi-integrated-card h3 { margin: 0 0 7px; color: var(--nx-ink); font: 600 20px/1.2 var(--nx-display); }
+.psi-integrated-card p { margin: 0; color: var(--nx-ink-soft); font-size: 13px; line-height: 1.55; }
+@media (max-width: 700px) { .psi-integrated-grid { grid-template-columns: 1fr; gap: 12px; } .psi-integrated-card { padding: 20px; } }
+
+/* The psychology landing links to one short, non-diagnostic burnout quiz. */
+.psi-burnout-section .nx-head { max-width: 740px; margin: 0 auto 28px; }
+.psi-burnout-card { display: flex; align-items: center; gap: 18px; max-width: 740px; margin: 0 auto; padding: 22px 24px; border: 1px solid var(--nx-border-mid); border-radius: var(--nx-r-lg); background: #fff; color: var(--nx-ink); text-decoration: none; box-shadow: 0 12px 32px rgba(var(--nx-deep-rgb), 0.08); transition: transform 180ms ease, box-shadow 180ms ease; }
+.psi-burnout-card:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(var(--nx-deep-rgb), 0.13); }
+.psi-burnout-card-copy { display: grid; flex: 1; gap: 5px; }
+.psi-burnout-card-copy strong { font-size: 16px; }
+.psi-burnout-card-copy small { color: var(--nx-ink-soft); font-size: 12px; }
+.psi-burnout-card-action { color: var(--nx-text-accent); font-size: 13px; font-weight: 600; white-space: nowrap; }
+@media (max-width: 560px) { .psi-burnout-card { align-items: flex-start; padding: 18px; gap: 12px; } .psi-burnout-card-action { font-size: 0; } .psi-burnout-card-action span { font-size: 20px; } }
+
+/* Clearer close card: balanced line lengths and less empty space between actions. */
+.page-psychology .nx-final { padding: 80px 0; }
+.page-psychology .nx-final-card { padding: 44px clamp(22px, 5vw, 52px); }
+.page-psychology .nx-final-card h2 { margin-bottom: 14px; }
+.page-psychology .nx-final-card .psi-close-intro { max-width: 720px; margin: 0 auto 26px; }
+.psi-close-prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 760px; margin: 0 auto 16px; text-align: left; }
+.psi-close-price { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 7px 14px; padding: 18px 20px; border: 1px solid rgba(var(--nx-on-gradient-rgb), 0.22); border-radius: 16px; background: rgba(var(--nx-on-gradient-rgb), 0.08); }
+.psi-close-price > span { grid-column: 1 / -1; margin-bottom: 2px; color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.psi-close-price > strong { color: var(--nx-on-gradient); font-size: 19px; white-space: nowrap; }
+.psi-close-price > strong small { color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 12px; font-weight: 500; }
+.psi-close-price > small { grid-column: 1 / -1; color: rgba(var(--nx-on-gradient-rgb), 0.72); font-size: 12px; line-height: 1.5; }
+.page-psychology .nx-final-card .psi-close-request { margin: 0 auto 22px; color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 13px; }
+.page-psychology .nx-final-btns { gap: 12px; }
+.page-psychology .nx-final-note { margin: 22px auto 0; line-height: 1.5; }
+@media (max-width: 700px) { .psi-close-prices { grid-template-columns: 1fr; gap: 10px; } }
+@media (max-width: 560px) { .page-psychology .nx-final { padding: 56px 0; } .page-psychology .nx-final-card { padding: 34px 22px; } .psi-close-price { padding: 16px; } }
+
 /* Phase / info strip */
 .nx-phases {
     margin-top: 36px;
@@ -745,3 +811,13 @@ body.nx-page.urgent-landing {
         line-height: 1;
     }
 }
+
+/* Center every element in the psychology page's opening section. */
+.page-psychology .nx-hero-grid { justify-items: center; }
+.page-psychology .nx-hero-left { width: 100%; margin-inline: auto; text-align: center; }
+.page-psychology .nx-hero-pill { justify-content: center; margin-inline: auto; }
+.page-psychology .nx-hero h1,
+.page-psychology .nx-hero-lead { margin-inline: auto; }
+.page-psychology .psi-hero-choices { margin-inline: auto; text-align: left; }
+.page-psychology .nx-hero-trust { justify-content: center; margin-inline: auto; }
+.page-psychology .nx-alert { justify-content: center; margin-inline: auto; text-align: center; }
