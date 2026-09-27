@@ -10139,7 +10139,7 @@ app.use((req, res, next) => {
         'consulta-pages.js', 'queixas.js', 'nutricao.js', 'tourist-pages.js',
         'pillar-pages.js', 'producers.js', 'wellness.js', 'utm.js', 'nutricao-nurture.js',
         'info-ssr.js', 'authors.js', 'cvi.js', 'staff-booking.js', 'clinical-quizzes.js',
-        'clinical-quiz-score.js', 'analytics-network.js', 'talk-cta.js',
+        'analytics-network.js', 'talk-cta.js',
         'totp.js', 'field-crypto.js', 'agent-seo.js',
         'package.json', 'package-lock.json', 'procfile', 'cookies.txt',
         'env_setup.txt', 'tailwind-src.css', 'dockerfile',
