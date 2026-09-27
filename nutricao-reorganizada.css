@@ -1,0 +1,64 @@
+/* Page-specific layout for the reworked nutrition landing page. */
+.nutri-hero-rework { padding: calc(var(--lon-nav-h, 72px) + 44px) 0 64px; }
+.nutri-hero-rework .nx-hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(280px, .75fr); align-items: center; gap: clamp(36px, 7vw, 92px); }
+.nutri-hero-rework h1 { max-width: 760px; font-size: clamp(2.5rem, 5.2vw, 4.4rem); line-height: 1.04; }
+.nutri-hero-rework .nx-hero-left { max-width: 760px; }
+.nutri-hero-rework .nx-hero-lead { max-width: 620px; font-size: clamp(1.05rem, 1.5vw, 1.25rem); line-height: 1.6; }
+.nutri-hero-note { margin: 16px 0 0; color: rgba(255,255,255,.78); font-size: .88rem; line-height: 1.5; }
+.nutri-hero-portrait { position: relative; margin: 0; max-width: 390px; justify-self: center; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 180px 180px 22px 22px; background: linear-gradient(155deg, #536e5d, #263e30); box-shadow: 0 24px 56px rgba(31, 53, 43, .16); }
+.nutri-hero-portrait img { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+.nutri-hero-portrait figcaption { position: absolute; inset: auto 14px 14px; padding: 11px 14px; text-align: center; color: #fff; font-size: .88rem; font-weight: 600; border-radius: 9px; background: rgba(27, 43, 33, .72); backdrop-filter: blur(8px); }
+.nutri-hero-rework .nx-hero-btns { margin-top: 26px; }
+.nutri-hero-rework .nx-btn--ghost { border-color: rgba(34, 64, 48, .22); color: var(--nx-deep, #264331); background: rgba(255,255,255,.7); }
+.nutri-narrow { max-width: 880px; }
+.nutri-audience { background: #f7f8f4; }
+.nutri-audience-list { list-style: none; padding: 0; margin: 26px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.nutri-audience-list li { position: relative; padding: 18px 18px 18px 48px; background: #fff; border: 1px solid rgba(36, 69, 50, .12); border-radius: 14px; line-height: 1.5; }
+.nutri-audience-list li::before { content: "✓"; position: absolute; left: 18px; top: 17px; color: #477a59; font-weight: 700; }
+.nutri-how { background: #fff; }
+.nutri-how .nx-steps { max-width: 760px; margin-bottom: 28px; }
+.nutri-how .nx-step h3 { margin: 0 0 6px; }
+.nutri-how .nx-step p { margin: 0; line-height: 1.6; }
+.nutri-how > .nx-inner > .nx-btn { margin-left: 66px; }
+.nutri-team { background: #f4f7f2; }
+.nutri-team-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; max-width: 920px; margin: 28px auto 0; }
+.nutri-person { display: flex; align-items: center; gap: 20px; min-width: 0; padding: 22px; background: #fff; border: 1px solid rgba(36, 69, 50, .12); border-radius: 18px; }
+.nutri-person img { width: 104px; height: 104px; flex: 0 0 104px; object-fit: cover; object-position: center 25%; border-radius: 50%; background: #e8eee8; }
+.nutri-person-initials { display: grid; place-items: center; width: 104px; height: 104px; flex: 0 0 104px; border-radius: 50%; color: #315540; background: #e5eee6; font: 600 1.55rem/1 var(--nx-display, Georgia, serif); }
+.nutri-person h3 { margin: 0 0 6px; font-size: 1.18rem; }
+.nutri-person p { margin: 0 0 10px; color: var(--nx-ink-soft, #53645d); font-size: .9rem; line-height: 1.5; }
+.nutri-person a { color: #356746; font-weight: 600; text-underline-offset: 3px; }
+.nutri-plans { background: #fff; }
+.nutri-plans .nx-plan-grid { max-width: 1020px; margin-inline: auto; }
+.nutri-plans .nx-plan { padding-top: 30px; }
+.nutri-plans .nx-plan-badge { display: none; }
+.nutri-plans .nx-plan-price del { display: block; margin-top: 5px; color: var(--nx-ghost, #66756b); font-size: .9rem; font-weight: 500; }
+.nutri-plans .nx-plan--featured .nx-plan-name { color: rgba(255,255,255,.76); }
+.nutri-plans .nx-plan--featured .nx-plan-price del { color: rgba(255,255,255,.68); }
+.nutri-plans .nx-plan-foot { margin-top: 20px; text-align: center; }
+.nutri-single-note { margin: 24px 0 0; text-align: center; color: var(--nx-ink-soft, #53645d); }
+.nutri-free { background: #f7f8f4; }
+.nutri-free-card { max-width: 1020px; }
+.nutri-free-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 26px 0; }
+.nutri-free-columns > div { padding: 20px; background: #fff; border: 1px solid rgba(36, 69, 50, .12); border-radius: 14px; }
+.nutri-free-columns h3 { margin: 0 0 8px; font-size: 1rem; }
+.nutri-free-columns p { margin: 0; line-height: 1.55; color: var(--nx-ink-soft, #53645d); }
+.nutri-free-card > .nx-btn { margin-top: 4px; }
+@media (max-width: 800px) {
+  .nutri-hero-rework { padding-top: calc(var(--lon-nav-h, 72px) + 30px); }
+  .nutri-hero-rework .nx-hero-grid { grid-template-columns: 1fr; gap: 30px; }
+  .nutri-hero-rework h1 { font-size: clamp(2.2rem, 9vw, 3.3rem); }
+  .nutri-hero-portrait { max-width: 290px; }
+  .nutri-audience-list { grid-template-columns: 1fr; }
+  .nutri-team-grid { grid-template-columns: 1fr; max-width: 560px; }
+  .nutri-free-columns { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 600px) {
+  .nutri-hero-rework .nx-hero-btns { align-items: stretch; flex-direction: column; }
+  .nutri-hero-rework .nx-hero-btns .nx-btn { justify-content: center; }
+  .nutri-how > .nx-inner > .nx-btn { margin-left: 0; }
+  .nutri-person { align-items: flex-start; padding: 16px; gap: 14px; }
+  .nutri-person img { width: 78px; height: 78px; flex-basis: 78px; }
+  .nutri-person-initials { width: 78px; height: 78px; flex-basis: 78px; }
+  .nutri-plan-grid { grid-template-columns: 1fr; }
+}
