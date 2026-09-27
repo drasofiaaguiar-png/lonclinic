@@ -2658,6 +2658,14 @@ body.dash-portal .dash-stat-card {
     color: var(--text-primary, #1c2a24);
 }
 
+.admin-dir-email {
+    max-width: 100%;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    color: var(--text-secondary, #64748b);
+}
+
 .admin-dir-role {
     font-size: 0.75rem;
     font-weight: 600;

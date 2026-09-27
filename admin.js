@@ -5783,6 +5783,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return `<button type="button" class="admin-dir-card${selected ? ' is-selected' : ''}" data-dir-key="${escapeHtml(key)}" aria-pressed="${selected ? 'true' : 'false'}">
                 ${professionalPhotoHtml(p, 'admin-dir-photo')}
                 <strong class="admin-dir-name">${escapeHtml(title)}</strong>
+                <span class="admin-dir-email">${escapeHtml(String(p.email || '').trim() || 'Email não definido')}</span>
                 <span class="admin-dir-role">${escapeHtml(role)}</span>
                 <span class="admin-pro-status${status.off ? ' is-off' : ''}">${escapeHtml(status.text)}</span>
             </button>`;
