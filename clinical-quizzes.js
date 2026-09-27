@@ -14,7 +14,7 @@ const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
 const CSS_V = '20260923a';
-const JS_V = '20260927a';
+const JS_V = '20260928a';
 
 const CBI = {
     id: 'cbi',
