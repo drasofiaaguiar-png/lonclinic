@@ -840,7 +840,7 @@ function renderQuizPage(origin, def) {
         <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" data-cta="book" href="${stickyHref}">${def.scoring === 'imc' ? 'Ver nutrição' : 'Marcar consulta'}</a>
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
-    <script src="/lon-analytics.js?v=20260924a" defer></script>
+    <script src="/lon-analytics.js?v=20260927a" defer></script>
     <script src="/lon-slots.js?v=20260922imc" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
@@ -1059,7 +1059,7 @@ ${__lonHeader.renderHeaderScripts(false)}
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/lon-analytics.js?v=20260924a" defer></script>
+    <script src="/lon-analytics.js?v=20260927a" defer></script>
 </body>
 </html>`;
 }

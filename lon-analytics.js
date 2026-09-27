@@ -328,7 +328,7 @@
     function track(name, props) {
         var ev = envelope(name, props);
         enqueue(ev);
-        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_complete|recovery_sent|nurture_sent|intake_submit|triagem_submit)$/.test(name)) {
+        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_start|quiz_complete|recovery_sent|nurture_sent|intake_submit|triagem_submit)$/.test(name)) {
             flush();
         }
         if (typeof gtag === 'function' && name !== 'page_view' && name !== 'heartbeat' && name !== 'scroll_depth') {

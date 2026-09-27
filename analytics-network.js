@@ -625,6 +625,12 @@ function topicSummary(rows) {
     const topics = new Map();
     const getTopic = (row) => {
         const path = normalizeAnalyticsPath(row.pagePath || row.page_path || '').toLowerCase();
+        const blogArticle = path.match(/^\/blog\/([^/?#]+)/);
+        const slug = blogArticle ? blogArticle[1] : '';
+        // Give explicit blog URL patterns priority so each article is assigned
+        // to its editorial theme even when its slug contains secondary terms.
+        if (/^(?:vacina|vacinas|viajante|consulta-do-viajante|profilaxia-malaria|malaria|febre-amarela)/.test(slug)) return 'Saúde do viajante';
+        if (slug && /burnout|ansiedade|depress|psicolog|stress|estresse|autismo|tdah|bipolar|mindfulness|saude-mental|saudemental/.test(slug)) return 'Saúde mental';
         if (/saudemental|saude-mental|psicolog|ansiedade|depress|burnout|stress|estresse|autismo|tdah|bipolar|mindfulness|sono/.test(path)) return 'Saúde mental';
         if (/nutri|emagrec|obesidade|aliment|peso|imc/.test(path)) return 'Nutrição e peso';
         if (/viajante|vacina|viagem|travel|malaria|febre-amarela/.test(path)) return 'Saúde do viajante';
@@ -634,7 +640,7 @@ function topicSummary(rows) {
     for (const r of rows || []) {
         const topic = getTopic(r);
         if (!topic) continue;
-        if (!topics.has(topic)) topics.set(topic, { key: topic, pageviews: 0, visitors: new Set(), sessions: new Set(), quizStarts: 0, quizCompletions: 0, articles: new Set(), pages: new Set() });
+        if (!topics.has(topic)) topics.set(topic, { key: topic, pageviews: 0, visitors: new Set(), sessions: new Set(), quizStarts: 0, quizCompletions: 0, articles: new Set(), articleVisitors: new Set(), articlePageviews: 0, pages: new Set() });
         const item = topics.get(topic);
         const path = normalizeAnalyticsPath(r.pagePath || r.page_path || '').toLowerCase();
         if (r.name === 'page_view') {
@@ -642,14 +648,19 @@ function topicSummary(rows) {
             if (r.visitorId) item.visitors.add(String(r.visitorId));
             if (r.sessionId) item.sessions.add(String(r.sessionId));
             if (path) item.pages.add(path);
-            if (/\/guide\/|\/guia\/|\/artigos?\//.test(path)) item.articles.add(path);
+            if (/^\/blog\/[^/]+(?:\/|$)|\/guide\/|\/guia\/|\/artigos?\//.test(path)) {
+                item.articles.add(path);
+                item.articlePageviews += 1;
+                if (r.visitorId) item.articleVisitors.add(String(r.visitorId));
+            }
         }
         if (r.name === 'quiz_start') item.quizStarts += 1;
         if (r.name === 'quiz_complete') item.quizCompletions += 1;
     }
     return [...topics.values()].map((t) => ({
         key: t.key, pageviews: t.pageviews, visitors: t.visitors.size, sessions: t.sessions.size,
-        quizStarts: t.quizStarts, quizCompletions: t.quizCompletions, articles: t.articles.size, pages: t.pages.size
+        quizStarts: t.quizStarts, quizCompletions: t.quizCompletions, articles: t.articles.size,
+        articlePageviews: t.articlePageviews, articleVisitors: t.articleVisitors.size, pages: t.pages.size
     })).sort((a, b) => b.pageviews - a.pageviews);
 }
 

@@ -4997,7 +4997,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (topics) {
                 const rows = data.topics || [];
                 topics.innerHTML = rows.length
-                    ? `<div class="an-table-scroll"><table class="an-table"><thead><tr><th>Tema</th><th>Visitantes</th><th>Sessões</th><th>Páginas vistas</th><th>Quizzes iniciados</th><th>Concluídos</th><th>Artigos</th></tr></thead><tbody>${rows.map((t) => `<tr><td>${escapeHtml(t.key || '')}</td><td>${t.visitors || 0}</td><td>${t.sessions || 0}</td><td>${t.pageviews || 0}</td><td>${t.quizStarts || 0}</td><td>${t.quizCompletions || 0}</td><td>${t.articles || 0}</td></tr>`).join('')}</tbody></table></div>`
+                    ? `<div class="an-table-scroll"><table class="an-table"><thead><tr><th>Tema</th><th>Visitantes</th><th>Sessões</th><th>Páginas vistas</th><th>Quizzes iniciados</th><th>Concluídos</th><th>Artigos distintos</th><th>Visitas a artigos</th><th>Visitantes dos artigos</th></tr></thead><tbody>${rows.map((t) => `<tr><td>${escapeHtml(t.key || '')}</td><td>${t.visitors || 0}</td><td>${t.sessions || 0}</td><td>${t.pageviews || 0}</td><td>${t.quizStarts || 0}</td><td>${t.quizCompletions || 0}</td><td>${t.articles || 0}</td><td>${t.articlePageviews || 0}</td><td>${t.articleVisitors || 0}</td></tr>`).join('')}</tbody></table></div>`
                     : '<p class="admin-empty-list">Ainda não há páginas associadas a temas neste período.</p>';
             }
             const funnelEl = document.getElementById('analyticsFunnel');

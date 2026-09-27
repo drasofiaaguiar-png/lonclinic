@@ -482,7 +482,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260924a" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260927a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 
 function injectMetaPixel(html) {
