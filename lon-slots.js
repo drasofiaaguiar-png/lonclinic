@@ -301,6 +301,8 @@
     }
 
     function currentSlotsService() {
+        var slotBox = document.querySelector('[data-next-slots][data-service]');
+        if (slotBox && slotBox.getAttribute('data-service')) return slotBox.getAttribute('data-service');
         try {
             return landingBookMeta().service || 'clinica_geral';
         } catch (e) {
@@ -318,6 +320,16 @@
 
     function slotsCacheKeyFor(service) {
         return SLOTS_CACHE_KEY + ':' + (service || 'clinica_geral');
+    }
+
+    function requestedSlotWindow(service) {
+        var box = Array.prototype.find.call(document.querySelectorAll('[data-next-slots][data-service]'), function (el) {
+            return el.getAttribute('data-service') === service && el.getAttribute('data-time-from') && el.getAttribute('data-time-to');
+        });
+        return box ? {
+            from: box.getAttribute('data-time-from'),
+            to: box.getAttribute('data-time-to')
+        } : null;
     }
 
     function siblingSlotService(service) {
@@ -431,13 +443,16 @@
 
     function fetchSlotsNetwork(service) {
         var requested = service || currentSlotsService();
+        var timeWindow = requestedSlotWindow(requested);
         if (slotsMemory.inflight && slotsMemory.inflightService === requested) {
             return slotsMemory.inflight;
         }
         abortSlotsFetch();
         var controller = typeof AbortController === 'function' ? new AbortController() : null;
         slotsMemory.controller = controller;
-        var req = fetch('/api/next-slots?limit=8&withinHours=72&service=' + encodeURIComponent(requested), {
+        var query = 'limit=8&withinHours=336&service=' + encodeURIComponent(requested);
+        if (timeWindow) query += '&timeFrom=' + encodeURIComponent(timeWindow.from) + '&timeTo=' + encodeURIComponent(timeWindow.to);
+        var req = fetch('/api/next-slots?' + query, {
             credentials: 'same-origin',
             signal: controller ? controller.signal : undefined
         })
@@ -453,6 +468,7 @@
                 });
             })
             .catch(function (err) {
+                if (timeWindow) return { slots: [], _ok: false, _service: requested };
                 var cached = readSlotsCache();
                 if (cached && cached.data) return cached.data;
                 return {
@@ -465,9 +481,10 @@
             .then(function (data) {
                 if (currentSlotsService() !== requested) return data;
                 if (data && data._ok && Array.isArray(data.slots) && !data.error) {
-                    writeSlotsCache(data, requested);
+                    if (!timeWindow) writeSlotsCache(data, requested);
                     return data;
                 }
+                if (timeWindow) return data;
                 var cached = readSlotsCache();
                 if (cached && cached.data) return cached.data;
                 return data;
@@ -485,6 +502,7 @@
     }
 
     function loadSlotsSWR() {
+        if (requestedSlotWindow(currentSlotsService())) return fetchSlotsNetwork(currentSlotsService());
         var cached = readSlotsCache();
         var age = cached ? Date.now() - cached.ts : Infinity;
         if (cached && cached.data && age < SLOTS_TTL_MS) {
@@ -792,8 +810,13 @@
             box.hidden = false;
             if (!slots.length) {
                 box.classList.add('is-fallback');
-                if (row) row.innerHTML = '';
-                fallback.hidden = false;
+                if (box.getAttribute('data-time-from') && box.getAttribute('data-time-to')) {
+                    if (row) row.innerHTML = '<span class="dr-live-slots-empty">Neste momento não há vagas entre as 20:00 e as 21:00. Tenta novamente mais tarde.</span>';
+                    fallback.hidden = true;
+                } else {
+                    if (row) row.innerHTML = '';
+                    fallback.hidden = false;
+                }
                 return;
             }
             box.classList.remove('is-fallback');

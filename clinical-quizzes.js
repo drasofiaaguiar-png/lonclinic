@@ -13,8 +13,8 @@ const { trackedShareUrl } = require('./utm');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
-const CSS_V = '20260923a';
-const JS_V = '20260928a';
+const CSS_V = '20260928b';
+const JS_V = '20260928b';
 
 const CBI = {
     id: 'cbi',
@@ -400,6 +400,14 @@ function utmPair(def, content) {
 }
 
 function quizSlotMeta(def) {
+    if (def.booking && def.booking.slotService) {
+        const href = def.booking.consultHref || '#';
+        return {
+            service: String(def.booking.slotService),
+            href: `${href}?ref=${encodeURIComponent(def.id + '-quiz')}`,
+            kicker: 'Vagas para conversa gratuita · 20:00–21:00'
+        };
+    }
     const href = String((def.booking && (def.booking.subHref || def.booking.consultHref)) || '');
     if (/nutricao-programa/.test(href) || def.cluster === 'nutrition') {
         return {
@@ -433,7 +441,7 @@ function quizSlotsHtml(def) {
     if (def.booking && def.booking.hideSlots) return '';
     const pack = quizSlotMeta(def);
     return `
-                        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="quiz-${escapeHtml(def.id)}" hidden>
+                        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}"${def.booking && def.booking.slotTimeFrom ? ` data-time-from="${escapeHtml(def.booking.slotTimeFrom)}" data-time-to="${escapeHtml(def.booking.slotTimeTo || '23:59')}"` : ''} data-book-href="${escapeHtml(pack.href)}" data-surface="quiz-${escapeHtml(def.id)}" hidden>
                             <p class="dr-live-slots-kicker">${escapeHtml(pack.kicker)}</p>
                             <div class="dr-live-slots-row" data-next-slots-row></div>
                             <a href="${escapeHtml(pack.href)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
@@ -659,7 +667,7 @@ function renderQuizPage(origin, def) {
     ${jsonLdScripts}
     <link rel="stylesheet" href="/landing.css?v=20260621b">
     <link rel="stylesheet" href="/burnout-quiz.css?v=${CSS_V}">
-    ${def.id === 'tfeq' ? `<link rel="stylesheet" href="/tfeq-modern.css?v=20260927a">` : ''}
+    ${def.id === 'tfeq' ? `<link rel="stylesheet" href="/tfeq-modern.css?v=20260928b">` : ''}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">

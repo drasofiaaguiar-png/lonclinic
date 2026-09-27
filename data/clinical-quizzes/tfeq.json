@@ -59,9 +59,9 @@
     ]}
   ],
   "bands": [
-    { "max": 39, "pill": "BAIXO", "concern": "low", "title": "Nenhum padrão está a mandar no prato", "text": "Os três fatores estão numa zona baixa. Se o peso resiste na mesma, o tema pode ser metabolismo, medicação, sono ou um plano pouco ajustado — não um padrão alimentar extremo.", "cta": "Uma consulta de clínica geral (39€) ajuda a ver análises, medicação e o que realmente come. Sem um PDF genérico.", "bookLabel": "Marcar consulta", "bookNote": "Videoconsulta · 30 min" },
-    { "max": 64, "pill": "MODERADO", "concern": "mid", "title": "Há um padrão a travar-te", "text": "Um dos três fatores já está elevado o suficiente para explicar porque «saber o que comer» não chega. O gráfico abaixo diz se o travão é restrição rígida, descontrolo ou emoção.", "cta": "Marca consulta. Levamos este TFEQ à sessão para não tratares fome emocional como se fosse falta de disciplina.", "bookLabel": "Marcar consulta", "bookNote": "Videoconsulta · o resultado fica na marcação" },
-    { "max": 100, "pill": "ELEVADO", "concern": "high", "title": "O obstáculo principal já está identificado", "text": "O fator dominante está alto. Restrição extrema rebenta em descontrolo; descontrolo pede estrutura; alimentação emocional pede o eixo stress/ansiedade — por vezes com psicologia, não só com um plano de kcal.", "cta": "Marca agora. Se o padrão for emocional ou de compulsão, cruzamos com o YFAS e, se fizer sentido, com a consulta de longevidade (79€).", "bookLabel": "Marcar consulta", "bookNote": "Videoconsulta · o resultado chega à consulta" }
+    { "max": 39, "pill": "BAIXO", "concern": "low", "title": "Padrões alimentares pouco marcados", "text": "Nenhum dos três padrões se destaca. Este resultado é apenas um ponto de partida.", "cta": "Fala gratuitamente com um médico durante 15 minutos para esclarecer o resultado.", "bookLabel": "Marcar conversa gratuita", "bookNote": "Conversa médica por videochamada · 15 min · gratuita. Inclui apenas a discussão do resultado e de opções que te possam beneficiar; não inclui exames nem receitas." },
+    { "max": 64, "pill": "MODERADO", "concern": "mid", "title": "Há um padrão a explorar", "text": "Um dos fatores destaca-se mais. O resultado não é um diagnóstico.", "cta": "Fala gratuitamente com um médico durante 15 minutos para esclarecer o resultado.", "bookLabel": "Marcar conversa gratuita", "bookNote": "Conversa médica por videochamada · 15 min · gratuita. Inclui apenas a discussão do resultado e de opções que te possam beneficiar; não inclui exames nem receitas." },
+    { "max": 100, "pill": "ELEVADO", "concern": "high", "title": "Um padrão merece atenção", "text": "Este fator destacou-se nas tuas respostas. Uma conversa pode ajudar a perceber o que significa para ti.", "cta": "Fala gratuitamente com um médico durante 15 minutos para discutir o resultado.", "bookLabel": "Marcar conversa gratuita", "bookNote": "Conversa médica por videochamada · 15 min · gratuita. Inclui apenas a discussão do resultado e de opções que te possam beneficiar; não inclui exames nem receitas." }
   ],
   "insights": {
     "cr": { "title": "Restrição cognitiva a mandar", "text": "O teu travão é o controlo: porções, alimentos proibidos, «estar de dieta». Sem estrutura flexível, este padrão costuma rebentar em descontrolo. A consulta trabalha regras que durem — não mais uma lista curta." },
@@ -69,16 +69,19 @@
     "ee": { "title": "Alimentação emocional a mandar", "text": "Comes quando estás ansioso, triste ou sozinho. O obstáculo não é falta de informação nutricional — é o eixo stress/humor. A nutrição trata o prato; a psicologia trata o gatilho. Os testes GAD-7 e PSS-10 afinam essa parte." }
   },
   "booking": {
-    "consultHref": "/marcar/nutricao-programa",
-    "consultName": "Consulta inicial de nutrição metabólica",
-    "consultPrice": "115",
-    "consultMeta": "Mês 1 do programa · depois 75 €/mês",
-    "subHref": "/marcar/nutricao-completo",
-    "subName": "Programa completo (com psicologia)",
-    "subPrice": "227",
-    "subMeta": "Nutrição + 12 sessões · mês 1",
-    "stickyLabel": "Consulta inicial de nutrição",
-    "hideSubOn": ["BAIXO"]
+    "consultHref": "/marcar/burnout-orientacao",
+    "consultName": "Conversa gratuita com um médico · 15 min",
+    "consultPrice": "",
+    "consultMeta": "Videochamada · gratuita",
+    "subHref": "/marcar/burnout-orientacao",
+    "subName": "Conversa gratuita com um médico · 15 min",
+    "subPrice": "",
+    "subMeta": "Videochamada · gratuita",
+    "stickyLabel": "Conversa gratuita com um médico",
+    "slotService": "burnout_orientacao",
+    "slotTimeFrom": "20:00",
+    "slotTimeTo": "20:59",
+    "hideSubOn": ["BAIXO", "MODERADO", "ELEVADO"]
   },
   "related": ["imc", "yfas", "who5", "ess"],
   "introLinks": [

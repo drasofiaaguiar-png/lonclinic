@@ -185,6 +185,22 @@
     box-shadow: 0 10px 24px rgba(37, 130, 83, .23);
 }
 
+/* Keep the TFEQ result focused on the three scores and the free orientation. */
+.bq-page--tfeq .bq-card--results .bq-gauge-wrap,
+.bq-page--tfeq .bq-card--results .bq-insights,
+.bq-page--tfeq .bq-card--results .bq-cta,
+.bq-page--tfeq .bq-card--results .bq-related,
+.bq-page--tfeq .bq-card--results .lon-share,
+.bq-page--tfeq .bq-card--results .bq-hold,
+.bq-page--tfeq .bq-card--results .bq-buy-trust,
+.bq-page--tfeq #stickyBook { display: none !important; }
+.bq-page--tfeq .bq-card--results .bq-band { margin-bottom: 20px; }
+.bq-page--tfeq .bq-card--results .bq-scale-note { display: none; }
+.bq-page--tfeq .bq-card--results .bq-book-now { margin: 22px 0; }
+.bq-page--tfeq .bq-card--results .bq-book-now-note { max-width: 620px; margin: 12px auto 0; line-height: 1.55; }
+.bq-page--tfeq .bq-card--results .dr-live-slots { margin-top: 16px; }
+.bq-page--tfeq .bq-card--results .bq-restart { margin-top: 20px; }
+
 @media (max-width: 520px) {
     .bq-page--tfeq .bq-main { padding: 22px 14px 32px; }
     .bq-page--tfeq .bq-intro { padding: 34px 22px 28px; border-radius: 22px; }

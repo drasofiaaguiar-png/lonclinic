@@ -7950,6 +7950,8 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
     const horizonMs = horizonHours > 0 ? Date.now() + horizonHours * 60 * 60 * 1000 : Infinity;
     const now = lisbonNowParts();
     const service = bookingServiceTag((opts && opts.service) || '');
+    const timeFrom = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(opts && opts.timeFrom || '')) ? String(opts.timeFrom) : '';
+    const timeTo = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(opts && opts.timeTo || '')) ? String(opts.timeTo) : '';
     const specialty = staffBooking.specialtyForService(service, (opts && opts.specialty) || '');
     const wantId = Number(opts && opts.professionalId);
     let staffPeople = Array.isArray(opts && opts.people) && opts.people.length
@@ -8007,6 +8009,14 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
                 professionals: pros
             });
         }
+    }
+    if (timeFrom && timeTo) {
+        const from = timeToMinutes(timeFrom);
+        const to = timeToMinutes(timeTo);
+        return pool.filter((s) => {
+            const mins = timeToMinutes(s.time);
+            return mins != null && mins >= from && mins <= to;
+        }).slice(0, cap);
     }
     const evening = pool.filter((s) => isEveningTime(s.time));
     const weekend = pool.filter((s) => isWeekendIso(s.date));
@@ -18581,7 +18591,9 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
     const specialty = String((opts && opts.specialty) || '').trim().toLowerCase();
     const professionalId = Number(opts && opts.professionalId);
     const proKey = Number.isInteger(professionalId) && professionalId > 0 ? String(professionalId) : '';
-    const cacheKey = `${limit}:${withinHours}:${service}:${specialty}:${proKey}`;
+    const timeFrom = String(opts && opts.timeFrom || '');
+    const timeTo = String(opts && opts.timeTo || '');
+    const cacheKey = `${limit}:${withinHours}:${service}:${specialty}:${proKey}:${timeFrom}-${timeTo}`;
     const hit = nextSlotsCache.get(cacheKey);
     if (hit && Date.now() - hit.ts < NEXT_SLOTS_TTL_MS) {
         return { body: hit.body, cache: 'HIT' };
@@ -18595,7 +18607,9 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
         const slots = await getNextBookableSlots(limit, maxDays, withinHours, {
             service,
             specialty,
-            professionalId: proKey ? professionalId : null
+            professionalId: proKey ? professionalId : null,
+            timeFrom,
+            timeTo
         });
         const body = {
             slots,
@@ -18633,12 +18647,16 @@ app.get('/api/next-slots', rateLimitNextSlots, async (req, res) => {
         const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 8, 1), 8);
         const withinHours = Math.min(Math.max(parseInt(req.query.withinHours, 10) || 168, 1), 336);
         const service = bookingServiceTag(req.query.service || 'clinica_geral');
+        const timeFrom = String(req.query.timeFrom || '');
+        const timeTo = String(req.query.timeTo || '');
         const specialty = String(req.query.specialty || '').trim().toLowerCase();
         const professionalId = Number(req.query.professionalId);
         const { body, cache } = await loadNextSlotsBody(limit, withinHours, {
             service,
             specialty,
-            professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
+            professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null,
+            timeFrom,
+            timeTo
         });
         res.set('Cache-Control', `public, max-age=${Math.ceil(NEXT_SLOTS_TTL_MS / 1000)}, stale-while-revalidate=60`);
         res.set('X-Slots-Cache', cache);
