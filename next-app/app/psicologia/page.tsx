@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import PricingCard from '@/components/modules/PricingCard';
-import TestimonialVisual from '@/components/modules/TestimonialVisual';
 import FAQItem from '@/components/modules/FAQItem';
 import type { Metadata } from 'next';
 
@@ -186,36 +185,7 @@ export default function PsicologiaPage() {
             />
           </div>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1100px] mx-auto px-6">
-          <h2 className="text-center text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-[var(--text)] mb-12">
-            O que dizem os nossos pacientes
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <TestimonialVisual
-              avatarSrc="/image/hero-run.webp"
-              avatarAlt="Paciente"
-              stars={5}
-              text="Finalmente consegui encontrar um psicólogo que me compreende. O facto de poder mudar sem custos extra deu-me a liberdade de encontrar a pessoa certa."
-              author="Paciente verificada"
-              role="Setembro de 2026"
-            />
-            
-            <TestimonialVisual
-              avatarSrc="/image/hero-bay.webp"
-              avatarAlt="Paciente"
-              stars={5}
-              text="As sessões online são surpreendentemente eficazes. Consigo falar de casa, no meu espaço, e isso faz toda a diferença."
-              author="Paciente verificado"
-              role="Agosto de 2026"
-            />
-          </div>
-        </div>
-      </section>
+      </section>`r`n
 
       {/* Badges */}
       <section className="py-12 bg-[var(--bg-alt)]">

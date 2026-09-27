@@ -450,18 +450,6 @@
             html += '<div class="triagem-proof-inner">';
             html += '<p class="triagem-proof-kicker">O que dizem os nossos pacientes?</p>';
             html += '<p class="triagem-proof-subtitle">Clientes reais verificados pelo Trustpilot</p>';
-            html += '<div class="triagem-proof-grid">';
-            html += '<blockquote class="triagem-proof-card">';
-            html += '<div class="triagem-proof-stars" aria-hidden="true">★★★★★</div>';
-            html += '<p class="triagem-proof-quote">«A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos.»</p>';
-            html += '<footer class="triagem-proof-author">Paciente verificada</footer>';
-            html += '</blockquote>';
-            html += '<blockquote class="triagem-proof-card">';
-            html += '<div class="triagem-proof-stars" aria-hidden="true">★★★★★</div>';
-            html += '<p class="triagem-proof-quote">«Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. A Dra. Rita foi muito simpática, atenciosa e profissional.»</p>';
-            html += '<footer class="triagem-proof-author">Miguel <a href="https://pt.trustpilot.com/review/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-profile>via Trustpilot</a></footer>';
-            html += '</blockquote>';
-            html += '</div>';
             html += '<div class="triagem-proof-badge">';
             html += '<a class="lon-tp-badge" href="https://pt.trustpilot.com/review/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-profile>';
             html += '<svg class="lon-trustpilot-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false">';

@@ -3,7 +3,6 @@ import ServiceCard from '@/components/modules/ServiceCard';
 import ConditionCard from '@/components/modules/ConditionCard';
 import ResultCard from '@/components/modules/ResultCard';
 import TransformationSection from '@/components/modules/TransformationSection';
-import TestimonialVisual from '@/components/modules/TestimonialVisual';
 import FeatureBlock from '@/components/modules/FeatureBlock';
 import Link from 'next/link';
 
@@ -222,47 +221,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-center text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-[var(--text)] mb-12 tracking-tight">
-            Ser ouvido faz diferença
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <TestimonialVisual
-              avatarSrc="/image/hero-run.webp"
-              avatarAlt="Paciente"
-              stars={5}
-              text="A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos."
-              author="Paciente verificada"
-              role="Junho de 2026"
-            />
-            
-            <TestimonialVisual
-              avatarSrc="/image/hero-bay.webp"
-              avatarAlt="Miguel"
-              stars={5}
-              text="Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. Muito simpática, atenciosa e profissional."
-              author="Miguel"
-              role="Via Trustpilot · Setembro de 2026"
-            />
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="https://pt.trustpilot.com/review/lonclinic.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-base font-semibold text-[var(--primary)] no-underline hover:text-[var(--primary-dark)] hover:underline transition-colors"
-            >
-              Ver todas as avaliações no Trustpilot →
-            </Link>
-          </div>
-        </div>
-      </section>
+      </section>`r`n
 
       {/* Why LON Clinic */}
       <section className="py-20 bg-[var(--bg-alt)]">

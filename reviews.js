@@ -15,13 +15,11 @@
             verifiedPatient: 'Verified patient',
             translationNote: 'Translated from Portuguese (not the original text)',
             originalNote: 'Original text in Portuguese (not translated)',
-            seedQuote: 'I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.'
         },
         es: {
             verifiedPatient: 'Paciente verificada',
             translationNote: 'Traducción del portugués (no es el texto original)',
             originalNote: 'Texto original en portugués (sin traducción)',
-            seedQuote: '¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.'
         }
     };
 
@@ -164,7 +162,7 @@
             const res = await fetch('/api/reviews/public');
             if (!res.ok) return;
             const data = await res.json();
-            const list = data.reviews || [];
+            const list = (data.reviews || []).filter(function (review) { return !isSeedReview(review); });
             const cardClass = container.dataset.cardClass || 'lon-testimonial-card';
             const locale = detectLocale();
             const limit = parseInt(container.dataset.limit, 10);
