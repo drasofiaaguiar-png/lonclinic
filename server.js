@@ -1207,6 +1207,17 @@ async function requireAuth(req, res, next) {
     } catch (err) {
         console.error('bindStaffSession:', err.message);
     }
+    if (req.session.clinicRole === 'clinician') {
+        const id = Number(req.session.professionalId);
+        const pro = Number.isInteger(id) && id > 0
+            ? await findProfessionalByIdInternal(id).catch(() => null)
+            : null;
+        if (!pro || pro.active === false) {
+            req.session.clinicAuthenticated = false;
+            req.session.professionalId = null;
+            return res.status(401).json({ error: 'Professional account is inactive or unavailable' });
+        }
+    }
     return next();
 }
 
@@ -2582,32 +2593,9 @@ async function findProfessionalByEmailInternal(email) {
 async function findProfessionalForClinicLogin(identifier) {
     const email = normalizeStaffEmail(identifier);
     if (!isValidStaffEmail(email)) return null;
-    const byEmail = await findProfessionalByEmailInternal(email);
-    if (byEmail) return byEmail;
-    try {
-        const app = await findPsychologistApplicationByEmailInternal(email);
-        if (!app) return null;
-        if (app.professionalId) {
-            const byId = await findProfessionalByIdInternal(app.professionalId);
-            if (byId) return byId;
-        }
-        const appName = bolsaApplicationName(app) || app.name;
-        if (!appName) return null;
-        const byName = await findProfessionalByDisplayNameInternal(appName);
-        if (byName) return byName;
-        if (usePersistentDb) {
-            const byFull = await db.findProfessionalByStaffFullName(appName);
-            if (byFull) return byFull;
-        }
-        const list = await listProfessionalsInternal();
-        return (list || []).find((p) => {
-            if (!p || p.active === false) return false;
-            return personNamesMatch(p.displayName, appName) || usernameMatchesPersonName(p.username, appName);
-        }) || null;
-    } catch (err) {
-        console.error('findProfessionalForClinicLogin bolsa:', err.message);
-    }
-    return null;
+    // A Bolsa application is not an identity proof. Only an email already
+    // explicitly attached to a professional account may authenticate it.
+    return findProfessionalByEmailInternal(email);
 }
 
 async function findProfessionalByDisplayNameInternal(name) {
@@ -3659,23 +3647,19 @@ async function bootstrapPersistence() {
         await ensureWellnessClubSeed();
         await ensureProfessionalDoxyRooms();
         await ensureKnownBolsaApplications();
-        await ensureAllBolsaStaffProfiles();
         await fixKnownEmailTypos();
         await assignKnownProfessionalEmails();
         await removeDuplicateMariaSaraProfessionals();
         await removeExperimentalTestProfessionals();
-        await ensureAllStaffProfilesHaveLogins();
         return;
     }
     scheduleStore = loadScheduleStore();
     persistScheduleStoreToFile();
     await ensureProfessionalDoxyRooms();
     await ensureKnownBolsaApplications();
-    await ensureAllBolsaStaffProfiles();
     await assignKnownProfessionalEmails();
     await removeDuplicateMariaSaraProfessionals();
     await removeExperimentalTestProfessionals();
-    await ensureAllStaffProfilesHaveLogins();
 }
 
 async function fixKnownEmailTypos() {
@@ -12244,7 +12228,8 @@ const PSYCH_APP_ALLOWED_STATUS = new Set([
     'aceite',
     'bolsa',
     'rejeitado',
-    'eliminado'
+    'eliminado',
+    'contratado'
 ]);
 
 function memoryPsychologistApplicationFromRecord(record, previous) {
@@ -12315,15 +12300,6 @@ function buildAdminBolsaPatch(existing, body) {
         patch.professionalId = existing.professionalId;
     }
     return patch;
-}
-
-async function syncBolsaApplicationSideEffects(app) {
-    if (!app) return app;
-    const professional = await linkedProfessionalForApplication(app);
-    if (!professional) return app;
-    await setApplicationProfessionalIdInternal(app.id, professional.id);
-    await seedPsychologistStaffProfile(professional, app);
-    return { ...app, professionalId: professional.id };
 }
 
 async function listPsychologistApplicationsInternal({ status, band, q, limit } = {}) {
@@ -12410,7 +12386,10 @@ async function listBookingProfessionalNamesInternal() {
 
 app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
     try {
-        const status = req.query.status ? String(req.query.status) : '';
+        const requestedStatus = req.query.status ? String(req.query.status) : '';
+        const status = requestedStatus === 'ativos' || requestedStatus === 'contratado'
+            ? undefined
+            : requestedStatus;
         const band = req.query.band ? String(req.query.band) : '';
         const q = req.query.q ? String(req.query.q) : '';
         const list = await listPsychologistApplicationsInternal({
@@ -12421,6 +12400,8 @@ app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
         });
         const applications = [];
         for (const app of list || []) {
+            if (requestedStatus === 'ativos' && String(app.status || '') === 'contratado') continue;
+            if (requestedStatus === 'contratado' && String(app.status || '') !== 'contratado') continue;
             applications.push(await enrichPsychologistApplicationSafe(app));
         }
         res.json({ applications, total: applications.length });
@@ -12471,20 +12452,8 @@ app.post('/api/admin/psychologists', requireAdmin, express.json(), async (req, r
             psychologistApplicationsStore.unshift(application);
             if (psychologistApplicationsStore.length > 500) psychologistApplicationsStore.length = 500;
         }
-        application = await syncBolsaApplicationSideEffects(application);
-        let loginResult = null;
-        if (body.createLogin === true) {
-            const already = await linkedProfessionalForApplication(application);
-            if (!already) {
-                loginResult = await assignLoginToPsychologistApplication(application, { resetPassword: false });
-                application = await findPsychologistApplicationInternal(application.id) || application;
-            }
-        }
         res.status(201).json({
             application: await enrichPsychologistApplication(application),
-            professional: loginResult ? publicProfessional(loginResult.professional) : undefined,
-            setupEmailSent: loginResult && loginResult.setupEmailSent,
-            emailedTo: loginResult && loginResult.emailedTo
         });
     } catch (err) {
         console.error('POST /api/admin/psychologists:', err.message);
@@ -12493,95 +12462,58 @@ app.post('/api/admin/psychologists', requireAdmin, express.json(), async (req, r
 });
 
 app.post('/api/admin/psychologists/logins', requireAdmin, async (req, res) => {
-    try {
-        const skip = new Set(['rejeitado', 'eliminado']);
-        const list = await listPsychologistApplicationsInternal({ limit: 300 });
-        const created = [];
-        const linked = [];
-        for (const app of list || []) {
-            if (skip.has(String(app.status || ''))) continue;
-            const already = await linkedProfessionalForApplication(app);
-            if (already) {
-                await setApplicationProfessionalIdInternal(app.id, already.id);
-                linked.push({
-                    id: app.id,
-                    name: app.name,
-                    professional: publicProfessional(already)
-                });
-                continue;
-            }
-            const result = await assignLoginToPsychologistApplication(app, { resetPassword: false });
-            created.push({
-                id: app.id,
-                name: app.name,
-                professional: publicProfessional(result.professional),
-                setupEmailSent: result.setupEmailSent,
-                emailedTo: result.emailedTo
-            });
-        }
-        const accountNames = new Set(
-            ((await listProfessionalsInternal()) || []).map((p) => String(p.displayName || '').trim().toLowerCase()).filter(Boolean)
-        );
-        const named = await listBookingProfessionalNamesInternal();
-        for (const row of named || []) {
-            const name = String((row && row.name) || '').trim();
-            if (!name || accountNames.has(name.toLowerCase())) continue;
-            const username = await allocateProfessionalUsername('', name);
-            const professional = await createProfessionalInternal({
-                username,
-                displayName: name,
-                active: true
-            });
-            const setup = await issueStaffPasswordSetup(professional);
-            created.push({
-                name,
-                professional: publicProfessional(setup.professional || professional),
-                setupEmailSent: setup.setupEmailSent,
-                emailedTo: setup.emailedTo
-            });
-            accountNames.add(name.toLowerCase());
-        }
-        res.json({ created, linked });
-    } catch (err) {
-        console.error('POST /api/admin/psychologists/logins:', err.message);
-        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign logins' });
-    }
+    res.status(410).json({ error: 'A Bolsa é apenas para candidaturas. Crie o profissional em Profissionais ou passe uma candidatura individual para Profissionais quando começar a trabalhar com a clínica.' });
 });
 
-app.post('/api/admin/psychologists/:id/login', requireAdmin, express.json(), async (req, res) => {
+app.post('/api/admin/psychologists/:id/hire', requireAdmin, async (req, res) => {
     try {
         const application = await findPsychologistApplicationInternal(req.params.id);
         if (!application) return res.status(404).json({ error: 'Not found' });
-        const resetPassword = req.body && req.body.resetPassword === true;
-        const already = await linkedProfessionalForApplication(application);
-        if (already && !resetPassword) {
-            await setApplicationProfessionalIdInternal(application.id, already.id);
+        const email = String(application.email || '').trim().toLowerCase();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+            return res.status(400).json({ error: 'Atualize a candidatura com um email válido antes de a passar para Profissionais.' });
+        }
+        const linked = await linkedProfessionalForApplication(application);
+        if (String(application.status || '') === 'contratado' && linked) {
             return res.json({
-                application: await enrichPsychologistApplication({
-                    ...application,
-                    professionalId: already.id
-                }),
-                professional: publicProfessional(already),
-                created: false
+                application: await enrichPsychologistApplication(application),
+                professional: publicProfessional(linked),
+                created: false,
+                setupEmailSent: false
             });
         }
-        const result = await assignLoginToPsychologistApplication(application, {
-            resetPassword: resetPassword || !already
-        });
+        const result = await assignLoginToPsychologistApplication(application, { resetPassword: false });
+        const patch = {
+            ...buildAdminBolsaPatch(application, { status: 'contratado' }),
+            professionalId: result.professional.id
+        };
+        let updated = null;
+        if (usePersistentDb) updated = await db.updatePsychologistApplication(application.id, patch);
+        if (!updated) {
+            const idx = psychologistApplicationsStore.findIndex((row) => String(row.id) === String(application.id));
+            if (idx >= 0) {
+                psychologistApplicationsStore[idx] = memoryPsychologistApplicationFromRecord(
+                    { ...psychologistApplicationsStore[idx], ...patch }, psychologistApplicationsStore[idx]
+                );
+                updated = psychologistApplicationsStore[idx];
+            }
+        }
+        if (!updated) throw new Error('A ficha profissional foi criada, mas não foi possível atualizar o estado da candidatura.');
         res.status(result.created ? 201 : 200).json({
-            application: await enrichPsychologistApplication({
-                ...application,
-                professionalId: result.professional.id
-            }),
+            application: await enrichPsychologistApplication(updated),
             professional: publicProfessional(result.professional),
             setupEmailSent: result.setupEmailSent,
             emailedTo: result.emailedTo,
             created: result.created
         });
     } catch (err) {
-        console.error('POST /api/admin/psychologists/:id/login:', err.message);
-        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign login' });
+        console.error('POST /api/admin/psychologists/:id/hire:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to move applicant to professionals' });
     }
+});
+
+app.post('/api/admin/psychologists/:id/login', requireAdmin, (req, res) => {
+    res.status(410).json({ error: 'As candidaturas da Bolsa não criam contas. Passe cada pessoa para Profissionais quando começar a trabalhar com a clínica.' });
 });
 
 app.get('/api/admin/psychologists/:id/cv', requireAdmin, async (req, res) => {
@@ -12629,7 +12561,6 @@ app.patch('/api/admin/psychologists/:id', requireAdmin, express.json(), async (r
             }
         }
         if (!application) return res.status(404).json({ error: 'Not found' });
-        application = await syncBolsaApplicationSideEffects(application);
         res.json({ application: await enrichPsychologistApplication(application) });
     } catch (err) {
         console.error('PATCH /api/admin/psychologists/:id:', err.message);
@@ -13964,9 +13895,11 @@ app.post('/api/clinic/otp/verify', rateLimitStaffOtp, async (req, res) => {
             professionalId = mem.professionalId || null;
             staffOtpMemory.delete(email);
         }
-        const pro = (professionalId && await findProfessionalByIdInternal(professionalId))
-            || await resolveActiveProfessionalForOtp(email);
-        if (!pro || pro.active === false) {
+        const proByEmail = await findProfessionalByEmailInternal(email);
+        const pro = professionalId
+            ? await findProfessionalByIdInternal(professionalId)
+            : proByEmail;
+        if (!pro || pro.active === false || !proByEmail || Number(proByEmail.id) !== Number(pro.id)) {
             return res.status(401).json({ error: 'Código inválido ou expirado.' });
         }
         const identity = {
@@ -15559,19 +15492,17 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
             return res.status(400).json({ error: 'Nome is required' });
         }
         const profession = String(body.profession || '').trim();
-        if (profession && !STAFF_PROFESSIONS[profession]) {
-            return res.status(400).json({ error: 'Choose médico, nutricionista or psicólogo' });
+        if (!profession || !STAFF_PROFESSIONS[profession]) {
+            return res.status(400).json({ error: 'Escolha a profissão.' });
         }
         let email = String(body.email || '').trim();
-        if (email) {
-            email = normalizeStaffEmail(email);
-            if (!isValidStaffEmail(email)) {
-                return res.status(400).json({ error: 'Email inválido' });
-            }
-            const taken = await findProfessionalByEmailInternal(email);
-            if (taken) {
-                return res.status(409).json({ error: 'That email already has a clinic login' });
-            }
+        email = normalizeStaffEmail(email);
+        if (!isValidStaffEmail(email)) {
+            return res.status(400).json({ error: 'Indique um email válido para o acesso.' });
+        }
+        const taken = await findProfessionalByEmailInternal(email);
+        if (taken) {
+            return res.status(409).json({ error: 'Já existe um profissional com este email.' });
         }
         const requestedUsername = String(body.username || '').trim();
         if (requestedUsername && !isValidProfessionalUsername(requestedUsername)) {
@@ -15608,6 +15539,21 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
         if (bolsaApp) {
             if (created && created.id) {
                 await setApplicationProfessionalIdInternal(bolsaApp.id, created.id);
+            }
+            const hiredPatch = {
+                ...buildAdminBolsaPatch(bolsaApp, { status: 'contratado' }),
+                professionalId: created.id
+            };
+            if (usePersistentDb) {
+                await db.updatePsychologistApplication(bolsaApp.id, hiredPatch);
+            } else {
+                const applicationIndex = psychologistApplicationsStore.findIndex((row) => String(row.id) === String(bolsaApp.id));
+                if (applicationIndex >= 0) {
+                    psychologistApplicationsStore[applicationIndex] = memoryPsychologistApplicationFromRecord(
+                        { ...psychologistApplicationsStore[applicationIndex], ...hiredPatch },
+                        psychologistApplicationsStore[applicationIndex]
+                    );
+                }
             }
             await seedPsychologistStaffProfile(created || { username, displayName: fullName, email }, bolsaApp);
             await copyBolsaCvToStaffDocuments((created && created.username) || username, bolsaApp);
@@ -15709,72 +15655,11 @@ app.delete('/api/admin/staff-profiles/:username', requireAdmin, async (req, res)
 });
 
 app.post('/api/admin/staff-profiles/logins', requireAdmin, async (req, res) => {
-    try {
-        const created = await ensureAllStaffProfilesHaveLogins();
-        res.json({ created });
-    } catch (err) {
-        console.error('POST /api/admin/staff-profiles/logins:', err.message);
-        res.status(500).json({ error: err.message || 'Failed to assign logins' });
-    }
+    res.status(410).json({ error: 'Os acessos são criados com a ficha do profissional e associados ao email; não é necessário atribuir logins separadamente.' });
 });
 
 app.post('/api/admin/staff-profiles/:username/login', requireAdmin, express.json(), async (req, res) => {
-    try {
-        const username = String(req.params.username || '').trim().toLowerCase();
-        if (!username || !isValidProfessionalUsername(username)) {
-            return res.status(400).json({ error: 'Username is required' });
-        }
-        if (username === normalizeProfessionalUsername(CLINIC_USERNAME)) {
-            return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
-        }
-        const existing = await findProfessionalByUsernameInternal(username);
-        if (existing) {
-            return res.status(409).json({
-                error: 'This professional already has a clinic login',
-                professional: publicProfessional(existing)
-            });
-        }
-        const profile = await getStaffProfileInternal(username);
-        if (!profile.updatedAt) {
-            return res.status(404).json({ error: 'Professional file not found' });
-        }
-        const filled = await fillStaffProfileFromBolsa(username);
-        const displayName = firstNonEmpty(profile.fullName, filled.bolsa && filled.bolsa.name, username);
-        const email = firstNonEmpty(
-            req.body && req.body.email,
-            filled.bolsa && filled.bolsa.email
-        );
-        if (email) {
-            const taken = await findProfessionalByEmailInternal(email);
-            if (taken) {
-                return res.status(409).json({ error: 'That email already has a clinic login' });
-            }
-        }
-        const created = await createProfessionalInternal({
-            username,
-            displayName,
-            email,
-            active: true
-        });
-        if (filled.app && filled.app.id) {
-            await setApplicationProfessionalIdInternal(filled.app.id, created.id);
-            await seedPsychologistStaffProfile(created, filled.app);
-            await copyBolsaCvToStaffDocuments(created.username, filled.app);
-        }
-        console.log(`   👤 Login assigned to professional file: ${created.username}`);
-        const setup = await issueStaffPasswordSetup(created);
-        res.status(201).json({
-            professional: publicProfessional(setup.professional || created),
-            setupEmailSent: setup.setupEmailSent,
-            emailedTo: setup.emailedTo
-        });
-    } catch (err) {
-        if (err && err.code === '23505') {
-            return res.status(409).json({ error: 'That username is already in use' });
-        }
-        console.error('POST /api/admin/staff-profiles login:', err.message);
-        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign login' });
-    }
+    res.status(410).json({ error: 'Crie a ficha do profissional em Profissionais, indicando o email de acesso. Não é necessário atribuir login depois.' });
 });
 
 app.get('/api/admin/staff-profiles/:username/bolsa-cv', requireAdmin, async (req, res) => {
@@ -16173,116 +16058,6 @@ async function findBolsaApplicationForStaff(username, professional) {
         console.error('findBolsaApplicationForStaff by name:', err.message);
     }
     return seed || finish(null);
-}
-
-/**
- * Every professional file gets a clinic login so they can enter /profissional with email + OTP.
- * The email comes from the linked bolsa application when there is one; otherwise the admin adds it later.
- */
-async function ensureAllStaffProfilesHaveLogins() {
-    const created = [];
-    try {
-        const profiles = await listStaffProfilesInternal();
-        for (const profile of profiles || []) {
-            const username = normalizeProfessionalUsername(profile && profile.username);
-            if (!username || !isValidProfessionalUsername(username)) continue;
-            if (username === normalizeProfessionalUsername(CLINIC_USERNAME)) continue;
-            try {
-                if (await findProfessionalByUsernameInternal(username)) continue;
-                const filled = await fillStaffProfileFromBolsa(username);
-                const bolsa = filled && filled.bolsa;
-                const displayName = firstNonEmpty(
-                    isJunkStaffName(profile.fullName) ? '' : profile.fullName,
-                    bolsa && bolsa.name,
-                    username
-                );
-                let email = normalizeStaffEmail(bolsa && bolsa.email);
-                if (!isValidStaffEmail(email) || (await findProfessionalByEmailInternal(email))) email = '';
-                const professional = await createProfessionalInternal({
-                    username,
-                    displayName,
-                    email,
-                    active: true
-                });
-                if (email) {
-                    try { await issueStaffPasswordSetup(professional); } catch (_) { /* optional */ }
-                }
-                if (filled && filled.app && filled.app.id && professional && professional.id) {
-                    try { await setApplicationProfessionalIdInternal(filled.app.id, professional.id); } catch (_) { /* optional link */ }
-                }
-                created.push({ username, displayName, email });
-                console.log(
-                    `   👤 Login created for professional file ${username}`
-                    + (email ? ` (${email})` : ' (no email yet — add it in Admin → Professionals → Editar ficha)')
-                );
-            } catch (err) {
-                console.error(`ensureAllStaffProfilesHaveLogins ${username}:`, err.message);
-            }
-        }
-    } catch (err) {
-        console.error('ensureAllStaffProfilesHaveLogins:', err.message);
-    }
-    return created;
-}
-
-async function ensureAllBolsaStaffProfiles() {
-    try {
-        const apps = await listPsychologistApplicationsInternal({ limit: 300 });
-        const pros = await listProfessionalsInternal();
-        const proByEmail = new Map();
-        for (const p of pros || []) {
-            const email = normalizeStaffEmail(p && p.email);
-            if (isValidStaffEmail(email) && !proByEmail.has(email)) proByEmail.set(email, p);
-        }
-        for (const app of apps || []) {
-            const emails = bolsaApplicationEmails(app);
-            let match = null;
-            let matchedByEmail = false;
-            for (const email of emails) {
-                match = proByEmail.get(email) || (pros || []).find((p) => normalizeStaffEmail(p.email) === email);
-                if (match) {
-                    matchedByEmail = true;
-                    break;
-                }
-            }
-            if (!match) {
-                const appName = bolsaApplicationName(app);
-                match = (pros || []).find((p) => {
-                    if (!p) return false;
-                    if (usernameMatchesPersonName(p.username, appName)) return true;
-                    if (personNamesMatch(p.displayName, appName) && !isClinicLeadDoxyName(p.displayName) && !isJunkStaffName(p.displayName)) return true;
-                    return false;
-                });
-            }
-            if (!match) continue;
-            const appEmail = emails[0] || '';
-            try {
-                if (appEmail && !isValidStaffEmail(match.email)) {
-                    const updated = await patchProfessionalInternal(match, { email: appEmail });
-                    if (updated) Object.assign(match, updated);
-                    proByEmail.set(appEmail, match);
-                }
-                if (matchedByEmail || !app.professionalId) {
-                    if (Number(app.professionalId) !== Number(match.id)) {
-                        await setApplicationProfessionalIdInternal(app.id, match.id);
-                        await copyBolsaCvToStaffDocuments(match.username, app);
-                    }
-                }
-            } catch (err) {
-                console.error('ensureAllBolsaStaffProfiles link:', err.message);
-            }
-        }
-        for (const pro of pros || []) {
-            if (!pro || !pro.username) continue;
-            try {
-                await fillStaffProfileFromBolsa(pro.username);
-            } catch (err) {
-                console.error('ensureAllBolsaStaffProfiles seed:', err.message);
-            }
-        }
-    } catch (err) {
-        console.error('ensureAllBolsaStaffProfiles:', err.message);
-    }
 }
 
 async function ensureKnownBolsaApplications() {
@@ -16698,6 +16473,8 @@ async function fillStaffProfileFromBolsa(username) {
         app = mergeKnownBolsaApplication(null, u, professional);
     }
     if (!app) app = mergeKnownBolsaApplication(null, u, professional);
+    // Bolsa applications remain separate until an explicit move to Professionals.
+    if (app && String(app.status || '') !== 'contratado') app = null;
     try {
         if (app && professional) {
             let justLinked = false;
@@ -16731,7 +16508,7 @@ async function fillStaffProfileFromBolsa(username) {
     }
     if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
         const seed = mergeKnownBolsaApplication(app, u, professional);
-        if (seed) {
+        if (seed && String(seed.status || '') === 'contratado') {
             app = seed;
             try { bolsa = publicBolsaProfile(seed); } catch (e) { /* ignore */ }
             if (professional && seed) {

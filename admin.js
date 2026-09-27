@@ -362,8 +362,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         availability: { title: 'Availability', subtitle: 'Hours per professional, used on each consultation type' },
         'hours-board': { title: 'Hours board', subtitle: 'Combined hours per profession, inside clinic opening hours' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
-        professionals: { title: 'Professionals', subtitle: 'Directory of clinic professionals' },
-        psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
+        professionals: { title: 'Profissionais', subtitle: 'Pessoas que trabalham com a clínica e entram no portal pelo email' },
+        psychologists: { title: 'Bolsa', subtitle: 'Candidaturas de pessoas que ainda não trabalham com a clínica' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
         'wellness-club': { title: 'LON Wellness Club', subtitle: 'Parceiros do marketplace' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
@@ -3910,7 +3910,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const psychologistsSearch = document.getElementById('psychologistsSearch');
     const psychologistsStatusFilter = document.getElementById('psychologistsStatusFilter');
     const psychologistsRefreshBtn = document.getElementById('psychologistsRefreshBtn');
-    const psychologistsAssignLoginsBtn = document.getElementById('psychologistsAssignLoginsBtn');
     const adminPsychCreds = document.getElementById('adminPsychCreds');
     const adminPsychCredsList = document.getElementById('adminPsychCredsList');
     const psychCredsCopyBtn = document.getElementById('psychCredsCopyBtn');
@@ -4072,12 +4071,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ${PSYCH_STATUS_OPTIONS.map((s) => `<option value="${s}" ${status === s ? 'selected' : ''}>${s}</option>`).join('')}
                         </select>
                     </div>
-                    ${opts && opts.createLogin
-                        ? `<label class="clinic-toggle-label is-wide" for="${escapeHtml(prefix)}-createLogin">
-                            <input type="checkbox" id="${escapeHtml(prefix)}-createLogin" name="createLogin">
-                            <span>Também criar ficha e login da clínica</span>
-                        </label>`
-                        : ''}
                 </div>
             </section>
         `;
@@ -4085,21 +4078,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function readBolsaForm(form) {
-        if (!form) return { payload: {}, status: '', adminNotes: '', createLogin: false };
+        if (!form) return { payload: {}, status: '', adminNotes: '' };
         const payload = {};
         form.querySelectorAll('[name]').forEach((el) => {
             const key = el.getAttribute('name');
-            if (!key || key === 'status' || key === 'adminNotes' || key === 'createLogin') return;
+            if (!key || key === 'status' || key === 'adminNotes') return;
             payload[key] = el.value;
         });
         const statusEl = form.querySelector('[name="status"]');
         const notesEl = form.querySelector('[name="adminNotes"]');
-        const loginEl = form.querySelector('[name="createLogin"]');
         return {
             payload,
             status: statusEl ? statusEl.value : '',
-            adminNotes: notesEl ? notesEl.value : '',
-            createLogin: !!(loginEl && loginEl.checked)
+            adminNotes: notesEl ? notesEl.value : ''
         };
     }
 
@@ -4250,11 +4241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </span>
                     <span class="admin-psych-col admin-psych-col-role"><span class="admin-psych-role-tag">Psicólogo</span></span>
                     <span class="admin-psych-col admin-psych-col-status">${escapeHtml(a.status || 'novo')}</span>
-                    <span class="admin-psych-col admin-psych-col-login">
-                        ${a.professional && a.professional.username
-                            ? `<span class="admin-psych-login-tag">${escapeHtml(a.professional.email || a.professional.username)}</span>`
-                            : '<span class="admin-psych-login-tag is-off">sem login</span>'}
-                    </span>
+                    <span class="admin-psych-col admin-psych-col-login">${a.status === 'contratado' ? 'Profissionais' : 'Candidatura'}</span>
                     <span class="admin-psych-chevron" aria-hidden="true"></span>
                 </summary>
                 <div class="admin-psych-body">
@@ -4264,6 +4251,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <label>
                             Status
                             <select class="admin-select admin-psych-status" data-psych-id="${escapeHtml(a.id)}">
+                                ${a.status === 'contratado' ? 'disabled' : ''}
+                                ${a.status === 'contratado' ? '<option value="contratado" selected>contratado</option>' : ''}
                                 ${PSYCH_STATUS_OPTIONS.map((s) =>
                                     `<option value="${s}" ${a.status === s ? 'selected' : ''}>${s}</option>`
                                 ).join('')}
@@ -4273,10 +4262,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="admin-psych-login-row">
                             <button type="button" class="btn btn-outline btn-sm" data-psych-edit="${escapeHtml(a.id)}">Editar dados</button>
                             <button type="button" class="btn btn-outline btn-sm" data-psych-delete="${escapeHtml(a.id)}">Eliminar</button>
-                            ${a.professional && a.professional.username
-                                ? `<span>Login: <code>${escapeHtml(a.professional.email || a.professional.username)}</code> — entra em <a href="/profissional">/profissional</a> com email + OTP</span>
-                                   <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">Enviar email de acesso</button>`
-                                : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
+                            ${a.status === 'contratado'
+                                ? '<span>Já trabalha com a clínica e está em Profissionais.</span>'
+                                : `<button type="button" class="btn btn-primary btn-sm" data-psych-hire="${escapeHtml(a.id)}">Passar para Profissionais</button>`}
                         </div>
                     </div>
                 </div>
@@ -4311,10 +4299,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const psychCount = document.getElementById('adminPsychCount');
             if (psychCount) {
                 const n = psychologistsCache.length;
-                const withLogin = psychologistsCache.filter((a) => a.professional && a.professional.username).length;
                 psychCount.textContent = n
-                    ? `${n} profissional${n === 1 ? '' : 'is'} na bolsa · ${withLogin} com login`
-                    : 'Candidaturas recebidas (ex.: /recrutamento/psicologia).';
+                    ? `${n} candidatura${n === 1 ? '' : 's'} na Bolsa`
+                    : 'Candidaturas de pessoas que ainda não trabalham com a clínica.';
             }
             renderAdminPsychologists(psychologistsCache);
         } catch (err) {
@@ -4351,62 +4338,81 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminPsychCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    async function assignPsychologistLogin(id, { resetPassword } = {}) {
-        const app = psychologistsCache.find((a) => String(a.id) === String(id))
-            || (typeof boardProfessionalsCache !== 'undefined' ? boardProfessionalsCache.find((a) => String(a.id) === String(id)) : null);
-        const label = app && app.name ? app.name : 'this professional';
-        if (resetPassword && !window.confirm(`Reenviar o email de acesso (OTP) a ${label}?`)) return;
+    async function movePsychologistToProfessionals(id) {
+        const app = psychologistsCache.find((a) => String(a.id) === String(id));
+        const label = app && app.name ? app.name : 'esta pessoa';
+        if (!app || app.status === 'contratado') return;
+        if (!window.confirm(`Passar ${label} da Bolsa para Profissionais? Será criada a ficha, ativado o acesso por email ${app.email || 'da candidatura'} e enviado um email com instruções de acesso.`)) return;
         try {
-            const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}/login`, {
+            const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}/hire`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ resetPassword: !!resetPassword })
+                headers: { 'Content-Type': 'application/json' }
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
             await loadAdminPsychologists();
             if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
-            if (data.setupEmailSent || data.professional) {
-                showPsychCreds([{
-                    name: (data.application && data.application.name) || label,
-                    email: data.emailedTo || data.professional.email || (app && app.email) || '',
-                    setupEmailSent: data.setupEmailSent !== false
-                }]);
-            } else {
-                hidePsychCreds();
-                alert(`${label} is already connected as ${(data.professional && data.professional.username) || 'a clinic login'}.`);
-            }
+            showPsychCreds([{
+                name: (data.application && data.application.name) || label,
+                email: data.emailedTo || (data.professional && data.professional.email) || app.email || '',
+                setupEmailSent: data.setupEmailSent !== false
+            }]);
         } catch (err) {
-            console.error('Assign psychologist login:', err);
-            alert(err.message || 'Não foi possível atribuir o login.');
+            console.error('Move psychologist to professionals:', err);
+            alert(err.message || 'Não foi possível passar para Profissionais.');
         }
     }
 
-    async function assignAllPsychologistLogins() {
-        if (!window.confirm('Atribuir login a todos os da bolsa e nomes já usados em marcações que ainda não têm conta? Candidaturas rejeitadas/eliminadas são ignoradas. Cada profissional entra em /profissional com email e um código OTP — não enviamos password.')) return;
-        try {
-            const res = await fetch('/api/admin/psychologists/logins', { method: 'POST' });
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
-            await loadAdminPsychologists();
-            if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
-            const created = (data.created || []).filter((row) => row.professional);
-            if (created.length) {
-                showPsychCreds(created.map((row) => ({
-                    name: row.name || (row.professional && row.professional.displayName) || '',
-                    email: row.emailedTo || (row.professional && row.professional.email) || row.email || '',
-                    setupEmailSent: row.setupEmailSent !== false
-                })));
-            } else {
-                hidePsychCreds();
-                alert(data.linked && data.linked.length
-                    ? 'Todos já têm login. Use «Enviar email de acesso» numa pessoa se precisar de reenviar o convite OTP.'
-                    : 'No professionals to assign.');
+    const adminProfessionalCreateBtn = document.getElementById('adminProfessionalAddBtn');
+    const adminProfessionalCreateDetails = document.getElementById('adminProfessionalCreateDetails');
+    const adminProfessionalCreateForm = document.getElementById('adminProfessionalCreateForm');
+    if (adminProfessionalCreateBtn && adminProfessionalCreateDetails) {
+        adminProfessionalCreateBtn.addEventListener('click', () => {
+            adminProfessionalCreateDetails.open = true;
+            adminProfessionalCreateDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            adminProfessionalCreateForm?.querySelector('[name="fullName"]')?.focus();
+        });
+    }
+    if (adminProfessionalCreateForm) {
+        adminProfessionalCreateForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const submit = form.querySelector('[type="submit"]');
+            const fields = new FormData(form);
+            const payload = {
+                fullName: String(fields.get('fullName') || '').trim(),
+                email: String(fields.get('email') || '').trim().toLowerCase(),
+                profession: String(fields.get('profession') || '').trim()
+            };
+            if (!payload.fullName || !payload.email || !payload.profession) return;
+            if (submit) submit.disabled = true;
+            showProfessionalError('');
+            try {
+                const response = await fetch('/api/admin/staff-profiles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || 'Não foi possível criar o profissional.');
+                form.reset();
+                if (adminProfessionalCreateDetails) adminProfessionalCreateDetails.open = false;
+                await loadAdminProfessionals();
+                const professional = data.professional || {};
+                showProfessionalError(
+                    `Profissional criado: ${payload.fullName}. Login por email: ${data.emailedTo || payload.email}.`
+                    + (data.setupEmailSent ? ' Foi enviado um email com instruções de acesso.' : '')
+                );
+                if (professional.username) {
+                    selectedProfessionalKey = professionalKey({ username: professional.username });
+                    renderAdminProfessionals();
+                }
+            } catch (error) {
+                showProfessionalError(error.message || 'Erro ao criar profissional.');
+            } finally {
+                if (submit) submit.disabled = false;
             }
-        } catch (err) {
-            console.error('Assign all psychologist logins:', err);
-            alert(err.message || 'Não foi possível atribuir os logins.');
-        }
+        });
     }
 
     async function savePsychologistApplication(id) {
@@ -4467,7 +4473,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({
                     payload: data.payload,
                     status: data.status || 'bolsa',
-                    createLogin: data.createLogin
                 })
             });
             const body = await res.json().catch(() => ({}));
@@ -4478,13 +4483,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (details) details.open = false;
             await loadAdminPsychologists();
             if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
-            if (body.setupEmailSent || body.professional) {
-                showPsychCreds([{
-                    name: (body.application && body.application.name) || data.payload.nome,
-                    email: body.emailedTo || body.professional.email || data.payload.email || '',
-                    setupEmailSent: body.setupEmailSent !== false
-                }]);
-            }
         } catch (err) {
             console.error('Create bolsa:', err);
             alert(err.message || 'Não foi possível adicionar à bolsa.');
@@ -4494,7 +4492,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function deleteBolsaApplication(id) {
         const app = psychologistsCache.find((a) => String(a.id) === String(id));
         const label = (app && app.name) || 'este profissional';
-        if (!window.confirm(`Eliminar ${label} da bolsa? A ficha e o login da clínica, se existirem, mantêm-se.`)) return;
+        if (!window.confirm(`Eliminar a candidatura de ${label} da Bolsa? A ficha em Profissionais, se existir, não será eliminada.`)) return;
         try {
             const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}`, { method: 'DELETE' });
             const body = await res.json().catch(() => ({}));
@@ -4510,7 +4508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const form = document.getElementById('adminBolsaCreateForm');
         if (!form) return;
         form.innerHTML = `
-            ${renderBolsaFormHtml({}, { idPrefix: 'bolsa-new', status: 'bolsa', createLogin: true })}
+            ${renderBolsaFormHtml({}, { idPrefix: 'bolsa-new', status: 'bolsa' })}
             <div class="admin-invite-actions">
                 <button type="submit" class="btn btn-primary">Adicionar à bolsa</button>
             </div>
@@ -4571,9 +4569,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (psychologistsRefreshBtn) {
         psychologistsRefreshBtn.addEventListener('click', () => loadAdminPsychologists());
     }
-    if (psychologistsAssignLoginsBtn) {
-        psychologistsAssignLoginsBtn.addEventListener('click', () => assignAllPsychologistLogins());
-    }
     if (psychologistsStatusFilter) {
         psychologistsStatusFilter.addEventListener('change', () => loadAdminPsychologists());
     }
@@ -4603,14 +4598,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 savePsychologistApplication(saveBtn.getAttribute('data-psych-id'));
                 return;
             }
-            const loginBtn = e.target.closest('[data-psych-login]');
-            if (loginBtn) {
-                assignPsychologistLogin(loginBtn.getAttribute('data-psych-login'));
-                return;
-            }
-            const passwordBtn = e.target.closest('[data-psych-password]');
-            if (passwordBtn) {
-                assignPsychologistLogin(passwordBtn.getAttribute('data-psych-password'), { resetPassword: true });
+            const hireBtn = e.target.closest('[data-psych-hire]');
+            if (hireBtn) {
+                movePsychologistToProfessionals(hireBtn.getAttribute('data-psych-hire'));
                 return;
             }
             const editBtn = e.target.closest('[data-psych-edit]');
@@ -5505,9 +5495,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const editBtn = canEdit
             ? `<button type="button" class="btn btn-outline btn-sm" data-pro-edit="${escapeHtml(p.username)}">Editar ficha</button>`
             : '';
-        const assignLogin = canEdit && !p.hasLogin
-            ? `<button type="button" class="btn btn-primary btn-sm" data-pro-assign-login="${escapeHtml(p.username)}">Atribuir login</button>`
-            : '';
         const loginEmailRow = p.hasLogin && !p.isClinicAdmin
             ? `<div><dt>Email de login</dt><dd>${p.loginEmail
                 ? escapeHtml(p.loginEmail)
@@ -5549,7 +5536,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <dl class="admin-staff-profile-dl">
                 ${loginEmailRow}
-                <div><dt>${p.hasLogin && !p.isClinicAdmin ? 'Email (bolsa / ficha)' : 'Email'}</dt><dd>${dashText(p.email)}</dd></div>
+                ${!p.hasLogin || String(p.email || '').toLowerCase() !== String(p.loginEmail || '').toLowerCase()
+                    ? `<div><dt>${p.hasLogin ? 'Email de contacto' : 'Email'}</dt><dd>${dashText(p.email)}</dd></div>`
+                    : ''}
                 <div><dt>Telefone</dt><dd>${dashText(p.phone || (p.bolsa && p.bolsa.phone))}</dd></div>
                 <div><dt>Sala Doxy.me</dt><dd>${doxy}</dd></div>
                 <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
@@ -5566,67 +5555,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             ${areaTagsHtml(p.primaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas primárias</h4>${areaTagsHtml(p.primaryAreas)}</div>` : ''}
             ${areaTagsHtml(p.secondaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas secundárias</h4>${areaTagsHtml(p.secondaryAreas)}</div>` : ''}
             ${docs ? `<div class="admin-staff-profile-block"><h4>Documentos</h4><ul class="admin-staff-docs">${docs}</ul></div>` : ''}
-            ${!p.hasLogin && canEdit ? '<p class="admin-dir-edit-note">Esta ficha ainda não tem conta de login. Atribua um login e depois envie o email de acesso (OTP).</p>' : ''}
-            ${editBtn || sendLogin || assignLogin ? `<div class="admin-dir-detail-actions">${editBtn}${assignLogin}${sendLogin}</div>` : ''}
+            ${editBtn || sendLogin ? `<div class="admin-dir-detail-actions">${editBtn}${sendLogin}</div>` : ''}
         `;
-    }
-
-    async function assignLoginToStaffFile(username, btn) {
-        const p = professionalByKey(selectedProfessionalKey) || {};
-        if (btn) btn.disabled = true;
-        showProfessionalError('');
-        try {
-            const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: String(p.email || '').trim() })
-            });
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) {
-                showProfessionalError(data.error || 'Não foi possível atribuir o login.');
-                return;
-            }
-            await loadAdminProfessionals();
-            if (data.professional) showProfessionalCreds(data.professional);
-            showProfessionalError(`Login atribuído a ${(data.professional && data.professional.displayName) || username}. ${data.setupEmailSent ? 'Email de acesso (OTP) enviado.' : 'Adicione um email na ficha para enviar o convite.'}`);
-        } catch (err) {
-            showProfessionalError('Erro de rede. Tente novamente.');
-        } finally {
-            if (btn) btn.disabled = false;
-        }
-    }
-
-    const adminDirAssignLoginsBtn = document.getElementById('adminDirAssignLoginsBtn');
-    if (adminDirAssignLoginsBtn) {
-        adminDirAssignLoginsBtn.addEventListener('click', async () => {
-            if (!window.confirm('Criar uma conta de login para todas as fichas que ainda não têm? O email vem da candidatura da bolsa quando existe; os restantes ficam para preencher em "Editar ficha".')) return;
-            adminDirAssignLoginsBtn.disabled = true;
-            showProfessionalError('');
-            try {
-                const res = await fetch('/api/admin/staff-profiles/logins', { method: 'POST' });
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    showProfessionalError(data.error || 'Não foi possível atribuir os logins.');
-                    return;
-                }
-                await loadAdminProfessionals();
-                const created = data.created || [];
-                if (!created.length) {
-                    showProfessionalError('Todas as fichas já têm login.');
-                    return;
-                }
-                const missing = created.filter((row) => !row.email).map((row) => row.displayName || row.username);
-                showProfessionalError(
-                    `${created.length} login(s) criado(s): ${created.map((row) => row.displayName || row.username).join(', ')}.`
-                    + (missing.length ? ` Sem email ainda: ${missing.join(', ')} — preencha em "Editar ficha".` : '')
-                    + ' Cada profissional entra em /profissional com o email da ficha e um código OTP.'
-                );
-            } catch (err) {
-                showProfessionalError('Erro de rede. Tente novamente.');
-            } finally {
-                adminDirAssignLoginsBtn.disabled = false;
-            }
-        });
     }
 
     function inputField(name, label, value, opts) {
@@ -5941,11 +5871,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 dirEditing = false;
                 showProfessionalError('');
                 renderAdminProfessionals();
-                return;
-            }
-            const assignBtn = e.target.closest('[data-pro-assign-login]');
-            if (assignBtn) {
-                void assignLoginToStaffFile(assignBtn.getAttribute('data-pro-assign-login') || '', assignBtn);
                 return;
             }
             const sendLoginBtn = e.target.closest('[data-pro-send-login]');

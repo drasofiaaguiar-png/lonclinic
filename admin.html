@@ -144,8 +144,8 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="hours-board">Hours board</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
-                    <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals</button>
-                    <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="professionals">Profissionais</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="wellness-club">Wellness Club</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
@@ -980,13 +980,30 @@
                 <div class="dash-section">
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
-                            <h2 class="dash-section-title">Professionals</h2>
-                            <p class="dash-section-subtitle" id="adminDirCount">Directory of people with a clinic file or login.</p>
+                            <h2 class="dash-section-title">Profissionais</h2>
+                            <p class="dash-section-subtitle" id="adminDirCount">Pessoas que trabalham com a clínica. Entram no portal com o email.</p>
                         </div>
-                        <div class="admin-schedule-filters" role="group" aria-label="Professional logins">
-                            <button type="button" class="btn btn-outline btn-sm" id="adminDirAssignLoginsBtn">Assign logins to all without one</button>
+                        <div class="admin-schedule-filters">
+                            <button type="button" class="btn btn-primary btn-sm" id="adminProfessionalAddBtn">Adicionar profissional</button>
                         </div>
                     </div>
+                    <details class="admin-create-card" id="adminProfessionalCreateDetails">
+                        <summary>Novo profissional</summary>
+                        <form id="adminProfessionalCreateForm" class="admin-create-form">
+                            <div class="admin-bolsa-form-grid">
+                                <label><span>Nome completo</span><input name="fullName" class="admin-input" required maxlength="160" autocomplete="name"></label>
+                                <label><span>Email de acesso</span><input name="email" type="email" class="admin-input" required autocomplete="email" placeholder="nome@email.com"></label>
+                                <label><span>Profissão</span><select name="profession" class="admin-select" required>
+                                    <option value="">Escolher</option>
+                                    <option value="medico">Médico</option>
+                                    <option value="psicologo">Psicólogo</option>
+                                    <option value="nutricionista">Nutricionista</option>
+                                </select></label>
+                            </div>
+                            <p class="admin-dir-edit-note">A pessoa fica logo em Profissionais e entra no portal com este email, através de um código enviado por email.</p>
+                            <div class="admin-invite-actions"><button type="submit" class="btn btn-primary">Criar profissional</button></div>
+                        </form>
+                    </details>
                     <div class="admin-dir-toolbar">
                         <input type="search" id="adminDirSearch" class="admin-input" placeholder="Search name or email…" autocomplete="off">
                         <div class="admin-dir-type-filters" role="group" aria-label="Filter by profession">
@@ -1020,12 +1037,11 @@
                 <div class="dash-section">
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
-                            <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                            <p class="dash-section-subtitle" id="adminPsychCount">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>). Aceitar/atribuir login cria a mesma pessoa no portal — ficha e login ficam ligados a esta candidatura.</p>
+                        <h2 class="dash-section-title">Bolsa</h2>
+                            <p class="dash-section-subtitle" id="adminPsychCount">Candidaturas de pessoas que ainda não trabalham com a clínica.</p>
                         </div>
                         <div class="admin-schedule-filters" role="group" aria-label="Filtrar profissionais">
                             <button type="button" class="btn btn-primary btn-sm" id="psychologistsAddBtn">Adicionar à bolsa</button>
-                            <button type="button" class="btn btn-primary btn-sm" id="psychologistsAssignLoginsBtn">Assign logins to all without one</button>
                             <button type="button" class="btn btn-outline btn-sm" id="psychologistsRefreshBtn">Refresh</button>
                         </div>
                     </div>
@@ -1036,7 +1052,8 @@
                     <div class="admin-psych-filters">
                         <input type="search" id="psychologistsSearch" class="admin-input" placeholder="Search name, email, cédula…" autocomplete="off">
                         <select id="psychologistsStatusFilter" class="admin-select">
-                            <option value="">All statuses</option>
+                            <option value="ativos" selected>Candidaturas ativas</option>
+                            <option value="">Todos os estados</option>
                             <option value="novo">Novo</option>
                             <option value="prioritario">Prioritário</option>
                             <option value="shortlist">Shortlist</option>
@@ -1045,6 +1062,7 @@
                             <option value="bolsa">Bolsa</option>
                             <option value="rejeitado">Rejeitado</option>
                             <option value="eliminado">Eliminado</option>
+                            <option value="contratado">Já trabalha na clínica</option>
                         </select>
                     </div>
                     <div id="adminPsychCreds" class="admin-pro-creds" hidden>
