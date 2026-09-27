@@ -4986,6 +4986,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const chart = document.getElementById('analyticsChart');
             if (chart) chart.innerHTML = anSpark(data.hourly || []);
+            const weekly = document.getElementById('analyticsWeekly');
+            if (weekly) {
+                const rows = data.weekly || [];
+                weekly.innerHTML = rows.length
+                    ? `<div class="an-table-scroll"><table class="an-table"><thead><tr><th>Semana (desde)</th><th>Visitantes</th><th>Sessões</th><th>Páginas vistas</th><th>Quizzes concluídos</th><th>Marcações</th></tr></thead><tbody>${rows.map((w) => `<tr><td>${escapeHtml(w.key || '')}</td><td>${w.visitors || 0}</td><td>${w.sessions || 0}</td><td>${w.pageviews || 0}</td><td>${w.quizzes || 0}</td><td>${w.bookings || 0}</td></tr>`).join('')}</tbody></table></div>`
+                    : '<p class="admin-empty-list">Ainda não há dados semanais neste período.</p>';
+            }
+            const topics = document.getElementById('analyticsTopics');
+            if (topics) {
+                const rows = data.topics || [];
+                topics.innerHTML = rows.length
+                    ? `<div class="an-table-scroll"><table class="an-table"><thead><tr><th>Tema</th><th>Visitantes</th><th>Sessões</th><th>Páginas vistas</th><th>Quizzes iniciados</th><th>Concluídos</th><th>Artigos</th></tr></thead><tbody>${rows.map((t) => `<tr><td>${escapeHtml(t.key || '')}</td><td>${t.visitors || 0}</td><td>${t.sessions || 0}</td><td>${t.pageviews || 0}</td><td>${t.quizStarts || 0}</td><td>${t.quizCompletions || 0}</td><td>${t.articles || 0}</td></tr>`).join('')}</tbody></table></div>`
+                    : '<p class="admin-empty-list">Ainda não há páginas associadas a temas neste período.</p>';
+            }
             const funnelEl = document.getElementById('analyticsFunnel');
             const funnelTitle = document.getElementById('analyticsFunnelTitle');
             const servicesTitle = document.getElementById('analyticsServicesTitle');

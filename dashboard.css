@@ -5736,6 +5736,9 @@ body.admin-logged-in .dash-content.admin-shell {
 }
 .an-funnel em { color: var(--text-muted); font-style: normal; font-size: 0.75rem; }
 .an-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.an-comparison-grid { grid-template-columns: 1fr; }
+.an-table-scroll { overflow-x: auto; }
+.an-table-scroll .an-table { min-width: 620px; }
 .an-table th, .an-table td {
     text-align: left;
     padding: 8px 6px;

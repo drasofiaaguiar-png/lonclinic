@@ -591,6 +591,68 @@ function hourlySeries(rows, fromIso, days) {
     return arr;
 }
 
+function weeklySeries(rows) {
+    const buckets = new Map();
+    for (const r of rows || []) {
+        if (r.name !== 'page_view') continue;
+        const at = new Date(r.occurredAt);
+        if (!Number.isFinite(at.getTime())) continue;
+        const start = new Date(Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate()));
+        start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
+        const key = start.toISOString().slice(0, 10);
+        if (!buckets.has(key)) buckets.set(key, { key, pageviews: 0, visitors: new Set(), sessions: new Set(), quizzes: 0, bookings: 0 });
+        const week = buckets.get(key);
+        week.pageviews += 1;
+        if (r.visitorId) week.visitors.add(String(r.visitorId));
+        if (r.sessionId) week.sessions.add(String(r.sessionId));
+    }
+    for (const r of rows || []) {
+        const at = new Date(r.occurredAt);
+        if (!Number.isFinite(at.getTime())) continue;
+        const start = new Date(Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate()));
+        start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
+        const week = buckets.get(start.toISOString().slice(0, 10));
+        if (!week) continue;
+        if (r.name === 'quiz_complete') week.quizzes += 1;
+        if (r.name === 'booking_confirmed' || r.name === 'payment_succeeded' || r.name === 'invite_paid') week.bookings += 1;
+    }
+    return [...buckets.values()].sort((a, b) => a.key.localeCompare(b.key)).map((w) => ({
+        key: w.key, pageviews: w.pageviews, visitors: w.visitors.size, sessions: w.sessions.size, quizzes: w.quizzes, bookings: w.bookings
+    }));
+}
+
+function topicSummary(rows) {
+    const topics = new Map();
+    const getTopic = (row) => {
+        const path = normalizeAnalyticsPath(row.pagePath || row.page_path || '').toLowerCase();
+        if (/saudemental|saude-mental|psicolog|ansiedade|depress|burnout|stress|estresse|autismo|tdah|bipolar|mindfulness|sono/.test(path)) return 'Saúde mental';
+        if (/nutri|emagrec|obesidade|aliment|peso|imc/.test(path)) return 'Nutrição e peso';
+        if (/viajante|vacina|viagem|travel|malaria|febre-amarela/.test(path)) return 'Saúde do viajante';
+        if (/longevidade|longevity|envelhecimento/.test(path)) return 'Longevidade';
+        return '';
+    };
+    for (const r of rows || []) {
+        const topic = getTopic(r);
+        if (!topic) continue;
+        if (!topics.has(topic)) topics.set(topic, { key: topic, pageviews: 0, visitors: new Set(), sessions: new Set(), quizStarts: 0, quizCompletions: 0, articles: new Set(), pages: new Set() });
+        const item = topics.get(topic);
+        const path = normalizeAnalyticsPath(r.pagePath || r.page_path || '').toLowerCase();
+        if (r.name === 'page_view') {
+            item.pageviews += 1;
+            if (r.visitorId) item.visitors.add(String(r.visitorId));
+            if (r.sessionId) item.sessions.add(String(r.sessionId));
+            if (path) item.pages.add(path);
+            if (/\/guide\/|\/guia\/|\/artigos?\//.test(path)) item.articles.add(path);
+        }
+        if (r.name === 'quiz_start') item.quizStarts += 1;
+        if (r.name === 'quiz_complete') item.quizCompletions += 1;
+    }
+    return [...topics.values()].map((t) => ({
+        key: t.key, pageviews: t.pageviews, visitors: t.visitors.size, sessions: t.sessions.size,
+        quizStarts: t.quizStarts, quizCompletions: t.quizCompletions, articles: t.articles.size, pages: t.pages.size
+    })).sort((a, b) => b.pageviews - a.pageviews);
+}
+
 function applyKnownStaff(rows, extraVisitorIds) {
     const vids = new Set();
     for (const id of extraVisitorIds || []) {
@@ -759,6 +821,8 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
             ? serviceFromBookings.map((s) => ({ key: s.service || 'unspecified', count: s.count }))
             : serviceFromEvents,
         hourly: hourlySeries(views, range.from, range.days),
+        weekly: weeklySeries(used),
+        topics: topicSummary(used),
         recent: used
             .filter((r) => r.name !== 'heartbeat')
             .slice(-25)
