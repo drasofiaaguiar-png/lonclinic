@@ -178,7 +178,6 @@ async function initBookingFlow() {
         return Number.isNaN(parsed.getTime()) ? null : parsed;
     }
 
-    // Load schedule on page load
     // Start schedule loading without blocking the rest of the booking UI setup.
     const scheduleLoadPromise = loadSchedule();
 

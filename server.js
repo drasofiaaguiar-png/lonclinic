@@ -4141,17 +4141,20 @@ const CONFIRMATION_EMAIL_I18N = {
     },
     pt: {
         htmlLang: 'pt',
-        subject: 'O link da sua teleconsulta – LON Clinic',
-        greeting: 'Caro(a) paciente,',
+        subject: (date, time, ref) => `Consulta confirmada · ${date}, ${time} | ${ref}`,
+        greeting: (name) => `Olá ${name}, a sua consulta está confirmada.`,
         dateLabel: 'Data',
         timeLabel: 'Hora',
         professionalLabel: 'Profissional',
-        linkLead: 'Aqui está o link para a sua teleconsulta:',
-        linkLabel: 'Abrir a teleconsulta',
-        instructions: 'À hora da consulta, basta abrir o link no browser (de preferência Chrome ou Safari) e permitir o acesso à câmara e ao microfone. Não é necessária qualquer instalação.',
-        questions: 'Se tiver alguma questão, diga-me.',
-        regards: 'Com os melhores cumprimentos,',
-        signName: 'Dr.ª Rita Aguiar',
+        serviceLabel: 'Serviço',
+        formatLabel: 'Formato',
+        format: 'Videoconsulta',
+        linkLead: 'Guarde este email: a ligação fica ativa à hora marcada.',
+        linkLabel: 'Entrar na videoconsulta',
+        instructions: 'Antes da consulta, tenha à mão o seu número do SNS, o NIF caso pretenda fatura com contribuinte, e a lista de doenças crónicas e medicação que toma. Tenha também análises ou exames recentes, se os tiver. Escolha um local tranquilo, com boa ligação à internet. Abra a ligação no Chrome ou Safari e permita o acesso à câmara e ao microfone. Não precisa de instalar nada.',
+        questions: 'Para reagendar, contacte-nos com pelo menos 48 horas de antecedência. Para cancelar, contacte-nos; as condições aplicáveis são as indicadas no momento da marcação.',
+        regards: 'Até breve,',
+        signName: 'Equipa',
         signClinic: 'LON Clinic'
     },
     es: {
@@ -4182,6 +4185,23 @@ function confirmationWhenLine(label, value) {
     return `${label}: ${text}`;
 }
 
+function patientEmailFooterHtml(locale) {
+    const lang = normalizePatientLocale(locale);
+    const copy = lang === 'pt'
+        ? 'LON Clinic · Consultas Médicas Online<br>info@lonclinic.com · +351 928 372 775 · Dias úteis, 9h–18h (hora de Lisboa)<br>Este endereço não se destina a situações urgentes. Em caso de emergência, ligue 112. Para aconselhamento de saúde, contacte o SNS 24: 808 24 24 24.<br>Rita Aguiar Fonseca · Prestador registado na ERS n.º 45475.'
+        : lang === 'es'
+            ? 'LON Clinic · Consultas médicas online<br>info@lonclinic.com · +351 928 372 775 · Días laborables, 9:00–18:00 (hora de Lisboa)<br>Este correo no atiende urgencias. En caso de emergencia, llame al 112. Para orientación sanitaria, contacte SNS 24: 808 24 24 24.'
+            : 'LON Clinic · Online Medical Consultations<br>info@lonclinic.com · +351 928 372 775 · Weekdays, 9:00–18:00 (Lisbon time)<br>This email is not for urgent matters. In an emergency, call 112. For health advice, contact SNS 24: 808 24 24 24.';
+    return `<tr><td style="padding:24px 12px;text-align:center;font-size:12px;line-height:1.6;color:#64748b;">${copy}</td></tr>`;
+}
+
+function patientEmailFooterText(locale) {
+    if (normalizePatientLocale(locale) === 'pt') {
+        return 'LON Clinic · Consultas Médicas Online\ninfo@lonclinic.com · +351 928 372 775 · Dias úteis, 9h–18h (hora de Lisboa)\nEste endereço não se destina a situações urgentes. Em caso de emergência, ligue 112. Para aconselhamento de saúde, contacte o SNS 24: 808 24 24 24.\nRita Aguiar Fonseca · Prestador registado na ERS n.º 45475.';
+    }
+    return 'LON Clinic · info@lonclinic.com · +351 928 372 775';
+}
+
 function buildConfirmationEmail(data) {
     const t = confirmationEmailStrings(data && data.locale);
     const room = patientDoxyRoomUrl(doxyUrlFromEmailData(data)) || DEFAULT_DOXY_ROOM_URL || DOXY_DEFAULT_PATIENT_ROOM;
@@ -4198,21 +4218,27 @@ function buildConfirmationEmail(data) {
     if (!professionalText && bookingServiceTag(data && data.service) === 'travel') {
         professionalText = 'Dr.ª Rita Aguiar';
     }
+    const patientName = String((data && (data.patientName || data.name)) || '').trim();
     const whenLines = [
+        t.serviceLabel ? confirmationWhenLine(t.serviceLabel, data && data.serviceLabel) : '',
         confirmationWhenLine(t.dateLabel, dateText),
         confirmationWhenLine(t.timeLabel, timeText),
-        confirmationWhenLine(t.professionalLabel, professionalText)
+        confirmationWhenLine(t.professionalLabel, professionalText),
+        t.formatLabel ? confirmationWhenLine(t.formatLabel, t.format) : ''
     ].filter(Boolean);
     const whenHtml = whenLines.length
         ? `<p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${whenLines.map((line) => escapeHtml(line)).join('<br>')}</p>`
         : '';
+    const subject = typeof t.subject === 'function'
+        ? t.subject(dateText, timeText, (data && data.bookingRef) || '')
+        : t.subject;
 
     const html = `<!DOCTYPE html>
 <html lang="${t.htmlLang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${t.subject}</title>
+    <title>${escapeHtml(subject)}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f0f4fa;padding:40px 20px;">
@@ -4221,7 +4247,7 @@ function buildConfirmationEmail(data) {
                 <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;">
                     <tr>
                         <td style="background:#ffffff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-                            <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.greeting}</p>
+                            <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${typeof t.greeting === 'function' ? escapeHtml(t.greeting(patientName || 'paciente')) : t.greeting}</p>
                             ${whenHtml}
                             <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.linkLead}</p>
                             <p style="margin:0 0 20px;">
@@ -4236,6 +4262,7 @@ function buildConfirmationEmail(data) {
                             </p>
                         </td>
                     </tr>
+                    ${patientEmailFooterHtml(locale)}
                 </table>
             </td>
         </tr>
@@ -4244,7 +4271,7 @@ function buildConfirmationEmail(data) {
 </html>`;
 
     const text = [
-        t.greeting,
+        typeof t.greeting === 'function' ? t.greeting(patientName || 'paciente') : t.greeting,
         '',
         ...whenLines,
         whenLines.length ? '' : null,
@@ -4259,10 +4286,12 @@ function buildConfirmationEmail(data) {
         t.regards,
         '',
         t.signName,
-        t.signClinic
+        t.signClinic,
+        '',
+        patientEmailFooterText(locale)
     ].filter((line) => line !== null).join('\n');
 
-    return { html, text, subject: t.subject };
+    return { html, text, subject };
 }
 
 /* ========================================
@@ -4935,8 +4964,8 @@ const AUTO_REPLY_I18N = {
         pt: {
             subject: 'Recebemos a sua mensagem — Lon Clinic',
             heading: 'Obrigado por nos contactar',
-            body: (name) => `Olá ${name},<br><br>Recebemos a sua mensagem e responderemos com brevidade nos dias úteis (9h–18h, hora de Lisboa).<br><br>Se o assunto for urgente, por favor contacte-nos diretamente por telefone.`,
-            text: (name) => `Olá ${name},\n\nRecebemos a sua mensagem e responderemos com brevidade nos dias úteis (9h–18h, hora de Lisboa).\n\nSe o assunto for urgente, por favor contacte-nos diretamente por telefone.`,
+            body: (name) => `Olá ${name},<br><br>Obrigado pelo seu contacto. Recebemos a sua mensagem e responderemos em até 2 dias úteis (9h–18h, hora de Lisboa).<br><br>Se a sua mensagem for sobre um problema de saúde urgente, não aguarde a nossa resposta. Contacte o SNS 24 (808 24 24 24) ou, em caso de emergência, ligue 112.<br><br>Para alterar ou cancelar uma consulta com pouca antecedência, ligue-nos para +351 928 372 775.`,
+            text: (name) => `Olá ${name},\n\nObrigado pelo seu contacto. Recebemos a sua mensagem e responderemos em até 2 dias úteis (9h–18h, hora de Lisboa).\n\nSe a sua mensagem for sobre um problema de saúde urgente, não aguarde a nossa resposta. Contacte o SNS 24 (808 24 24 24) ou, em caso de emergência, ligue 112.\n\nPara alterar ou cancelar uma consulta com pouca antecedência, ligue-nos para +351 928 372 775.`,
             footer: 'Lon Clinic — Consultas Médicas Online'
         },
         es: {
@@ -4958,8 +4987,8 @@ const AUTO_REPLY_I18N = {
         pt: {
             subject: 'Recebemos a sua candidatura — Lon Clinic',
             heading: 'Obrigado pelo interesse',
-            body: (name) => `Olá ${name},<br><br>Recebemos a sua candidatura e iremos analisá-la com atenção. Caso o seu perfil corresponda às nossas necessidades, entraremos em contacto nas próximas semanas.`,
-            text: (name) => `Olá ${name},\n\nRecebemos a sua candidatura e iremos analisá-la com atenção. Caso o seu perfil corresponda às nossas necessidades, entraremos em contacto nas próximas semanas.`,
+            body: (name) => `Olá ${name},<br><br>Obrigado pelo seu interesse em colaborar com a LON Clinic. Recebemos a sua candidatura e vamos analisá-la com atenção. Se o seu perfil corresponder às nossas necessidades atuais, entraremos em contacto nas próximas 2 semanas. Os seus dados são tratados de acordo com a nossa Política de Privacidade.`,
+            text: (name) => `Olá ${name},\n\nObrigado pelo seu interesse em colaborar com a LON Clinic. Recebemos a sua candidatura e vamos analisá-la com atenção. Se o seu perfil corresponder às nossas necessidades atuais, entraremos em contacto nas próximas 2 semanas. Os seus dados são tratados de acordo com a nossa Política de Privacidade.`,
             footer: 'Lon Clinic — Consultas Médicas Online'
         },
         es: {
@@ -4981,8 +5010,8 @@ const AUTO_REPLY_I18N = {
         pt: {
             subject: 'Recebemos a sua reclamação — Lon Clinic',
             heading: 'A sua reclamação foi recebida',
-            body: (name) => `Olá ${name},<br><br>Recebemos a sua reclamação e responderemos no prazo máximo de 5 dias úteis (9h–18h, hora de Lisboa). Tomamos todas as reclamações a sério e iremos investigar a situação de forma diligente.`,
-            text: (name) => `Olá ${name},\n\nRecebemos a sua reclamação e responderemos no prazo máximo de 5 dias úteis (9h–18h, hora de Lisboa). Tomamos todas as reclamações a sério e iremos investigar a situação de forma diligente.`,
+            body: (name) => `Olá ${name},<br><br>Recebemos a sua reclamação. Levamos todas as reclamações a sério. Vamos analisar a situação e responder-lhe no prazo máximo de 5 dias úteis.<br><br>Se preferir, contacte-nos diretamente por WhatsApp ou telefone: +351 928 372 775.`,
+            text: (name) => `Olá ${name},\n\nRecebemos a sua reclamação. Levamos todas as reclamações a sério. Vamos analisar a situação e responder-lhe no prazo máximo de 5 dias úteis.\n\nSe preferir, contacte-nos diretamente por WhatsApp ou telefone: +351 928 372 775.`,
             footer: 'Lon Clinic — Consultas Médicas Online'
         },
         es: {
@@ -5011,13 +5040,14 @@ function buildAutoReplyEmail(type, name, locale) {
     <div style="padding:28px;">
       <h2 style="margin:0 0 16px;font-size:20px;color:#111827;">${strings.heading}</h2>
       <p style="margin:0 0 24px;color:#374151;line-height:1.7;">${strings.body(safeName)}</p>
-      <p style="margin:0;color:#6b7280;font-size:13px;">${strings.footer}</p>
+      <p style="margin:0 0 16px;color:#6b7280;font-size:13px;">${strings.footer}</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;line-height:1.6;">${patientEmailFooterText(locale).replace(/\n/g, '<br>')}</p>
     </div>
   </div>
 </body>
 </html>`;
 
-    const text = strings.text(name);
+    const text = `${strings.text(name)}\n\n${patientEmailFooterText(locale)}`;
     return { html, text, subject: strings.subject };
 }
 
@@ -6004,23 +6034,21 @@ const REMINDER_EMAIL_I18N = {
         htmlLang: 'pt',
         emailTitle: 'Lembrete de consulta',
         h2: 'A sua consulta está a aproximar-se',
-        lead: (name) =>
-            `Olá ${name}, este é um lembrete amigável de que tem uma consulta online com a Longevity Clinic nas próximas 24 horas.`,
+        lead: (name) => `Olá ${name}, lembramos que a sua videoconsulta é amanhã.`,
         refLabel: 'Referência',
         colService: 'Serviço',
         colDate: 'Data',
         colTime: 'Hora',
         colFormat: 'Formato',
-        formatVideo: 'Videochamada segura',
+        formatVideo: 'Videoconsulta',
         videoTitle: 'Entrar na videoconsulta',
-        doxyBefore: 'Utilize a nossa sala de vídeo segura à hora marcada:',
-        doxyAfter: 'Não é necessária qualquer instalação — abra a ligação num browser atualizado.',
+        doxyBefore: 'Entre na videoconsulta à hora marcada:',
+        doxyAfter: 'Abra a ligação num browser atualizado. Não precisa de instalar nada.',
         joinVideoButton: 'Entrar na consulta por vídeo',
-        noDoxy: 'Os detalhes da ligação foram enviados no email de confirmação. Precisa de ajuda? Responda a este email ou contacte-nos.',
-        subject: (serviceLabel, date, ref) => `Lembrete: ${serviceLabel} · ${date} | ${ref}`,
+        noDoxy: 'Consulte o email de confirmação para encontrar a ligação da videoconsulta.',
+        subject: (serviceLabel, date, ref, time) => `Lembrete: a sua consulta é amanhã, às ${time} | ${ref}`,
         textHead: 'LEMBRETE DE CONSULTA',
-        textLead: (name) =>
-            `Olá ${name}, tem uma consulta online com a Longevity Clinic nas próximas 24 horas.`,
+        textLead: (name) => `Olá ${name}, lembramos que a sua videoconsulta é amanhã.`,
         textDetails: 'DETALHES DA CONSULTA',
         textService: 'Serviço',
         textDate: 'Data',
@@ -6030,8 +6058,8 @@ const REMINDER_EMAIL_I18N = {
         textDoxy: (url) => `Ligação: ${url}`,
         textNoDoxy: 'Consulte o email de confirmação para a ligação por vídeo.',
         textFooterCopy: '© 2026 Longevity Clinic',
-        rescheduleStrong: 'Precisa de reagendar?',
-        rescheduleRest: 'Reagendamento gratuito até 24 horas antes. Responda a este email ou contacte-nos.'
+        rescheduleStrong: 'Não vai conseguir comparecer?',
+        rescheduleRest: 'Avise-nos o quanto antes, respondendo a este email ou ligando para +351 928 372 775, para podermos ajudar a encontrar outro horário.'
     },
     es: {
         htmlLang: 'es',
@@ -6106,23 +6134,21 @@ const REMINDER_1H_EMAIL_I18N = {
         htmlLang: 'pt',
         emailTitle: 'A sua consulta começa em breve',
         h2: 'A sua consulta é em breve',
-        lead: (name) =>
-            `Olá ${name}, este é um lembrete de que a sua consulta online com a Longevity Clinic começa na próxima hora.`,
+        lead: (name, time) => `Olá ${name}, a sua videoconsulta começa daqui a cerca de uma hora, às ${time} (hora de Lisboa).`,
         refLabel: 'Referência',
         colService: 'Serviço',
         colDate: 'Data',
         colTime: 'Hora',
         colFormat: 'Formato',
-        formatVideo: 'Videochamada segura',
+        formatVideo: 'Videoconsulta',
         videoTitle: 'Entrar na videoconsulta',
-        doxyBefore: 'Utilize a nossa sala de vídeo segura à hora marcada:',
-        doxyAfter: 'Não é necessária qualquer instalação — abra a ligação num browser atualizado.',
+        doxyBefore: 'Entre na videoconsulta:',
+        doxyAfter: 'Sugestão: abra a ligação uns minutos antes e confirme que a câmara e o microfone estão a funcionar.',
         joinVideoButton: 'Entrar na consulta por vídeo',
-        noDoxy: 'Os detalhes da ligação foram enviados no email de confirmação. Precisa de ajuda? Responda a este email ou contacte-nos.',
-        subject: (serviceLabel, date, ref) => `Em breve: ${serviceLabel} · ${date} | ${ref}`,
+        noDoxy: 'Consulte o email de confirmação para encontrar a ligação da videoconsulta.',
+        subject: (serviceLabel, date, ref, time) => `A sua consulta começa às ${time} | ${ref}`,
         textHead: 'LEMBRETE (1 HORA)',
-        textLead: (name) =>
-            `Olá ${name}, a sua consulta online com a Longevity Clinic começa na próxima hora.`,
+        textLead: (name) => `Olá ${name}, a sua videoconsulta começa dentro de cerca de uma hora. Abra a ligação uns minutos antes e confirme que a câmara e o microfone estão a funcionar.`,
         textDetails: 'DETALHES DA CONSULTA',
         textService: 'Serviço',
         textDate: 'Data',
@@ -6132,8 +6158,8 @@ const REMINDER_1H_EMAIL_I18N = {
         textDoxy: (url) => `Ligação: ${url}`,
         textNoDoxy: 'Consulte o email de confirmação para a ligação por vídeo.',
         textFooterCopy: '© 2026 Longevity Clinic',
-        rescheduleStrong: 'Precisa de ajuda?',
-        rescheduleRest: 'Se algo mudou, contacte-nos o mais rapidamente possível.'
+        rescheduleStrong: 'Problemas técnicos ou algum imprevisto?',
+        rescheduleRest: 'Ligue-nos para +351 928 372 775.'
     },
     es: {
         htmlLang: 'es',
@@ -6237,7 +6263,7 @@ function buildReminderEmail(data) {
                     <tr>
                         <td style="background: #ffffff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
                             <h2 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: #0f172a; text-align: center;">${t.h2}</h2>
-                            <p style="margin: 0 0 28px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">${t.lead(name)}</p>
+                            <p style="margin: 0 0 28px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">${t.lead(name, time)}</p>
 
                             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; text-align: center; margin-bottom: 24px;">
                                 <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">${t.refLabel}</p>
@@ -6285,6 +6311,7 @@ function buildReminderEmail(data) {
                             <p style="margin: 0; font-size: 11px; color: #cbd5e1;">${t.textFooterCopy}</p>
                         </td>
                     </tr>
+                    ${patientEmailFooterHtml(rawLocale)}
                 </table>
             </td>
         </tr>
@@ -6296,7 +6323,7 @@ function buildReminderEmail(data) {
     const text = `
 ${t.textHead} — ${bookingRef}
 
-${t.textLead(name)}
+${t.textLead(name, time)}
 
 ${t.textDetails}
 ───────────────
@@ -6310,9 +6337,10 @@ ${t.rescheduleStrong} ${t.rescheduleRest}
 
 info@lonclinic.com | +351 928 372 775
 ${t.textFooterCopy}
+${patientEmailFooterText(rawLocale)}
 `;
 
-    return { html, text, subject: t.subject(serviceLabel, date, bookingRef) };
+    return { html, text, subject: t.subject(serviceLabel, date, bookingRef, time) };
 }
 
 async function sendReminderEmail(data) {
@@ -6449,7 +6477,7 @@ const INTAKE_REMINDER_EMAIL_I18N = {
         subject: (time, ref) => `Lembrete: preencha a ficha clínica para a consulta das ${time} | ${ref}`,
         h2: 'A sua ficha clínica ainda está por preencher',
         lead: (name, time) =>
-            `Olá ${name}, a sua consulta das ${time} está confirmada. Preencha os dados clínicos para o médico preparar a consulta (menos de 2 minutos).`,
+            `Olá ${name}, a sua consulta está confirmada para as ${time}. Preencha a ficha clínica para que o médico possa preparar a consulta. Demora menos de 2 minutos.`,
         button: 'Preencher ficha clínica',
         text: (name, time, url) =>
             `Olá ${name}, preencha a ficha clínica para a consulta das ${time}:\n${url}`
@@ -6485,14 +6513,16 @@ async function sendIntakeReminderEmail(booking) {
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td align="center">
 <a href="${escapeHtml(url)}" style="display:inline-block;background-color:#255235;color:#fff !important;font-size:15px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.button}</a>
 </td></tr></table>
-</td></tr></table>
+</td></tr>
+${patientEmailFooterHtml(booking.patientLocale)}
+</table>
 </td></tr></table></body></html>`;
     try {
         await deliverEmail({
             from: EMAIL_FROM,
             to,
             subject: t.subject(time, booking.bookingRef),
-            text: t.text(name, time, url),
+            text: `${t.text(name, time, url)}\n\n${patientEmailFooterText(booking.patientLocale)}`,
             html
         });
         console.log('   ✉️  Intake reminder sent to:', to);
@@ -6537,18 +6567,18 @@ const FOLLOWUP_EMAIL_I18N = {
     pt: {
         htmlLang: 'pt',
         emailTitle: 'Obrigado pela sua consulta',
-        h2: 'Obrigado por ter escolhido a Longevity Clinic',
+        h2: 'Obrigado pela sua consulta',
         body: (name) =>
-            `Exmo.(a) ${name}, obrigado por ter participado na sua consulta online connosco. Esperamos que tenha sido útil e que se sinta acompanhado na sua saúde.`,
+            `Olá ${name}, obrigado por ter escolhido a LON Clinic. Esperamos que a consulta tenha sido útil.`,
         feedbackTitle: 'Gostaríamos de saber a sua opinião',
         feedbackBody:
-            'A sua experiência é importante. Se tiver um momento, deixe uma avaliação independente no Trustpilot — ajuda outros pacientes a escolherem com confiança.',
+            'A sua opinião ajuda outras pessoas a conhecerem a experiência de outros pacientes. Se tiver um minuto, deixe uma avaliação independente no Trustpilot.',
         ctaLabel: 'Avaliar no Trustpilot',
         renewalTitle: 'Precisa de renovar a receita?',
-        renewalBody: 'Se o tratamento está estável, renove online por €19.',
+        renewalBody: 'Se o seu médico indicou tratamento contínuo e este se mantém estável, pode pedir a renovação online por 19 €.',
         renewalCta: 'Renovar tratamento — €19',
         siteAlt: (url) => `Também pode deixar a sua opinião no nosso site: ${url}`,
-        subject: (ref) => `Obrigado — a sua opinião conta | ${ref}`,
+        subject: (ref) => `Obrigado pela sua consulta | ${ref}`,
         textHead: 'OBRIGADO',
         textBody: (name) =>
             `Exmo.(a) ${name}, obrigado pela sua consulta online na Longevity Clinic.`,
@@ -6593,7 +6623,7 @@ function buildFollowupEmail(data) {
     const name = (patientName || 'Patient').trim();
     const reviewUrl = trustpilotEvaluateUrl(rawLocale);
     const siteReviewUrl = emailLink(`${PUBLIC_SITE_URL}/#deixar-opiniao`, datedCampaign('post_consult_review'), 'site-form');
-    const showRenewal = service !== 'renovacao' && service !== 'entrevista';
+    const showRenewal = data.continuousTreatment === true && service !== 'renovacao' && service !== 'entrevista';
     const renewalHref = showRenewal
         ? renewalFollowupUrl({ email, patientName: name, bookingRef })
         : '';
@@ -6636,11 +6666,12 @@ ${renewalBlock}
 <tr><td style="padding:32px 20px;text-align:center;">
 <p style="margin:0;font-size:11px;color:#cbd5e1;">${t.textFooterCopy}</p>
 </td></tr>
+${patientEmailFooterHtml(rawLocale)}
 </table>
 </td></tr>
 </table>
 </body></html>`;
-    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${showRenewal && t.textRenewal ? t.textRenewal(renewalHref) + '\n\n' : ''}${t.textFeedback(reviewUrl, siteReviewUrl)}`;
+    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${showRenewal && t.textRenewal ? t.textRenewal(renewalHref) + '\n\n' : ''}${t.textFeedback(reviewUrl, siteReviewUrl)}\n\n${patientEmailFooterText(rawLocale)}`;
     return { html, text, subject: t.subject(bookingRef) };
 }
 
@@ -6669,7 +6700,8 @@ async function sendPostConsultationReviewEmail(booking) {
         service: booking.service,
         serviceLabel: serviceLabelFromCode(booking.service),
         bookingRef: booking.bookingRef,
-        locale: booking.patientLocale || 'en'
+        locale: booking.patientLocale || 'en',
+        continuousTreatment: booking.continuousTreatment === true
     });
     if (!sent) return false;
     try {
@@ -6706,13 +6738,12 @@ const CANCEL_PATIENT_I18N = {
     pt: {
         htmlLang: 'pt',
         h2: 'Marcação cancelada',
-        lead: (name) =>
-            `Olá ${name}, a sua marcação foi cancelada tal como solicitou.`,
+        lead: (name) => `Olá ${name}, confirmamos o cancelamento da sua marcação, conforme pediu.`,
         refLabel: 'Referência',
         colService: 'Serviço',
-        colDate: 'Data anterior',
-        colTime: 'Hora anterior',
-        bookAgain: 'Para marcar novamente, visite o nosso site ou responda a este email.',
+        colDate: 'Data',
+        colTime: 'Hora (Lisboa)',
+        bookAgain: 'Não pediu este cancelamento? Contacte-nos com a maior brevidade possível. Para marcar uma nova consulta, visite o nosso site.',
         subject: (ref) => `Marcação cancelada | ${ref}`,
         textHead: 'MARCAÇÃO CANCELADA'
     },
@@ -6760,9 +6791,11 @@ function buildCancellationPatientEmail(data) {
 <tr><td style="padding:8px 0;color:#64748b;">${t.colTime}</td>
 <td style="padding:8px 0;text-align:right;">${time}</td></tr>
 </table>
-<p style="color:#475569;font-size:14px;">${t.bookAgain}</p>
-</td></tr></table></td></tr></table></body></html>`;
-    const text = `${t.textHead} — ${bookingRef}\n${t.lead(name)}\n${t.colService}: ${serviceLabel}\n${t.colDate}: ${date}\n${t.colTime}: ${time}`;
+<p style="color:#475569;font-size:14px;">${t.bookAgain} <a href="${escapeHtml(PUBLIC_SITE_URL)}" style="color:#255235;">Marcar consulta</a></p>
+</td></tr></table>
+${patientEmailFooterHtml(rawLocale)}
+</td></tr></table></body></html>`;
+    const text = `${t.textHead} — ${bookingRef}\n${t.lead(name)}\n${t.colService}: ${serviceLabel}\n${t.colDate}: ${date}\n${t.colTime}: ${time}\n\n${t.bookAgain}\n${PUBLIC_SITE_URL}\n\n${patientEmailFooterText(rawLocale)}`;
     return { html, text, subject: t.subject(bookingRef) };
 }
 

@@ -576,20 +576,21 @@ body.nx-page.urgent-landing {
 
 /* Clearer close card: balanced line lengths and less empty space between actions. */
 .page-psychology .nx-final { padding: 80px 0; }
-.page-psychology .nx-final-card { padding: 44px clamp(22px, 5vw, 52px); }
+.page-psychology .nx-final-card { max-width: 900px; padding: 44px clamp(22px, 5vw, 52px); }
 .page-psychology .nx-final-card h2 { margin-bottom: 14px; }
 .page-psychology .nx-final-card .psi-close-intro { max-width: 720px; margin: 0 auto 26px; }
-.psi-close-prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 760px; margin: 0 auto 16px; text-align: left; }
-.psi-close-price { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 7px 14px; padding: 18px 20px; border: 1px solid rgba(var(--nx-on-gradient-rgb), 0.22); border-radius: 16px; background: rgba(var(--nx-on-gradient-rgb), 0.08); }
+.psi-close-prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 780px; margin: 0 auto 20px; text-align: left; }
+.psi-close-price { display: grid; align-content: start; gap: 10px; padding: 20px 22px; border: 1px solid rgba(var(--nx-on-gradient-rgb), 0.22); border-radius: 16px; background: rgba(var(--nx-on-gradient-rgb), 0.08); }
 .psi-close-price > span { grid-column: 1 / -1; margin-bottom: 2px; color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.psi-close-price > strong { color: var(--nx-on-gradient); font-size: 19px; white-space: nowrap; }
-.psi-close-price > strong small { color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 12px; font-weight: 500; }
+.psi-close-price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(var(--nx-on-gradient-rgb), 0.14); }
+.psi-close-price-row strong { color: var(--nx-on-gradient); font-size: 21px; white-space: nowrap; }
+.psi-close-price-row small { color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 13px; text-align: right; }
 .psi-close-price > small { grid-column: 1 / -1; color: rgba(var(--nx-on-gradient-rgb), 0.72); font-size: 12px; line-height: 1.5; }
 .page-psychology .nx-final-card .psi-close-request { margin: 0 auto 22px; color: rgba(var(--nx-on-gradient-rgb), 0.76); font-size: 13px; }
 .page-psychology .nx-final-btns { gap: 12px; }
 .page-psychology .nx-final-note { margin: 22px auto 0; line-height: 1.5; }
 @media (max-width: 700px) { .psi-close-prices { grid-template-columns: 1fr; gap: 10px; } }
-@media (max-width: 560px) { .page-psychology .nx-final { padding: 56px 0; } .page-psychology .nx-final-card { padding: 34px 22px; } .psi-close-price { padding: 16px; } }
+@media (max-width: 560px) { .page-psychology .nx-final { padding: 56px 0; } .page-psychology .nx-final-card { padding: 34px 22px; } .psi-close-price { padding: 16px; } .page-psychology .nx-final-btns { display: grid; grid-template-columns: 1fr; } .page-psychology .nx-final-btns .nx-btn { width: 100%; justify-content: center; text-align: center; } }
 
 /* Phase / info strip */
 .nx-phases {
