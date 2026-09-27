@@ -11534,7 +11534,7 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         return res.status(400).json({ error: 'Email inválido.' });
     }
-    if (!Number.isFinite(idade) || idade < 16 || idade > 120) {
+    if (!Number.isFinite(idade) || idade < (isCasal ? 18 : 16) || idade > 120) {
         return res.status(400).json({ error: 'Idade inválida.' });
     }
     if (!body.consentimentos?.termos) {

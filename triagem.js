@@ -266,7 +266,6 @@
             ];
         }
         var steps = [
-            { id: 'consent', type: 'consent' },
             { id: 'idade', type: 'number' },
             { id: 'genero', type: 'single', optional: true },
             { id: 'orientation', type: 'single', optional: true },
@@ -375,13 +374,8 @@
                 html += '<input type="text" id="diagnosticoQual" maxlength="200" value="' + escapeHtml(a.diagnosticoQual) + '"></div>';
             }
             html += renderRiskQ9(a);
-        } else if (step.id === 'consent') {
-            html += eyebrow('Antes de começar');
-            html += '<h2>Precisamos do vosso consentimento</h2>';
-            html += '<div class="tri-consent">Para fazer o vosso encaminhamento e prestar consultas de terapia de casal, recolhemos dados sobre a vossa saúde e relação, considerados dados de categoria especial ao abrigo do RGPD. Podes consultar a <a href="/info/politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> para saber como os tratamos e como retirar o consentimento.</div>';
-            html += '<label class="tri-check"><input type="checkbox" id="consentSaude"' + (a.consentSaude ? ' checked' : '') + '><span>Autorizo a recolha e o tratamento dos meus dados de saúde para esta triagem e para as consultas de casal.</span></label>';
         } else if (step.id === 'genero') {
-            html += eyebrow(isCasal() ? 'Passo 3 · opcional' : '');
+            html += eyebrow(isCasal() ? ('Passo ' + (state.quizIndex + 1) + ' · opcional') : '');
             html += '<h2>' + (isCasal() ? 'Como te identificas em termos de género?' : 'Qual é o teu género?') + '</h2>';
             html += '<p class="tri-quiz-why">' + (isCasal()
                 ? 'Isto ajuda o terapeuta a adaptar a linguagem desde a primeira sessão. Podes saltar esta pergunta.'
@@ -395,7 +389,7 @@
                 html += '<button type="button" class="tri-more" data-expand="gender">Mostrar mais</button>';
             }
         } else if (step.id === 'orientation') {
-            html += eyebrow('Passo 4 · opcional');
+            html += eyebrow(('Passo ' + (state.quizIndex + 1) + ' · opcional'));
             html += '<h2>Como te identificas em termos de orientação?</h2>';
             html += '<p class="tri-quiz-why">Ajuda a Dra. Carolina Rocha a ter contexto relevante para a vossa relação. Podes saltar esta pergunta.</p>';
             html += '<div class="tri-opts">';
@@ -407,11 +401,11 @@
                 html += '<button type="button" class="tri-more" data-expand="orientation">Mostrar mais</button>';
             }
         } else if (step.id === 'idade') {
-            html += eyebrow(isCasal() ? 'Passo 2' : '');
+            html += eyebrow(isCasal() ? ('Passo ' + (state.quizIndex + 1)) : '');
             html += '<h2>Qual é a tua idade?</h2>';
-            html += '<div class="tri-field"><input type="number" id="idade" name="idade" inputmode="numeric" min="16" max="120" placeholder="Ex.: 32" value="' + escapeHtml(a.idade) + '"></div>';
+            html += '<div class="tri-field"><input type="number" id="idade" name="idade" inputmode="numeric" min="18" max="120" placeholder="Ex.: 32" value="' + escapeHtml(a.idade) + '"></div>';
         } else if (step.id === 'relStatus') {
-            html += eyebrow('Passo 5');
+            html += eyebrow(('Passo ' + (state.quizIndex + 1)));
             html += '<h2>Qual é o vosso estado de relação?</h2>';
             html += '<div class="tri-opts">';
             REL_STATUS.forEach(function (v) {
@@ -422,7 +416,7 @@
                 html += '<div class="tri-info"><b>Nota</b>Vamos ter isto em conta na terapia de casal, incluindo experiência em relações não-monogâmicas.</div>';
             }
         } else if (step.id === 'cohabit') {
-            html += eyebrow('Passo 6');
+            html += eyebrow(('Passo ' + (state.quizIndex + 1)));
             html += '<h2>Vivem atualmente juntos?</h2>';
             html += '<div class="tri-opts">';
             ['Sim', 'Não'].forEach(function (v) {
@@ -430,7 +424,7 @@
             });
             html += '</div>';
         } else if (step.id === 'dv') {
-            html += eyebrow('Passo 7');
+            html += eyebrow(('Passo ' + (state.quizIndex + 1)));
             html += '<h2>A violência doméstica é atualmente um problema na vossa relação?</h2>';
             html += '<p class="tri-quiz-why">Perguntamos isto a todos os casais — a resposta não é partilhada com o teu par.</p>';
             html += '<div class="tri-opts">';
@@ -461,7 +455,7 @@
             html += '</div>';
             html += '</div>';
         } else if (step.id === 'motivos') {
-            html += eyebrow(isCasal() ? 'Passo 9' : '');
+            html += eyebrow(isCasal() ? ('Passo ' + (state.quizIndex + 1)) : '');
             html += '<h2>' + (isCasal() ? 'O que vos trouxe à terapia neste momento?' : 'O que te traz à terapia?') + '</h2>';
             html += '<p class="tri-quiz-why">Podes escolher mais do que uma opção.</p>';
             html += '<div class="tri-opts">';
@@ -479,7 +473,7 @@
                 });
             }
         } else if (step.id === 'expect') {
-            html += eyebrow('Passo 10');
+            html += eyebrow(('Passo ' + (state.quizIndex + 1)));
             html += '<h2>O que esperam do vosso terapeuta?</h2>';
             html += '<p class="tri-quiz-why">Um terapeuta que…</p>';
             html += '<div class="tri-opts">';
@@ -495,7 +489,7 @@
             });
             html += '</div>';
         } else if (step.id === 'terapiaAntes') {
-            html += eyebrow(isCasal() ? 'Passo 8' : '');
+            html += eyebrow(isCasal() ? ('Passo ' + (state.quizIndex + 1)) : '');
             html += '<h2>' + (isCasal() ? 'Já fizeram terapia de casal antes?' : 'Já fizeste terapia ou acompanhamento psicológico antes?') + '</h2>';
             html += '<div class="tri-opts">';
             ['Sim', 'Não'].forEach(function (v) {
@@ -602,6 +596,10 @@
                 html += optionBtn('invitePartner', 'Não', 'Não, por agora', a.invitePartner === 'Não');
                 html += '</div>';
             }
+        }
+        if (isCasal()) {
+            html += '<div class="tri-consent">Para fazer o vosso encaminhamento e prestar consultas de terapia de casal, recolhemos dados sobre a vossa saúde e relação, considerados dados de categoria especial ao abrigo do RGPD. Podes consultar a <a href="/info/politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> para saber como os tratamos e como retirar o consentimento.</div>';
+            html += '<label class="tri-check"><input type="checkbox" id="consentSaude"' + (a.consentSaude ? ' checked' : '') + '><span>Autorizo a recolha e o tratamento dos meus dados de saúde para esta triagem e para as consultas de casal.</span></label>';
         }
         html += '<label class="tri-check"><input type="checkbox" id="termos"' + (a.termos ? ' checked' : '') + '><span>Li e aceito os <a href="/info/termos-condicoes" target="_blank" rel="noopener">Termos</a> e a <a href="/info/politica-privacidade" target="_blank" rel="noopener">Privacidade</a>.</span></label>';
         if (!isCasal() && !state.riskFlagged) {
@@ -757,11 +755,10 @@
         var step = currentStep();
         var a = state.answers;
         formError.hidden = true;
-        if (step.id === 'consent' && !a.consentSaude) return fail('Precisamos deste consentimento para continuar.');
         if (step.id === 'genero' && !step.optional && !a.genero) return fail('Escolhe uma opção para continuar.');
         if (step.id === 'idade') {
             var idade = Number(a.idade);
-            if (!Number.isFinite(idade) || idade < 16 || idade > 120) return fail('Indica uma idade a partir dos 16 anos.');
+            if (!Number.isFinite(idade) || idade < 18 || idade > 120) return fail('Indica uma idade a partir dos 18 anos.');
         }
         if (step.id === 'relStatus' && !a.relStatus) return fail('Escolhe uma opção para continuar.');
         if (step.id === 'cohabit' && !a.cohabit) return fail('Escolhe uma opção para continuar.');
@@ -819,6 +816,10 @@
                 if (!Number.isFinite(idadeContacto) || idadeContacto < 16 || idadeContacto > 120) {
                     return fail('Indica uma idade a partir dos 16 anos.');
                 }
+            }
+            if (isCasal()) {
+                a.consentSaude = !!(document.getElementById('consentSaude') || {}).checked;
+                if (!a.consentSaude) return fail('Autoriza o tratamento dos teus dados de saúde para enviar a triagem.');
             }
             if (!a.termos) return fail('Aceita os termos para continuar.');
             if (isCasal()) {
@@ -1136,6 +1137,10 @@
             });
             var data = await res.json().catch(function () { return {}; });
             if (!res.ok) {
+                var isLocalPreview = ['localhost', '127.0.0.1', '[::1]'].indexOf(window.location.hostname) !== -1;
+                if (isLocalPreview && (res.status === 404 || res.status === 405)) {
+                    throw new Error('Esta pré-visualização não tem o serviço de envio ativo. Para enviar a triagem e o convite por email, usa o site www.lonclinic.com.');
+                }
                 throw new Error(data.error || 'Não foi possível enviar. Tenta novamente.');
             }
             track('triagem_submit', {

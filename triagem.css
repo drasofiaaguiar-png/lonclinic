@@ -1,22 +1,22 @@
-/* Questionário de Triagem — LON Clinic Psicologia (visual BetterHelp / verde) */
+/* Questionário de Triagem — LON Clinic Psicologia */
 .triagem-page {
-    --tri-ink: #1c2a24;
-    --tri-muted: #5c6d64;
-    --tri-paper: #f3f1ec;
-    --tri-mist: #faf9f6;
+    --tri-ink: #172d4d;
+    --tri-muted: #586d87;
+    --tri-paper: #edf4fc;
+    --tri-mist: #f5f9ff;
     --tri-surface: #ffffff;
-    --tri-line: rgba(28, 42, 36, 0.12);
-    --tri-signal: #2f6342;
-    --tri-signal-soft: rgba(47, 99, 66, 0.12);
+    --tri-line: rgba(23, 45, 77, 0.12);
+    --tri-signal: #2463d4;
+    --tri-signal-soft: rgba(36, 99, 212, 0.12);
     --tri-risk: #8b1e18;
     --tri-risk-bg: #fff5f4;
     --lon-accent: var(--tri-signal);
-    --lon-accent-dark: #255235;
+    --lon-accent-dark: #194ea9;
     min-height: 100vh;
     background:
-        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(47, 99, 66, 0.07), transparent 50%),
-        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(36, 54, 46, 0.04), transparent 45%),
-        linear-gradient(180deg, var(--tri-mist) 0%, var(--tri-paper) 48%, #e8ebe6 100%);
+        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(36, 99, 212, 0.07), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(22, 57, 99, 0.04), transparent 45%),
+        linear-gradient(180deg, var(--tri-mist) 0%, var(--tri-paper) 48%, #e7f0fc 100%);
     color: var(--tri-ink);
     padding-bottom: 0 !important;
 }
@@ -27,8 +27,8 @@
 
 .triagem-page.is-choice,
 body.lon-landing.psi-landing.triagem-page.is-choice {
-    background: #3a4634 !important;
-    color: #f7f4ea;
+    background: #163963 !important;
+    color: #ffffff;
 }
 
 .triagem-page.is-choice .triagem-top {
@@ -40,7 +40,7 @@ body.lon-landing.psi-landing.triagem-page.is-choice {
 
 .triagem-page.is-choice .triagem-brand,
 .triagem-page.is-choice .triagem-login {
-    color: #f7f4ea;
+    color: #ffffff;
 }
 
 .triagem-page.is-choice .triagem-login {
@@ -98,7 +98,7 @@ body.lon-landing.psi-landing.triagem-page.is-choice {
     align-items: center;
     justify-content: space-between;
     padding: 16px 24px;
-    background: rgba(250, 249, 246, 0.92);
+    background: rgba(245, 249, 255, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--tri-line);
@@ -136,7 +136,7 @@ body.lon-landing.psi-landing.triagem-page.is-choice {
 /* ── Quiz (BetterHelp-style, one question per screen) ── */
 .triagem-page.is-quiz,
 body.lon-landing.psi-landing.triagem-page.is-quiz {
-    background: #faf9f6 !important;
+    background: #f5f9ff !important;
 }
 
 .triagem-page.is-quiz .triagem-main {
@@ -216,7 +216,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 }
 
 .tri-quiz-back:hover {
-    background: rgba(28, 42, 36, 0.06);
+    background: rgba(23, 45, 77, 0.06);
 }
 
 .tri-quiz-count {
@@ -230,7 +230,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 .tri-quiz-meter {
     height: 4px;
     border-radius: 99px;
-    background: rgba(28, 42, 36, 0.1);
+    background: rgba(23, 45, 77, 0.1);
     margin: 0 0 28px;
     overflow: hidden;
 }
@@ -257,7 +257,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     align-items: center;
     min-height: 56px;
     padding: 14px 18px;
-    border: 1px solid rgba(28, 42, 36, 0.14);
+    border: 1px solid rgba(23, 45, 77, 0.14);
     border-radius: 10px;
     background: #fff;
     cursor: pointer;
@@ -279,7 +279,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 .tri-opt:hover,
 .tri-opt.is-on {
     border-color: var(--tri-signal);
-    background: #f3f8f4;
+    background: #edf5ff;
 }
 
 .tri-opt.is-on {
@@ -305,7 +305,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 
 .tri-field input {
     width: 100%;
-    border: 1px solid rgba(28, 42, 36, 0.16);
+    border: 1px solid rgba(23, 45, 77, 0.16);
     border-radius: 10px;
     padding: 14px 16px;
     font: inherit;
@@ -329,8 +329,8 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     min-height: 52px;
     border: 0;
     border-radius: 10px;
-    background: #2f453a;
-    color: #f7f4ea;
+    background: #2463d4;
+    color: #ffffff;
     font: inherit;
     font-size: 1rem;
     font-weight: 600;
@@ -338,7 +338,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 }
 
 .tri-quiz-continue:hover {
-    background: #24362e;
+    background: #194ea9;
 }
 
 .tri-quiz-continue:disabled {
@@ -374,7 +374,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.02em;
-    color: #6e7f74;
+    color: #586d87;
 }
 
 .tri-eyebrow:empty {
@@ -382,7 +382,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 }
 
 .tri-consent {
-    background: #eef3ea;
+    background: #edf5ff;
     border: 1px solid var(--tri-line);
     border-radius: 10px;
     padding: 14px 16px;
@@ -463,7 +463,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 
 .tri-field textarea {
     width: 100%;
-    border: 1px solid rgba(28, 42, 36, 0.16);
+    border: 1px solid rgba(23, 45, 77, 0.16);
     border-radius: 10px;
     padding: 14px 16px;
     font: inherit;
@@ -520,7 +520,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     width: 100%;
     min-height: 64px;
     padding: 8px 4px;
-    border: 1px solid rgba(28, 42, 36, 0.14);
+    border: 1px solid rgba(23, 45, 77, 0.14);
     border-radius: 10px;
     background: #fff;
     text-align: center;
@@ -538,7 +538,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 
 .tri-phq-opt.is-on span {
     border-color: var(--tri-signal);
-    background: #f3f8f4;
+    background: #edf5ff;
     box-shadow: inset 0 0 0 1px var(--tri-signal);
 }
 
@@ -576,7 +576,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 }
 
 .triagem-seg.is-active {
-    box-shadow: 0 0 0 1px rgba(47, 99, 66, 0.2);
+    box-shadow: 0 0 0 1px rgba(36, 99, 212, 0.2);
 }
 
 /* ── Main ── */
@@ -658,7 +658,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     margin: 0 auto 8px;
     border-radius: 50%;
     overflow: hidden;
-    background: #e8f0ec;
+    background: #e6f0ff;
 }
 
 .triagem-intro-photo img,
@@ -685,7 +685,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     justify-content: center;
     font-weight: 700;
     color: var(--tri-signal);
-    background: #e8f0ec;
+    background: #e6f0ff;
 }
 
 .triagem-intro-person figcaption {
@@ -1057,12 +1057,12 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     background: var(--tri-signal);
     color: #fff;
     border-color: var(--tri-signal);
-    box-shadow: 0 10px 24px rgba(47, 99, 66, 0.22);
+    box-shadow: 0 10px 24px rgba(36, 99, 212, 0.22);
 }
 
 .triagem-page .lon-btn-primary:hover {
-    background: #255235;
-    border-color: #255235;
+    background: #194ea9;
+    border-color: #194ea9;
     color: #fff;
 }
 
@@ -1178,7 +1178,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     justify-content: center;
     font-weight: 700;
     color: var(--tri-signal);
-    background: #e8f0ec;
+    background: #e6f0ff;
 }
 
 .triagem-match-bio {
@@ -1223,20 +1223,20 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 }
 
 .triagem-match-card .lon-btn-primary {
-    background: #2f453a;
-    color: #f7f4ea;
+    background: #2463d4;
+    color: #ffffff;
     border: 0;
 }
 
 .triagem-match-card .lon-btn-primary:hover {
-    background: #24362e;
+    background: #194ea9;
 }
 
 .triagem-offers { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--tri-line); }
 .triagem-offers > h3 { margin: 0 0 16px; font-size: 1.1rem; text-align: left; }
 .triagem-offers-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .triagem-offer-card { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; padding: 20px; border: 1px solid var(--tri-line); border-radius: 16px; background: #fff; text-align: left; }
-.triagem-offer-card--intro { background: #f7f5ef; }
+.triagem-offer-card--intro { background: #edf5ff; }
 .triagem-offer-kicker { margin: 0 !important; color: var(--tri-signal) !important; font-size: 0.72rem !important; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .triagem-offer-card h4 { margin: 0; font-size: 1rem; }
 .triagem-offer-price { color: var(--tri-ink); font-size: 1.35rem; }
@@ -1280,7 +1280,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     margin: 0;
     padding: 16px 18px;
     border-radius: 14px;
-    background: #eef4ef;
+    background: #edf5ff;
     color: var(--tri-ink);
     font-size: 0.95rem;
     line-height: 1.5;
@@ -1544,4 +1544,64 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 .triagem-proof .lon-tp-badge-name {
     color: var(--tri-muted);
     font-weight: 500;
+}
+
+/* Blue questionnaire: a calm, focused surface across every step. */
+body.lon-landing.psi-landing.triagem-page:not(.is-choice) {
+    background: radial-gradient(ellipse at 10% 0%, #dfedff 0, transparent 48%),
+        radial-gradient(ellipse at 100% 65%, #e7f0ff 0, transparent 45%), #f5f9ff !important;
+    font-family: "Sora", sans-serif;
+}
+.triagem-top { padding: 18px max(24px, calc((100vw - 1120px) / 2)); }
+.triagem-brand { color: #163963; font-size: 1.55rem; }
+.triagem-login { border-radius: 999px; background: rgba(255,255,255,.5); }
+.triagem-page.is-choice .triagem-login { background: transparent; }
+.triagem-page.is-quiz .triagem-main,
+.triagem-page:not(.is-choice) .triagem-main { max-width: 740px; padding: 36px 24px 48px; }
+.tri-quiz {
+    padding: 32px 40px 40px;
+    background: #fff;
+    border: 1px solid #dce7f5;
+    border-radius: 28px;
+    box-shadow: 0 16px 60px -24px rgba(26, 67, 126, .23);
+}
+.tri-quiz-bar { justify-content: space-between; margin-bottom: 16px; }
+.tri-quiz-back { background: #f0f5fc; color: #2458a1; border: 1px solid #dce7f5; }
+.tri-quiz-back:hover { background: #e3eeff; }
+.tri-quiz-count { color: #365a8a; font-size: .75rem; background: #edf5ff; padding: 8px 12px; border-radius: 999px; }
+.tri-quiz-meter { height: 6px; background: #e9eff8; margin-bottom: 32px; }
+.tri-quiz-meter span { background: linear-gradient(90deg, #2463d4, #64a4f6); }
+.tri-match-intro { padding-bottom: 24px; border-bottom: 1px solid #e4edf8; margin-bottom: 26px; }
+.tri-match-intro h1,
+.tri-quiz h2 { font-family: "Sora", sans-serif; font-weight: 600; letter-spacing: -.045em; }
+.tri-match-intro h1 { font-size: clamp(1.65rem, 4vw, 2.15rem); line-height: 1.25; }
+.tri-quiz h2 { font-size: clamp(1.2rem, 3vw, 1.45rem); line-height: 1.4; }
+.tri-match-intro p, .tri-quiz-why { font-size: .88rem; line-height: 1.75; }
+.tri-opt { min-height: 58px; border-color: #dce5f1; border-radius: 14px; padding: 15px 18px; gap: 14px; }
+.tri-opt::before { content: ""; flex: 0 0 19px; width: 19px; height: 19px; border: 1.5px solid #a7bad3; border-radius: 50%; background: #fff; box-sizing: border-box; }
+.tri-opt:has(input[type="checkbox"])::before { border-radius: 6px; }
+.tri-opt.is-on::before { border: 5px solid #2463d4; }
+.tri-opt span { font-size: .9rem; line-height: 1.5; }
+.tri-opt:hover { border-color: #82aceb; background: #f5f9ff; }
+.tri-opt.is-on { border-color: #2463d4; background: #edf5ff; box-shadow: inset 0 0 0 1px #2463d4; }
+.tri-opt:focus-within { outline: 3px solid #8dbbff; outline-offset: 3px; }
+.tri-field input { border-color: #dce5f1; border-radius: 12px; background: #fbfdff; }
+.tri-check input { accent-color: #2463d4; width: 18px; height: 18px; flex-shrink: 0; }
+.tri-quiz-continue { min-height: 56px; border-radius: 14px; background: #2463d4; box-shadow: 0 6px 16px rgba(36,99,212,.18); transition: background .2s ease, box-shadow .2s ease; }
+.tri-quiz-continue:hover { background: #194ea9; box-shadow: 0 8px 20px rgba(36,99,212,.25); }
+.triagem-page :is(button, a, input):focus-visible { outline: 3px solid #75a9fa; outline-offset: 4px; }
+.triagem-crisis-foot { margin-top: 28px; }
+.triagem-page .lon-btn-primary { background: #2463d4; border-color: #2463d4; color: #fff; }
+.triagem-page .lon-btn-primary:hover { background: #194ea9; border-color: #194ea9; }
+.triagem-page .lon-btn-soft { background: #edf5ff; border-color: #cbdcf5; color: #194ea9; }
+@media (max-width: 520px) {
+    .triagem-top { padding: 14px 20px; }
+    .triagem-page.is-quiz .triagem-main,
+    .triagem-page:not(.is-choice) .triagem-main { padding: 20px 14px 32px; }
+    .tri-quiz { padding: 22px 20px 26px; border-radius: 22px; }
+    .tri-quiz-meter { margin-bottom: 26px; }
+    .tri-opt { padding: 13px 14px; gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .triagem-page *, .triagem-page *::before { animation: none !important; transition: none !important; }
 }
