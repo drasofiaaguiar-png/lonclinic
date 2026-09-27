@@ -12,11 +12,11 @@
     --bg-card-hover: #ffffff;
     --bg-elevated: #f1f5f2;
     --text-primary: #1a1a1a;
-    --text-secondary: #2c3d31;
-    --text-muted: #425045;
-    --border: #c9d4cc;
-    --border-light: #9fb2a6;
-    --accent: #255235;
+    --text-secondary: #333333;
+    --text-muted: #6b6b6b;
+    --border: #dedede;
+    --border-light: #c8c8c8;
+    --accent: #111111;
     --radius-sm: 10px;
     --radius: 12px;
     --radius-md: 16px;
@@ -295,7 +295,7 @@ body {
 }
 
 .booking-slot-change-wrap a {
-    color: #255235;
+    color: #111111;
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 600;
@@ -1844,7 +1844,7 @@ body.is-psych-checkout .lon-buy-trust li::before {
     margin: 0 0 20px;
     padding: 16px 18px 14px;
     background: var(--bg-card, #fff);
-    border: 1px solid var(--border, #d5ddd6);
+    border: 1px solid #111111;
     border-radius: var(--radius-lg, 16px);
 }
 
@@ -1865,8 +1865,11 @@ body.is-psych-checkout .lon-buy-trust li::before {
 
 .booking-quick-row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding: 1px 1px 5px;
 }
 
 .booking-quick-hint {
@@ -1877,9 +1880,10 @@ body.is-psych-checkout .lon-buy-trust li::before {
 
 .booking-quick-slot {
     appearance: none;
-    border: 1px solid #255235;
+    flex: 0 0 auto;
+    border: 1px solid #111111;
     background: #fff;
-    color: #255235;
+    color: #111111;
     border-radius: 999px;
     padding: 8px 12px;
     font: inherit;
@@ -1889,7 +1893,7 @@ body.is-psych-checkout .lon-buy-trust li::before {
 }
 
 .booking-quick-slot:hover {
-    background: #255235;
+    background: #111111;
     color: #fff;
 }
 
@@ -1963,13 +1967,15 @@ body.is-psych-checkout .lon-buy-trust li::before {
 }
 
 .cal-day {
-    aspect-ratio: 1;
+    width: 40px;
+    height: 32px;
+    justify-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.8125rem;
     font-weight: 500;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-full);
     border: none;
     background: none;
     color: var(--text-primary);
@@ -1979,7 +1985,7 @@ body.is-psych-checkout .lon-buy-trust li::before {
 }
 
 .cal-day:hover:not(.cal-disabled):not(.cal-empty) {
-    background: rgba(37, 82, 53, 0.12);
+    background: rgba(17, 17, 17, 0.08);
 }
 
 .cal-day.cal-today {
@@ -1993,7 +1999,7 @@ body.is-psych-checkout .lon-buy-trust li::before {
 }
 
 .cal-day.cal-disabled {
-    color: #90a396;
+    color: #a7a7a7;
     cursor: default;
 }
 

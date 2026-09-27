@@ -179,7 +179,8 @@ async function initBookingFlow() {
     }
 
     // Load schedule on page load
-    await loadSchedule();
+    // Start schedule loading without blocking the rest of the booking UI setup.
+    const scheduleLoadPromise = loadSchedule();
 
     const services = {
         clinica_geral: { label: 'Consulta Clínica Geral / Check Up', price: '39 €', cents: 3900 },
@@ -2920,7 +2921,8 @@ async function initBookingFlow() {
     syncConsultLangPolicyUI();
     applyRenewalAndNextSlot();
     applyClinicalIntentToForm();
-    await loadBookableDays();
+    // Fetch both sources together so calendar availability is ready sooner.
+    await Promise.all([scheduleLoadPromise, loadBookableDays()]);
 
     if (state.currentStep === 1) {
         renderCalendar();
