@@ -4219,6 +4219,12 @@ function buildConfirmationEmail(data) {
     const subject = typeof t.subject === 'function'
         ? t.subject(dateText, timeText, (data && data.bookingRef) || '')
         : t.subject;
+    const mbwayText = data && data.paymentMethod === 'mbway'
+        ? `Pagamento por MB WAY ainda por validar. Envie ${(Number(data.amount || 0) / 100).toFixed(2)} € para ${String(data.mbwayPhone || '').trim()}.`
+        : '';
+    const mbwayHtml = mbwayText
+        ? `<p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;"><strong>Pagamento por MB WAY:</strong> ${escapeHtml(mbwayText)}</p>`
+        : '';
 
     const html = `<!DOCTYPE html>
 <html lang="${t.htmlLang}">
@@ -4236,6 +4242,7 @@ function buildConfirmationEmail(data) {
                         <td style="background:#ffffff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
                             <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${typeof t.greeting === 'function' ? escapeHtml(t.greeting(patientName || 'paciente')) : t.greeting}</p>
                             ${whenHtml}
+                            ${mbwayHtml}
                             <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.linkLead}</p>
                             <p style="margin:0 0 20px;">
                                 <a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#255235;font-size:15px;font-weight:600;text-decoration:underline;">${t.linkLabel}</a>
@@ -4262,6 +4269,8 @@ function buildConfirmationEmail(data) {
         '',
         ...whenLines,
         whenLines.length ? '' : null,
+        mbwayText,
+        mbwayText ? '' : null,
         t.linkLead,
         t.linkLabel,
         room,
@@ -13247,8 +13256,10 @@ async function confirmFreeOrientationBooking(fields) {
 }
 
 app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => {
+    const requestedPaymentMethod = String((req.body && req.body.paymentMethod) || 'card').trim().toLowerCase();
+    const isMbwayCheckout = requestedPaymentMethod === 'mbway';
     const incomingFree = bookingServiceTag((req.body && req.body.service) || '') === 'burnout_orientacao';
-        if (!isStripeConfigured && !incomingFree) {
+        if (!isStripeConfigured && !incomingFree && !isMbwayCheckout) {
         console.error('❌ Stripe configuration check failed:');
         console.error('   STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
         console.error('   isStripeConfigured:', isStripeConfigured);
@@ -13473,6 +13484,123 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                         : 'Não foi possível confirmar a sessão. Tente outro horário.'
                 });
             }
+        }
+
+        if (isMbwayCheckout) {
+            const mbwayPhone = String(process.env.MBWAY_PHONE || '+351 928 372 775').trim();
+            if (isStripeSubscriptionService(service)) {
+                if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
+                return res.status(400).json({ error: 'O MB WAY manual não está disponível para subscrições. Escolha o pagamento por cartão.' });
+            }
+            if (priceAmount <= 0) {
+                if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
+                return res.status(400).json({ error: 'Este serviço não requer pagamento por MB WAY.' });
+            }
+            if (!mbwayPhone) {
+                if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
+                return res.status(503).json({ error: 'O pagamento por MB WAY não está disponível neste momento.' });
+            }
+            if (!isoCheckout || !normTimeCheckout) {
+                if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
+                return res.status(400).json({ error: 'Missing date or time' });
+            }
+
+            const paymentId = `manual_${crypto.randomUUID().replace(/-/g, '')}`;
+            const bookingRef = `LC-${paymentId.slice(-8).toUpperCase()}`;
+            const intakeToken = newIntakeToken();
+            const passengerNames = (Array.isArray(passengers) ? passengers : []).slice(0, 4)
+                .map((p) => `${p.firstName || ''} ${p.lastName || ''}`.trim()).filter(Boolean);
+            const resolvedPatientName = passengerNames[0] || patientName || String(patientEmail).split('@')[0];
+            const bookingData = {
+                bookingRef,
+                patientName: resolvedPatientName,
+                email: String(patientEmail).toLowerCase().trim(),
+                service,
+                serviceLabel: String(serviceLabel || SERVICE_LABELS[service] || service),
+                date,
+                dateLabel: date,
+                time: normTimeCheckout,
+                amount: priceAmount,
+                currency: 'eur',
+                travellerCount: count || 1,
+                hasInsurance: false,
+                passengers: passengerNames.length ? passengerNames : [resolvedPatientName],
+                travelDest: travelDest || '',
+                travelDates: travelDates || '',
+                contactPhone: patientPhone || '',
+                locale: normalizePatientLocale(locale),
+                intakeToken,
+                professional: String(metadata.professional_name || '').trim() || null,
+                paymentMethod: 'mbway',
+                mbwayPhone
+            };
+            const record = {
+                bookingRef,
+                email: bookingData.email,
+                service,
+                date,
+                time: normTimeCheckout,
+                dateIso: isoCheckout,
+                patientName: resolvedPatientName,
+                patientPhone: patientPhone || '',
+                travellerCount: count || 1,
+                amount: priceAmount,
+                currency: 'eur',
+                paymentId,
+                patientLocale: normalizePatientLocale(locale),
+                cancelled: false,
+                rescheduleCount: 0,
+                reminderSent: false,
+                reminder1hSent: false,
+                followupSent: false,
+                intakeToken,
+                intakeCompletedAt: null,
+                intakeReminderSent: false,
+                intake: null,
+                createdAt: new Date().toISOString(),
+                professionalId: Number(metadata.professional_id) > 0 ? Number(metadata.professional_id) : null,
+                professional: bookingData.professional
+            };
+            try {
+                if (usePersistentDb) {
+                    const inserted = await db.insertBooking(record);
+                    if (!inserted) return res.status(409).json({ error: 'Esse horário já não está disponível.' });
+                    try { await db.setBookingIntakeToken(bookingRef, intakeToken); } catch (err) {
+                        console.error('MB WAY intake token:', err.message);
+                    }
+                } else {
+                    if (!isSlotFreeInMemory(isoCheckout, normTimeCheckout, null)) {
+                        return res.status(409).json({ error: 'Esse horário já não está disponível.' });
+                    }
+                    bookingsStore.push(record);
+                }
+            } catch (err) {
+                const slotClash = err && (err.code === '23505' || /idx_bookings_active_slot/i.test(String(err.message || '')));
+                if (slotClash) return res.status(409).json({ error: 'Esse horário já não está disponível.' });
+                throw err;
+            } finally {
+                if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
+            }
+            try {
+                await sendConfirmationEmail(bookingData);
+                await sendAdminNotificationEmail(bookingData);
+            } catch (err) {
+                console.error('MB WAY booking email:', err.message);
+            }
+            await releaseHoldsForSlot(isoCheckout, normTimeCheckout);
+            return res.json({
+                confirmed: {
+                    service,
+                    serviceLabel: bookingData.serviceLabel,
+                    date,
+                    time: normTimeCheckout,
+                    amount: priceAmount,
+                    currency: 'eur',
+                    email: bookingData.email,
+                    bookingRef
+                },
+                mbway: { phone: mbwayPhone }
+            });
         }
 
         if (!isStripeConfigured) {

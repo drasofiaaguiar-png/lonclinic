@@ -2309,9 +2309,12 @@ async function initBookingFlow() {
 
     // ─── Pay Button → Create Stripe Checkout Session ───
     const payBtn = document.getElementById('next-2');
+    const mbwayPayBtn = document.getElementById('mbway-pay-btn');
     const stripeError = document.getElementById('stripeErrorStep2') || document.getElementById('stripeError');
 
-    if (payBtn) payBtn.addEventListener('click', async () => {
+    async function startCheckout(paymentMethod, activePayBtn) {
+        const payBtn = activePayBtn || document.getElementById('next-2');
+        if (!payBtn) return;
         if (!validateForm()) return;
         updateReviewAndSummary();
         payBtn.disabled = true;
@@ -2374,6 +2377,7 @@ async function initBookingFlow() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    paymentMethod: paymentMethod || 'card',
                     service: state.service,
                     serviceLabel: state.serviceLabel,
                     discountCode: state.discountCode || null,
@@ -2412,6 +2416,16 @@ async function initBookingFlow() {
 
             if (data.confirmed) {
                 showBookingConfirmation(data.confirmed);
+                if (data.mbway && data.mbway.phone) {
+                    const instructions = document.getElementById('mbwayInstructions');
+                    if (instructions) instructions.hidden = false;
+                    const phone = document.getElementById('mbwayPhone');
+                    if (phone) phone.textContent = data.mbway.phone;
+                    const amount = document.getElementById('mbwayAmount');
+                    if (amount) amount.textContent = `€${(Number(data.confirmed.amount || 0) / 100).toFixed(2)}`;
+                    const amountLabel = document.getElementById('confirmAmount');
+                    if (amountLabel) amountLabel.textContent = `${(Number(data.confirmed.amount || 0) / 100).toFixed(2)} € · MB WAY por confirmar`;
+                }
                 return;
             }
 
@@ -2429,12 +2443,17 @@ async function initBookingFlow() {
                 stripeError.style.display = 'block';
             }
             payBtn.disabled = false;
-            payBtn.innerHTML = `
+            payBtn.innerHTML = paymentMethod === 'mbway' ? 'Pagar com MB WAY' : `
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 <span id="next-2-label">${payButtonLabel(formatPayablePrice(currentTotalCents(), state.service))}</span>
             `;
         }
-    });
+    }
+    if (payBtn) payBtn.addEventListener('click', () => startCheckout('card', payBtn));
+    if (mbwayPayBtn) {
+        mbwayPayBtn.style.display = '';
+        mbwayPayBtn.addEventListener('click', () => startCheckout('mbway', mbwayPayBtn));
+    }
 
     // ═══════════════════════════════════════
     //  STRIPE RETURN HANDLERS
@@ -2606,6 +2625,8 @@ async function initBookingFlow() {
             ? 'Gratuita'
             : `€${(Number(data.amount) / 100).toFixed(0)}`;
         document.getElementById('confirmRef').textContent = data.bookingRef || '—';
+        const mbwayInstructions = document.getElementById('mbwayInstructions');
+        if (mbwayInstructions) mbwayInstructions.hidden = true;
     }
 
     async function handleStripeReturn(confirmToken) {
