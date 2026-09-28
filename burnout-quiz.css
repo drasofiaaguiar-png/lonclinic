@@ -2399,3 +2399,99 @@
         font-size: 0.6rem;
     }
 }
+
+/* Results: "Passo 2" booking card — white card, calendar first */
+.bq-page.is-results .bq-orient {
+    background: #fff;
+    border-color: #fff;
+    color: #0e2c58;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.bq-page.is-results .bq-orient h3 {
+    color: #0e2c58;
+}
+
+.bq-page.is-results .bq-orient > p,
+.bq-page.is-results .bq-orient-list,
+.bq-page.is-results .bq-orient-label {
+    color: #33445e;
+}
+
+.bq-page.is-results .bq-orient-intro {
+    margin-top: 32px;
+}
+
+.bq-page.is-results .bq-orient-note,
+.bq-page.is-results .bq-orient .bq-book-now-note {
+    background: #f1f5fb;
+    color: #4a5a72;
+}
+
+.bq-page.is-results .bq-orient-empty {
+    color: #4a5a72;
+}
+
+.bq-page.is-results .bq-orient .bq-btn-primary {
+    background: #0e2c58;
+    color: #fff;
+}
+
+.bq-page.is-results .bq-orient .bq-btn-primary:hover {
+    background: #173d74;
+    color: #fff;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar {
+    border-color: #dfe6f0;
+    background: #f7f9fc;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-title,
+.bq-page.is-results .bq-orient .bq-calendar-day-heading {
+    color: #0e2c58;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-arrow {
+    border-color: #cdd7e5;
+    background: #fff;
+    color: #0e2c58;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-arrow:hover:not(:disabled) {
+    background: #eaf0f8;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-date {
+    border-color: #dfe6f0;
+    background: #fff;
+    color: #0e2c58;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-date:hover {
+    background: #eaf0f8;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-date.is-selected {
+    border-color: #0e2c58;
+    background: #0e2c58;
+    color: #fff;
+}
+
+.bq-page.is-results .bq-orient .bq-calendar-slots {
+    border-top-color: #dfe6f0;
+}
+
+.bq-page.is-results .bq-orient-slot {
+    background: #fff;
+    border-color: #cdd7e5;
+    color: #0e2c58;
+}
+
+.bq-page.is-results .bq-orient-slot.is-selected,
+.bq-page.is-results .bq-orient-slot:hover {
+    background: #0e2c58;
+    border-color: #0e2c58;
+    color: #fff;
+}
