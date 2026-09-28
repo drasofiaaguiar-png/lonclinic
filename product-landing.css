@@ -365,7 +365,10 @@ body.nx-page.urgent-landing {
     .page-psychology .nx-hero-lead { font-size: 15.5px; line-height: 1.62; margin-bottom: 18px; }
     .page-psychology .psi-hero-choices { grid-template-columns: 1fr; gap: 14px; margin-bottom: 22px; }
     .page-psychology .psi-hero-choice { grid-template-rows: minmax(180px, 55vw) auto; border-radius: var(--nx-r-lg); }
-    .page-psychology .psi-hero-choice-body { padding: 15px 17px 17px; }
+    .page-psychology .psi-hero-choice-body { padding: 15px 17px 17px; background: var(--nx-deep); }
+    .page-psychology .psi-hero-choice-copy strong,
+    .page-psychology .psi-hero-choice-copy small,
+    .page-psychology .psi-hero-choice-arrow { color: #fff; }
     .page-psychology .psi-hero-choice-copy strong { font-size: 16px; }
     .page-psychology .nx-hero-price { gap: 10px; margin-bottom: 22px; }
     .page-psychology .nx-hero-price strong { font-size: 42px; }
@@ -591,6 +594,38 @@ body.nx-page.urgent-landing {
 .page-psychology .nx-final-note { margin: 22px auto 0; line-height: 1.5; }
 @media (max-width: 700px) { .psi-close-prices { grid-template-columns: 1fr; gap: 10px; } }
 @media (max-width: 560px) { .page-psychology .nx-final { padding: 56px 0; } .page-psychology .nx-final-card { padding: 34px 22px; } .psi-close-price { padding: 16px; } .page-psychology .nx-final-btns { display: grid; grid-template-columns: 1fr; } .page-psychology .nx-final-btns .nx-btn { width: 100%; justify-content: center; text-align: center; } }
+
+.psi-mobile-cta-fixed { display: none; }
+@media (max-width: 899px) {
+    .psi-mobile-cta-fixed {
+        position: fixed;
+        z-index: 1100;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: block;
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+        border-top: 1px solid rgba(18, 34, 43, 0.12);
+        background: #fff;
+        box-shadow: 0 -4px 16px rgba(28, 23, 16, 0.1);
+    }
+    .psi-mobile-cta-fixed a {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: var(--nx-deep);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+    }
+    .page-psychology { padding-bottom: 88px; }
+    .page-psychology .lon-wa-float { bottom: 82px; }
+}
 
 /* Phase / info strip */
 .nx-phases {

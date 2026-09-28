@@ -128,13 +128,13 @@ function isPsychologyStaffService(service) {
     return isIndividualPsychologyService(key) || isCoupleTherapyService(key);
 }
 
-/** Free 15-minute burnout orientation. Fixed window: every day 20:00–21:00. */
-const ORIENTATION_SERVICE = 'burnout_orientacao';
+/** Free 15-minute orientation calls. Fixed window: every day 20:00–21:00. */
+const ORIENTATION_SERVICES = new Set(['burnout_orientacao', 'nutricao_orientacao']);
 const ORIENTATION_STARTS = ['20:00', '20:15', '20:30', '20:45'];
 const ORIENTATION_DURATION = 15;
 
 function isOrientationService(service) {
-    return normalizeServiceKey(service) === ORIENTATION_SERVICE;
+    return ORIENTATION_SERVICES.has(normalizeServiceKey(service));
 }
 
 /**
@@ -575,7 +575,7 @@ module.exports = {
     isIndividualPsychologyService,
     isPsychologyStaffService,
     isOrientationService,
-    ORIENTATION_SERVICE,
+    ORIENTATION_SERVICES,
     ORIENTATION_STARTS,
     ORIENTATION_DURATION,
     isCoupleTherapist,

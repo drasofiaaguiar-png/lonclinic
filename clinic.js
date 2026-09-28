@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         burnout_mensal: 'Anti-burnout',
         burnout_programa: 'Programa anti-burnout',
         burnout_orientacao: 'Orientação burnout (15 min)',
+        nutricao_orientacao: 'Conversa inicial de nutrição (15 min)',
         renovacao: 'Renovação receita',
         psicologia: 'Psicologia',
         terapia_casal: 'Terapia de casal',

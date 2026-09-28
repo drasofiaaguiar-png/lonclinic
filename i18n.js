@@ -941,6 +941,7 @@
                 burnout_mensal: 'Anti-Burnout Subscription',
                 burnout_programa: 'Anti-Burnout Program (8 sessions)',
                 burnout_orientacao: 'Initial orientation session (15 min)',
+                nutricao_orientacao: 'Free Nutrition Introduction (15 min)',
                 renovacao: 'Medical Treatment Renewal',
                 longevidade: 'Functional Medicine Consultation',
                 nutricao_consulta: 'Nutrition consultation',
@@ -962,7 +963,8 @@
                 burnout: 'Burnout',
                 travel: 'Travel Medicine',
                 longevidade: 'Functional Medicine',
-                renovacao: 'Treatment renewal'
+                renovacao: 'Treatment renewal',
+                nutricao_orientacao: 'Free nutrition introduction'
             },
             durations: {
                 clinica_geral: '30 minutes',
@@ -977,6 +979,7 @@
                 burnout_mensal: '60 min · 4 sessions/month',
                 burnout_programa: '8 sessions · 60 min',
                 burnout_orientacao: '15 min · free',
+                nutricao_orientacao: '15 min · free',
                 renovacao: '15–20 min',
                 longevidade: '45–60 min',
                 nutricao_consulta: '30 minutes',
@@ -1012,6 +1015,7 @@
                 burnout_mensal: 'Subscrição Anti-Burnout',
                 burnout_programa: 'Programa Anti-Burnout (8 sessões)',
                 burnout_orientacao: 'Sessão de Orientação Inicial (15 min)',
+                nutricao_orientacao: 'Conversa Inicial de Nutrição (15 min)',
                 renovacao: 'Renovação de Tratamento Médico',
                 longevidade: 'Consulta de Medicina Funcional',
                 nutricao_consulta: 'Consulta de nutrição',
@@ -1033,7 +1037,8 @@
                 burnout: 'Burnout',
                 travel: 'Consulta do Viajante',
                 longevidade: 'Medicina Funcional',
-                renovacao: 'Renovação de tratamento'
+                renovacao: 'Renovação de tratamento',
+                nutricao_orientacao: 'Conversa gratuita de nutrição'
             },
             durations: {
                 clinica_geral: '30 minutos',
@@ -1048,6 +1053,7 @@
                 burnout_mensal: '60 min · 4 consultas/mês',
                 burnout_programa: '8 sessões · 60 min',
                 burnout_orientacao: '15 min · gratuita',
+                nutricao_orientacao: '15 min · gratuita',
                 renovacao: '15–20 min',
                 longevidade: '45–60 min',
                 nutricao_consulta: '30 minutos',
@@ -1083,6 +1089,7 @@
                 burnout_mensal: 'Suscripción Anti-Burnout',
                 burnout_programa: 'Programa anti-burnout (8 sesiones)',
                 burnout_orientacao: 'Sesión de orientación inicial (15 min)',
+                nutricao_orientacao: 'Conversación inicial de nutrición (15 min)',
                 renovacao: 'Renovación de tratamiento médico',
                 longevidade: 'Consulta de medicina funcional',
                 nutricao_consulta: 'Consulta de nutrición',
@@ -1104,7 +1111,8 @@
                 burnout: 'Burnout',
                 travel: 'Medicina del viajero',
                 longevidade: 'Medicina funcional',
-                renovacao: 'Renovación de tratamiento'
+                renovacao: 'Renovación de tratamiento',
+                nutricao_orientacao: 'Conversación inicial gratuita'
             },
             durations: {
                 clinica_geral: '30 minutos',
@@ -1119,6 +1127,7 @@
                 burnout_mensal: '60 min · 4 consultas/mes',
                 burnout_programa: '8 sesiones · 60 min',
                 burnout_orientacao: '15 min · gratuita',
+                nutricao_orientacao: '15 min · gratuita',
                 renovacao: '15–20 min',
                 longevidade: '45–60 min',
                 nutricao_consulta: '30 minutos',

@@ -190,6 +190,7 @@ async function initBookingFlow() {
         burnout_mensal: { label: 'Subscrição Anti-Burnout', price: '216 €/mês', cents: 21600 },
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
         burnout_orientacao: { label: 'Sessão de Orientação Inicial (15 min)', price: 'Gratuita', cents: 0 },
+        nutricao_orientacao: { label: 'Conversa Inicial de Nutrição (15 min)', price: 'Gratuita', cents: 0 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
         longevidade: { label: 'Consulta de Medicina Funcional', price: '60 €', cents: 6000 },
         nutricao_consulta: { label: 'Consulta de nutrição', price: '45 €', cents: 4500 },
@@ -305,7 +306,8 @@ async function initBookingFlow() {
         burnout: 'Burnout',
         travel: 'Consulta do Viajante',
         longevidade: 'Medicina Funcional',
-        renovacao: 'Renovação de tratamento'
+        renovacao: 'Renovação de tratamento',
+        nutricao_orientacao: 'Conversa gratuita de nutrição'
     };
 
     function bookingString(key, fallback) {
@@ -318,6 +320,7 @@ async function initBookingFlow() {
 
     function dropdownValueFor(serviceKey) {
         if (!serviceKey) return 'clinica_geral';
+        if (serviceKey === 'nutricao_orientacao') return serviceKey;
         if (serviceKey.indexOf('burnout') === 0) return 'burnout';
         if (serviceKey.indexOf('psicologia') === 0) return 'psicologia';
         if (serviceKey.indexOf('terapia_casal') === 0) return 'terapia_casal';
@@ -345,7 +348,7 @@ async function initBookingFlow() {
     }
 
     function formatPayablePrice(cents, serviceKey) {
-        if ((serviceKey || state.service) === 'burnout_orientacao') {
+        if (['burnout_orientacao', 'nutricao_orientacao'].includes(serviceKey || state.service)) {
             const lang = getBookingLocale();
             if (lang === 'en') return 'Free';
             return 'Gratuita';
@@ -364,7 +367,7 @@ async function initBookingFlow() {
             discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
         }
         let totalCents = subtotalCents - discountCents;
-        if (state.service === 'burnout_orientacao') return 0;
+        if (['burnout_orientacao', 'nutricao_orientacao'].includes(state.service)) return 0;
         if (totalCents < 50) totalCents = 50;
         return totalCents;
     }
@@ -381,7 +384,7 @@ async function initBookingFlow() {
     }
 
     function payButtonLabel(priceText) {
-        if (state.service === 'burnout_orientacao') {
+        if (['burnout_orientacao', 'nutricao_orientacao'].includes(state.service)) {
             const lang = getBookingLocale();
             if (lang === 'en') return 'Confirm free session';
             if (lang === 'es') return 'Confirmar sesión gratuita';
@@ -1248,26 +1251,33 @@ async function initBookingFlow() {
         const lead = document.getElementById('checkoutHeroLead');
         const eyebrow = document.getElementById('checkoutEyebrow');
         if (planFamilyFor(state.service) !== 'nutricao') return;
+        const isFreeNutritionIntro = state.service === 'nutricao_orientacao';
         const lang = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function')
             ? window.CLINIC_I18N.getLang()
             : getBookingLocale();
         const copy = {
             pt: {
+                freeEyebrow: 'Confirmar conversa gratuita',
+                freeLead: 'Confirme os seus dados para reservar. Não é necessário cartão.',
                 eyebrow: 'Confirmar e pagar',
                 lead: 'Reveja o plano e o horário, confirme o contacto e conclua o pagamento seguro.'
             },
             en: {
+                freeEyebrow: 'Confirm your free call',
+                freeLead: 'Confirm your details to reserve a time. No card required.',
                 eyebrow: 'Confirm and pay',
                 lead: 'Review the plan and time, confirm your contact details, then complete secure payment.'
             },
             es: {
+                freeEyebrow: 'Confirme su conversación gratuita',
+                freeLead: 'Confirme sus datos para reservar. No necesita tarjeta.',
                 eyebrow: 'Confirmar y pagar',
                 lead: 'Revise el plan y el horario, confirme su contacto y complete el pago seguro.'
             }
         };
         const row = copy[lang] || copy.pt;
-        if (eyebrow) eyebrow.textContent = row.eyebrow;
-        if (lead) lead.textContent = row.lead;
+        if (eyebrow) eyebrow.textContent = isFreeNutritionIntro ? row.freeEyebrow : row.eyebrow;
+        if (lead) lead.textContent = isFreeNutritionIntro ? row.freeLead : row.lead;
     }
 
     function relabelNutritionProgress() {
@@ -1277,10 +1287,13 @@ async function initBookingFlow() {
         const lang = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function')
             ? window.CLINIC_I18N.getLang()
             : getBookingLocale();
-        const first = state.fromMarcar
+        const isFreeNutritionIntro = state.service === 'nutricao_orientacao';
+        const first = state.fromMarcar && !isFreeNutritionIntro
             ? { pt: 'Plano e horário', en: 'Plan & time', es: 'Plan y hora' }
             : { pt: 'Horário', en: 'Time', es: 'Horario' };
-        const second = { pt: 'Dados e pagamento', en: 'Details and payment', es: 'Datos y pago' };
+        const second = isFreeNutritionIntro
+            ? { pt: 'Dados de contacto', en: 'Contact details', es: 'Datos de contacto' }
+            : { pt: 'Dados e pagamento', en: 'Details and payment', es: 'Datos y pago' };
         const third = { pt: 'Confirmado', en: 'Confirmed', es: 'Confirmado' };
         if (labels[0]) labels[0].textContent = first[lang] || first.pt;
         if (labels[1]) labels[1].textContent = second[lang] || second.pt;
@@ -1658,8 +1671,11 @@ async function initBookingFlow() {
             const currentMinute = new Date().getMinutes();
 
             let availableSlots = data.available;
+            if (['burnout_orientacao', 'nutricao_orientacao'].includes(state.service)) {
+                availableSlots = availableSlots.filter(slot => ['20:00', '20:15', '20:30', '20:45'].includes(slot));
+            }
             if (isToday) {
-                availableSlots = data.available.filter(slot => {
+                availableSlots = availableSlots.filter(slot => {
                     const [hour, minute] = slot.split(':').map(Number);
                     const slotTime = hour * 60 + minute;
                     const currentTime = currentHour * 60 + currentMinute;
@@ -1698,10 +1714,14 @@ async function initBookingFlow() {
         } catch (err) {
             console.error('Failed to load schedule:', err);
             // Fallback to default behavior if schedule API fails
-            const slots = [];
-            for (let h = 9; h < 17; h++) {
-                slots.push(`${h.toString().padStart(2, '0')}:00`);
-                slots.push(`${h.toString().padStart(2, '0')}:30`);
+            const slots = ['burnout_orientacao', 'nutricao_orientacao'].includes(state.service)
+                ? ['20:00', '20:15', '20:30', '20:45']
+                : [];
+            if (!slots.length) {
+                for (let h = 9; h < 17; h++) {
+                    slots.push(`${h.toString().padStart(2, '0')}:00`);
+                    slots.push(`${h.toString().padStart(2, '0')}:30`);
+                }
             }
 
             const today = new Date();
@@ -1778,6 +1798,7 @@ async function initBookingFlow() {
                 nutricao_consulta: 'nutricao-consulta',
                 nutricao_quinzenal: 'nutricao-quinzenal',
                 nutricao_programa: 'nutricao-programa',
+                nutricao_orientacao: 'nutricao-orientacao',
                 nutricao_completo: 'nutricao-completo',
                 nutricao_completo_reforcado: 'nutricao-completo-reforcado'
             };
@@ -2206,7 +2227,7 @@ async function initBookingFlow() {
         let totalCents = subtotalCents - discountCents;
         // Ensure minimum of 50 cents (Stripe minimum for EUR)
         const STRIPE_MINIMUM = 50;
-        if (state.service === 'burnout_orientacao') {
+        if (['burnout_orientacao', 'nutricao_orientacao'].includes(state.service)) {
             totalCents = 0;
             discountCents = 0;
         } else if (totalCents < STRIPE_MINIMUM) {
@@ -2337,7 +2358,7 @@ async function initBookingFlow() {
         let totalCents = subtotalCents - discountCents;
         // Ensure minimum of 50 cents (Stripe minimum for EUR)
         const STRIPE_MINIMUM = 50;
-        if (state.service === 'burnout_orientacao') {
+        if (['burnout_orientacao', 'nutricao_orientacao'].includes(state.service)) {
             totalCents = 0;
             discountCents = 0;
         } else if (totalCents < STRIPE_MINIMUM) {

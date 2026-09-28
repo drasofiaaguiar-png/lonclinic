@@ -7035,7 +7035,7 @@ function getAppointmentStartUtcMs(booking, timeZone) {
 
 function appointmentDurationMinutes(booking) {
     const s = booking && booking.service;
-    if (s === 'burnout_orientacao') return staffBooking.ORIENTATION_DURATION;
+    if (staffBooking.isOrientationService(s)) return staffBooking.ORIENTATION_DURATION;
     if (s === 'burnout' || s === 'burnout_mensal' || s === 'burnout_programa') return 60;
     if (s === 'psicologia' || s === 'psicologia_mensal') return 50;
     if (s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
@@ -9405,6 +9405,7 @@ const MARCAR_TIPO_TO_SLUG = {
     burnout_mensal: 'burnout-mensal',
     burnout_programa: 'burnout-programa',
     burnout_orientacao: 'burnout-orientacao',
+    nutricao_orientacao: 'nutricao-orientacao',
     longevidade: 'medicina-funcional',
     medicina_funcional: 'medicina-funcional',
     nutricao_consulta: 'nutricao-consulta',
@@ -13160,9 +13161,11 @@ async function confirmFreeOrientationBooking(fields) {
     const bookingRef = 'LC-' + paymentId.slice(-8).toUpperCase();
     const intakeToken = newIntakeToken();
     const emailNorm = String(fields.patientEmail || '').toLowerCase().trim();
-    const service = 'burnout_orientacao';
+    const service = bookingServiceTag(fields.service || 'burnout_orientacao');
     const serviceLabel = String(fields.serviceLabel || '').trim()
-        || 'Sessão de Orientação Inicial (15 min) — Gratuita';
+        || (service === 'nutricao_orientacao'
+            ? 'Conversa inicial de nutrição (15 min) — Gratuita'
+            : 'Sessão de Orientação Inicial (15 min) — Gratuita');
     const record = {
         bookingRef,
         email: emailNorm,
@@ -13258,7 +13261,7 @@ async function confirmFreeOrientationBooking(fields) {
 app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => {
     const requestedPaymentMethod = String((req.body && req.body.paymentMethod) || 'card').trim().toLowerCase();
     const isMbwayCheckout = requestedPaymentMethod === 'mbway';
-    const incomingFree = bookingServiceTag((req.body && req.body.service) || '') === 'burnout_orientacao';
+    const incomingFree = staffBooking.isOrientationService((req.body && req.body.service) || '');
         if (!isStripeConfigured && !incomingFree && !isMbwayCheckout) {
         console.error('❌ Stripe configuration check failed:');
         console.error('   STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
@@ -13455,15 +13458,19 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             }
         }
 
-        if (bookingServiceTag(service) === 'burnout_orientacao' && priceAmount === 0) {
+        if (staffBooking.isOrientationService(service) && priceAmount === 0) {
             if (!isoCheckout || !normTimeCheckout) {
                 return res.status(400).json({ error: 'Missing date or time' });
+            }
+            if (!staffBooking.ORIENTATION_STARTS.includes(normTimeCheckout)) {
+                return res.status(400).json({ error: 'That time slot is not available' });
             }
             const named = patientName || (Array.isArray(passengers) && passengers[0]
                 ? `${passengers[0].firstName || ''} ${passengers[0].lastName || ''}`.trim()
                 : '');
             try {
                 const confirmed = await confirmFreeOrientationBooking({
+                    service,
                     serviceLabel,
                     date,
                     time: normTimeCheckout,
@@ -18771,7 +18778,7 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                         ? '€224/mês'
                         : service === 'nutricao_quinzenal'
                             ? '€45 / 15 dias'
-                            : service === 'burnout_orientacao'
+                            : staffBooking.isOrientationService(service)
                                 ? 'Gratuita'
                                 : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
@@ -19320,6 +19327,7 @@ const INVITATION_SERVICE_LABEL = {
     burnout_mensal: { pt: 'Subscrição Anti-Burnout', en: 'Anti-Burnout Subscription', es: 'Suscripción Anti-Burnout' },
     burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
     burnout_orientacao: { pt: 'Sessão de Orientação Inicial (15 min)', en: 'Initial orientation session (15 min)', es: 'Sesión de orientación inicial (15 min)' },
+    nutricao_orientacao: { pt: 'Conversa Inicial de Nutrição (15 min)', en: 'Free Nutrition Introduction (15 min)', es: 'Conversación inicial de nutrición (15 min)' },
     nutricao_consulta: { pt: 'Consulta de Nutrição', en: 'Nutrition Consultation', es: 'Consulta de nutrición' },
     nutricao_quinzenal: { pt: 'Subscrição de Nutrição · quinzenal', en: 'Nutrition subscription · fortnightly', es: 'Suscripción de nutrición · quincenal' },
     nutricao_programa: { pt: 'Programa de Perda de Peso (6 meses)', en: 'Weight-Loss Program (6 months)', es: 'Programa de pérdida de peso (6 meses)' },

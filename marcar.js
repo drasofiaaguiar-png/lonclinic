@@ -137,6 +137,10 @@
                     'Every day from 20:00 to 21:00, unless that time is already booked.'
                 ]
             },
+            nutricao_orientacao: {
+                label: 'Free Nutrition Introduction (15 min)', duration: '15 min · free',
+                bullets: ['Free 15-minute video call to discuss your goals and questions.', 'Learn which nutrition follow-up option may suit you.', 'No payment or commitment required.', 'Available every day between 20:00 and 21:00.']
+            },
             longevidade: {
                 label: 'Functional Medicine Consultation',
                 duration: '45–60 min',
@@ -322,6 +326,10 @@
                     'Todos los días de 20:00 a 21:00, salvo que esa hora ya esté ocupada.'
                 ]
             },
+            nutricao_orientacao: {
+                label: 'Conversación inicial de nutrición (15 min)', duration: '15 min · gratuita',
+                bullets: ['Videollamada gratuita de 15 minutos para hablar de sus objetivos y dudas.', 'Le explicamos qué opción de seguimiento nutricional puede encajar con usted.', 'Sin pago ni compromiso.', 'Disponible todos los días entre las 20:00 y las 21:00.']
+            },
             longevidade: {
                 label: 'Consulta de Medicina Funcional',
                 duration: '45–60 min',
@@ -388,6 +396,7 @@
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
         burnout_orientacao: 'burnout-orientacao',
+        nutricao_orientacao: 'nutricao-orientacao',
         longevidade: 'medicina-funcional',
         nutricao_consulta: 'nutricao-consulta',
         nutricao_quinzenal: 'nutricao-quinzenal',
@@ -416,6 +425,7 @@
         burnout_programa: 'burnout_programa',
         'burnout-orientacao': 'burnout_orientacao',
         burnout_orientacao: 'burnout_orientacao',
+        'nutricao-orientacao': 'nutricao_orientacao',
         longevidade: 'longevidade',
         'medicina-funcional': 'longevidade',
         medicina_funcional: 'longevidade',
@@ -491,7 +501,7 @@
             featured: false
         }
     ];
-    var NUTRICAO_FAMILY = ['nutricao_consulta', 'nutricao_quinzenal', 'nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado'];
+    var NUTRICAO_FAMILY = ['nutricao_consulta', 'nutricao_quinzenal', 'nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado', 'nutricao_orientacao'];
     var NUTRICAO_PLAN_CARDS = [
         {
             tipo: 'nutricao_quinzenal',
@@ -772,6 +782,11 @@
                 'Sessão orientativa: não inclui prescrição de medicação nem pedido de exames.',
                 'Todos os dias entre as 20:00 e as 21:00, salvo horário já ocupado por outra consulta.'
             ]
+        },
+        nutricao_orientacao: {
+            label: 'Conversa inicial de nutrição (15 min)', price: 'Gratuita', cents: 0,
+            duration: '15 min', serviceKey: 'nutricao_orientacao',
+            bullets: ['Conversa gratuita de 15 minutos por videochamada para falar dos seus objetivos e dúvidas.', 'Explicamos as opções de acompanhamento de nutrição mais adequadas para si.', 'Sem pagamento nem compromisso.', 'Disponível todos os dias entre as 20:00 e as 21:00.']
         },
         longevidade: {
             label: 'Consulta de Medicina Funcional',
@@ -1071,7 +1086,8 @@
             travel: 'Medicina del viajero', renovacao: 'Renovación de receta',
             psicologia: 'Psicología individual', terapia_casal: 'Terapia de pareja', burnout: 'Burnout',
             nutricao_quinzenal: 'Suscripción quincenal', nutricao_consulta: 'Consulta suelta',
-            nutricao_programa: 'Programa 6 meses', nutricao_completo: 'Programa completo'
+            nutricao_programa: 'Programa 6 meses', nutricao_completo: 'Programa completo',
+            nutricao_orientacao: 'Conversa inicial gratuita'
         }
     };
     function currentLangKey() {
@@ -1253,7 +1269,7 @@
         var nutricaoLink = document.getElementById('marcarNutricaoLink');
         if (nutricaoLink) nutricaoLink.hidden = true;
         var nutricaoTrust = document.getElementById('marcarBuyTrust');
-        if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal';
+        if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal' || tipo === 'nutricao_orientacao';
         var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
         if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, true);
         var nuBack = document.getElementById('marcarBookingBack');
@@ -1703,6 +1719,15 @@
 
     function nutricaoClinicalIntent() {
         var goalLabel = nutricaoGoalNoteLabel(state.nutricaoGoal);
+        if (tipo === 'nutricao_orientacao') {
+            return {
+                category: 'nutrition',
+                product: 'nutricao_orientacao',
+                goal: goalLabel,
+                concerns: 'Conversa inicial gratuita de nutrição (15 min). Sem plano alimentar ou compromisso de acompanhamento.',
+                label: 'Conversa inicial de nutrição'
+            };
+        }
         if (tipo === 'nutricao_consulta') {
             return {
                 category: 'nutrition',
@@ -1832,7 +1857,7 @@
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         if (dateObj < today) return false;
-        if (tipo !== 'burnout_orientacao' && dateObj.getTime() === today.getTime()) return false;
+        if (tipo !== 'burnout_orientacao' && tipo !== 'nutricao_orientacao' && dateObj.getTime() === today.getTime()) return false;
 
         var dateStr = formatDateLocal(dateObj);
         if (usesStaffSlotCalendar()) {
@@ -2568,7 +2593,7 @@
         var lead = document.getElementById('marcarLead');
         var footnote = document.getElementById('marcarFootnote');
         var scheduleSub = document.getElementById('marcarScheduleSub');
-        var orient = tipo === 'burnout_orientacao';
+        var orient = tipo === 'burnout_orientacao' || tipo === 'nutricao_orientacao';
         if (eyebrow) eyebrow.textContent = copy.eyebrow;
         if (lead) {
             lead.textContent = orient
@@ -2589,7 +2614,7 @@
         if (back) back.textContent = copy.back;
         var isLast = shell.step === steps.length - 1;
         if (next) {
-            next.textContent = isLast ? (tipo === 'burnout_orientacao' ? (copy.orientNext || copy.toPayment) : copy.toPayment) : copy.next;
+            next.textContent = isLast ? (orient ? (copy.orientNext || copy.toPayment) : copy.toPayment) : copy.next;
             next.disabled = !shellStepDone(current);
         }
         if (hint) hint.textContent = shellHint(current);
