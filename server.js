@@ -563,6 +563,45 @@ function injectAnalyticsHtml(html, req) {
     return html + ANALYTICS_SNIPPET;
 }
 
+/** Content-hashed ?v= for shared quiz/analytics assets. Pages keep hand-written
+ *  dates (often stale), so HTML is rewritten to the file's hash on the way out and
+ *  the static handler only sends a 1-year immutable cache when ?v matches it. */
+const HASHED_ASSETS = new Set([
+    'burnout-quiz.css',
+    'burnout-quiz.js',
+    'clinical-quiz.js',
+    'clinical-quiz-score.js',
+    'lon-analytics.js',
+    'lon-slots.js'
+]);
+const assetHashMemo = new Map();
+
+function assetContentHash(base) {
+    if (!HASHED_ASSETS.has(base)) return null;
+    try {
+        const fp = path.join(__dirname, base);
+        const mtime = fs.statSync(fp).mtimeMs;
+        const memo = assetHashMemo.get(base);
+        if (memo && memo.mtime === mtime) return memo.hash;
+        const hash = crypto.createHash('sha1').update(fs.readFileSync(fp)).digest('hex').slice(0, 12);
+        assetHashMemo.set(base, { mtime, hash });
+        return hash;
+    } catch (e) {
+        return null;
+    }
+}
+
+function applyAssetHashes(html) {
+    if (!html || typeof html !== 'string') return html;
+    return html.replace(
+        /\/(burnout-quiz\.css|burnout-quiz\.js|clinical-quiz\.js|clinical-quiz-score\.js|lon-analytics\.js|lon-slots\.js)\?v=[^"'&\s<>]*/g,
+        (m, base) => {
+            const hash = assetContentHash(base);
+            return hash ? `/${base}?v=${hash}` : m;
+        }
+    );
+}
+
 function applyCspNonce(html, nonce) {
     if (!html || typeof html !== 'string' || !nonce) return html;
     const n = String(nonce).replace(/[^A-Za-z0-9+/=_-]/g, '');
@@ -606,7 +645,7 @@ function injectPublicHtml(html, req, nonce) {
         out = injectMetaPixel(out);
     }
     return disableCloudflareEmailObfuscation(
-        applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req), nonce)
+        applyCspNonce(applyAssetHashes(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req)), nonce)
     );
 }
 
@@ -10222,6 +10261,14 @@ app.use(express.static(path.join(__dirname), {
     index: false,
     setHeaders: (res, filePath) => {
         const base = path.basename(filePath);
+        if (HASHED_ASSETS.has(base)) {
+            const v = res.req && res.req.query ? res.req.query.v : null;
+            const hash = assetContentHash(base);
+            if (hash && v === hash) {
+                res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+                return;
+            }
+        }
         if (
             base === 'guide.css' ||
             base === 'magazine.css' ||
