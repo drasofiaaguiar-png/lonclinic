@@ -390,6 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout_mensal: 'Anti-burnout (semanal)',
         burnout_programa: 'Programa anti-burnout',
         burnout_orientacao: 'Orientação burnout (15 min)',
+        nutricao_orientacao: 'Conversa inicial de nutrição (15 min)',
         longevidade: 'Longevidade',
         renovacao: 'Renovação receita',
         psicologia: 'Psicologia',
@@ -1562,6 +1563,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 unpaidCents: visible[0].unpaidCents,
                 complimentaryCount: visible[0].complimentaryCount,
                 stripeFeeCents: visible[0].stripeFeeCents,
+                salaryCents: visible[0].salaryCents,
                 breakdown: visible[0].breakdown
             }
             : (financesCache.totals || { paidCents: 0, unpaidCents: 0, complimentaryCount: 0 });
@@ -1587,6 +1589,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span class="admin-finances-card-label">SS (15%)</span>
                     <strong class="admin-finances-card-value">${formatEuroFromCents(bd.ssCents || 0)}</strong>
                 </div>
+                <div class="admin-finances-card is-salary">
+                    <span class="admin-finances-card-label">Salários</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(bd.salaryCents || 0)}</strong>
+                </div>
                 <div class="admin-finances-card is-net">
                     <span class="admin-finances-card-label">Líquido</span>
                     <strong class="admin-finances-card-value">${formatEuroFromCents(bd.netCents || 0)}</strong>
@@ -1596,7 +1602,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <strong class="admin-finances-card-value">${formatEuroFromCents(totals.unpaidCents)}</strong>
                 </div>
             </div>
-            <p class="admin-finances-footnote">IRS e SS calculados sobre a receita bruta paga. Stripe só em pagamentos online (não em marcações manuais sem fatura). Valores estimativos.</p>
+            <p class="admin-finances-footnote">Salários por consulta paga: Psicologia €20, terapia de casal €25 e Nutrição €16. IRS e SS calculados sobre a receita bruta paga. Stripe só em pagamentos online. Estimativas.</p>
         `;
 
         if (!visible.length) {
@@ -1612,7 +1618,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const svc = SERVICE_LABELS_ADMIN[c.service] || c.service || '—';
                     const when = c.dateIso || c.date || '—';
                     const status = c.complimentary ? 'Cortesia' : (c.paid ? 'Pago' : 'Por receber');
-                    return `<li><span>${escapeHtml(when)}${c.time ? ` · ${escapeHtml(c.time)}` : ''} · ${escapeHtml(svc)}</span><span>${c.complimentary ? '—' : formatEuroFromCents(c.amountCents)} · ${status}</span></li>`;
+                    return `<li><span>${escapeHtml(when)}${c.time ? ` · ${escapeHtml(c.time)}` : ''} · ${escapeHtml(svc)}</span><span>${c.complimentary ? '—' : formatEuroFromCents(c.amountCents)} · ${status}${c.salaryCents ? ` · salário ${formatEuroFromCents(c.salaryCents)}` : ''}</span></li>`;
                 }).join('');
                 return `
                     <div class="admin-finances-patient">
@@ -1631,6 +1637,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <span>Stripe ${formatEuroFromCents(pbd.stripeFeeCents || 0)}</span>
                             <span>IRS ${formatEuroFromCents(pbd.irsCents || 0)}</span>
                             <span>SS ${formatEuroFromCents(pbd.ssCents || 0)}</span>
+                            <span>Salário ${formatEuroFromCents(pbd.salaryCents || 0)}</span>
                         </div>
                         <ul class="admin-finances-patient-list">${consultLines}</ul>
                     </div>`;
@@ -1645,6 +1652,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <span class="is-stripe">Stripe ${formatEuroFromCents(mbd.stripeFeeCents || 0)}</span>
                             <span class="is-irs">IRS ${formatEuroFromCents(mbd.irsCents || 0)}</span>
                             <span class="is-ss">SS ${formatEuroFromCents(mbd.ssCents || 0)}</span>
+                            <span class="is-salary">Salários ${formatEuroFromCents(mbd.salaryCents || 0)}</span>
                             <span class="is-net">${formatEuroFromCents(mbd.netCents || 0)} líquido</span>
                         </div>
                     </div>

@@ -17706,17 +17706,19 @@ function estimateStripeFeeCents(amountCents) {
     return Math.round(amount * (percent / 100)) + fixedCents;
 }
 
-function buildGrossBreakdown(grossCents, stripeFeeCents) {
+function buildGrossBreakdown(grossCents, stripeFeeCents, salaryCents = 0) {
     const gross = Math.max(0, Math.round(Number(grossCents) || 0));
     const stripe = Math.max(0, Math.round(Number(stripeFeeCents) || 0));
     const irsCents = Math.round(gross * 0.25);
     const ssCents = Math.round(gross * 0.15);
-    const netCents = gross - stripe - irsCents - ssCents;
+    const salary = Math.max(0, Math.round(Number(salaryCents) || 0));
+    const netCents = gross - stripe - irsCents - ssCents - salary;
     return {
         grossCents: gross,
         stripeFeeCents: stripe,
         irsCents,
         ssCents,
+        salaryCents: salary,
         netCents,
         rates: {
             irsPercent: 25,
@@ -17727,6 +17729,14 @@ function buildGrossBreakdown(grossCents, stripeFeeCents) {
                 : 25
         }
     };
+}
+
+function salaryForConsultationCents(service) {
+    const key = String(service || '').trim().toLowerCase();
+    if (key.startsWith('terapia_casal')) return 2500;
+    if (key.startsWith('psicologia')) return 2000;
+    if (key.startsWith('nutricao')) return 1600;
+    return 0;
 }
 
 // ─── API: Admin — Finances (paid revenue by month / patient) ───
@@ -17766,6 +17776,7 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
                     paidConsultations: 0,
                     unpaidConsultations: 0,
                     stripeFeeCents: 0,
+                    salaryCents: 0,
                     patients: new Map()
                 });
             }
@@ -17779,6 +17790,7 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
                     unpaidCents: 0,
                     complimentaryCount: 0,
                     stripeFeeCents: 0,
+                    salaryCents: 0,
                     consultations: []
                 });
             }
@@ -17795,7 +17807,8 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
                 paid: isPaid,
                 complimentary: isComp,
                 viaStripe,
-                stripeFeeCents: stripeFee
+                stripeFeeCents: stripeFee,
+                salaryCents: isPaid && !isComp ? salaryForConsultationCents(b.service) : 0
             };
 
             if (isComp) {
@@ -17805,8 +17818,10 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
                 bucket.paidCents += amountCents;
                 bucket.paidConsultations += 1;
                 bucket.stripeFeeCents += stripeFee;
+                bucket.salaryCents += entry.salaryCents;
                 patient.paidCents += amountCents;
                 patient.stripeFeeCents += stripeFee;
+                patient.salaryCents += entry.salaryCents;
             } else {
                 bucket.unpaidCents += amountCents;
                 bucket.unpaidConsultations += 1;
@@ -17817,7 +17832,7 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
 
         const months = Array.from(byMonth.values())
             .map((m) => {
-                const breakdown = buildGrossBreakdown(m.paidCents, m.stripeFeeCents);
+                const breakdown = buildGrossBreakdown(m.paidCents, m.stripeFeeCents, m.salaryCents);
                 return {
                     month: m.month,
                     label: m.label,
@@ -17827,11 +17842,12 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
                     paidConsultations: m.paidConsultations,
                     unpaidConsultations: m.unpaidConsultations,
                     stripeFeeCents: m.stripeFeeCents,
+                    salaryCents: m.salaryCents,
                     breakdown,
                     patients: Array.from(m.patients.values())
                         .map((p) => ({
                             ...p,
-                            breakdown: buildGrossBreakdown(p.paidCents, p.stripeFeeCents),
+                            breakdown: buildGrossBreakdown(p.paidCents, p.stripeFeeCents, p.salaryCents),
                             consultations: p.consultations.sort((a, b) =>
                                 String(b.dateIso || b.date || '').localeCompare(String(a.dateIso || a.date || ''))
                             )
@@ -17843,7 +17859,8 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
 
         const totalsPaid = months.reduce((s, m) => s + m.paidCents, 0);
         const totalsStripe = months.reduce((s, m) => s + m.stripeFeeCents, 0);
-        const totalsBreakdown = buildGrossBreakdown(totalsPaid, totalsStripe);
+        const totalsSalary = months.reduce((s, m) => s + m.salaryCents, 0);
+        const totalsBreakdown = buildGrossBreakdown(totalsPaid, totalsStripe, totalsSalary);
 
         res.json({
             currency: 'eur',
@@ -17852,6 +17869,7 @@ app.get('/api/admin/finances', requireAdmin, async (req, res) => {
                 unpaidCents: months.reduce((s, m) => s + m.unpaidCents, 0),
                 complimentaryCount: months.reduce((s, m) => s + m.complimentaryCount, 0),
                 stripeFeeCents: totalsStripe,
+                salaryCents: totalsSalary,
                 breakdown: totalsBreakdown
             },
             months
