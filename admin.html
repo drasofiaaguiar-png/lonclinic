@@ -147,6 +147,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="professionals">Profissionais</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="quiz-leads">Leads quizzes</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="wellness-club">Wellness Club</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
                 </nav>
@@ -1105,6 +1106,30 @@
                 </div>
             </div>
 
+            <div class="admin-panel" id="adminPanelQuizLeads" data-admin-panel-content="quiz-leads" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">Leads dos quizzes</h2>
+                            <p class="dash-section-subtitle" id="adminQuizLeadsCount">Emails e contactos de quem concluiu um teste.</p>
+                        </div>
+                        <div class="admin-schedule-filters">
+                            <button type="button" class="btn btn-outline btn-sm" id="quizLeadsExportBtn">Exportar CSV</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="quizLeadsRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="admin-psych-filters" style="align-items:end;">
+                        <select id="quizLeadsQuiz" class="admin-select">
+                            <option value="">Todos os quizzes</option>
+                        </select>
+                        <input type="search" id="quizLeadsSearch" class="admin-input" placeholder="Nome, email ou telemóvel" maxlength="160">
+                    </div>
+                    <div id="adminQuizLeadsList" class="an-table-scroll">
+                        <p class="admin-empty-list">Loading…</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="admin-panel" id="adminPanelWellnessClub" data-admin-panel-content="wellness-club" hidden>
                 <div class="dash-section">
                     <div class="dash-section-header admin-schedule-toolbar">
@@ -1347,7 +1372,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=20260927-professional-create"></script>
+    <script src="/admin.js?v=20260928-quiz-leads"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

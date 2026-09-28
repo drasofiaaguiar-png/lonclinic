@@ -1821,6 +1821,39 @@ async function claimQuizAttempt(id, claimToken, email) {
     return r.rows[0] ? rowToQuizAttempt(r.rows[0]) : null;
 }
 
+function quizLeadFromRow(row) {
+    const result = decryptQuizJson(row.result) || {};
+    const convertedRaw = result.convertedAt;
+    const at = row.claimed_at || row.created_at;
+    return {
+        id: row.id,
+        quizId: row.quiz_id,
+        email: row.email,
+        name: String(result.leadName || '').trim().slice(0, 120),
+        phone: String(result.leadPhone || '').trim().slice(0, 40),
+        band: String(result.band || '').trim().slice(0, 80),
+        country: String(result.country || '').trim().slice(0, 80),
+        plan: String(result.plan || '').trim().slice(0, 40),
+        converted: !!(convertedRaw && String(convertedRaw) !== '0'),
+        createdAt: at instanceof Date ? at.toISOString() : at
+    };
+}
+
+async function listQuizLeads(limit = 500) {
+    const p = getPool();
+    if (!p) return [];
+    const n = Math.min(Math.max(parseInt(limit, 10) || 500, 1), 1000);
+    const r = await p.query(
+        `SELECT id, quiz_id, email, result, created_at, claimed_at
+         FROM quiz_attempts
+         WHERE email IS NOT NULL AND TRIM(email) <> ''
+         ORDER BY COALESCE(claimed_at, created_at) DESC
+         LIMIT $1`,
+        [n]
+    );
+    return r.rows.map(quizLeadFromRow);
+}
+
 async function findQuizAttemptsByEmail(email, limit = 50) {
     const p = getPool();
     const e = email.toLowerCase().trim();
@@ -4910,6 +4943,7 @@ module.exports = {
     findQuizAttemptById,
     claimQuizAttempt,
     findQuizAttemptsByEmail,
+    listQuizLeads,
     findDueQuizRecoveries,
     findDueNutricaoNurture,
     claimNutricaoNurtureStep,

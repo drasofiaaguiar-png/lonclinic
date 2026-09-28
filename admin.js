@@ -365,6 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         professionals: { title: 'Profissionais', subtitle: 'Pessoas que trabalham com a clínica e entram no portal pelo email' },
         psychologists: { title: 'Bolsa', subtitle: 'Candidaturas de pessoas que ainda não trabalham com a clínica' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
+        'quiz-leads': { title: 'Leads quizzes', subtitle: 'Emails e contactos de quem concluiu um teste' },
         'wellness-club': { title: 'LON Wellness Club', subtitle: 'Parceiros do marketplace' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
     };
@@ -459,6 +460,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
         if (panelId === 'producers') loadAdminProducers();
+        if (panelId === 'quiz-leads' && typeof loadAdminQuizLeads === 'function') loadAdminQuizLeads();
         if (panelId === 'wellness-club' && typeof loadAdminWellnessClub === 'function') loadAdminWellnessClub();
         if (panelId === 'profile') loadAdminProfile();
     }
@@ -6480,6 +6482,135 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    let quizLeadsCache = [];
+
+    function quizLeadWhatsApp(phone) {
+        let d = String(phone || '').replace(/\D/g, '');
+        if (d.length === 9) d = '351' + d;
+        return d.length >= 10 ? 'https://wa.me/' + d : '';
+    }
+
+    function filteredQuizLeads() {
+        const quiz = (document.getElementById('quizLeadsQuiz') || {}).value || '';
+        const q = String((document.getElementById('quizLeadsSearch') || {}).value || '').trim().toLowerCase();
+        return quizLeadsCache.filter((lead) => {
+            if (quiz && lead.quizId !== quiz) return false;
+            if (!q) return true;
+            const hay = [lead.name, lead.email, lead.phone, lead.quiz, lead.band, lead.country].join(' ').toLowerCase();
+            return hay.indexOf(q) !== -1;
+        });
+    }
+
+    function renderQuizLeads() {
+        const list = document.getElementById('adminQuizLeadsList');
+        const countEl = document.getElementById('adminQuizLeadsCount');
+        if (!list) return;
+        const rows = filteredQuizLeads();
+        if (countEl) {
+            const n = rows.length;
+            countEl.textContent = n === 1
+                ? '1 contacto'
+                : n + ' contactos';
+        }
+        if (!rows.length) {
+            list.innerHTML = '<p class="admin-empty-list">Ainda sem contactos' + (quizLeadsCache.length ? ' com este filtro.' : '.') + '</p>';
+            return;
+        }
+        list.innerHTML = '<table class="an-table"><thead><tr>' +
+            '<th>Data</th><th>Quiz</th><th>Nome</th><th>Email</th><th>Telemóvel</th><th>Resultado</th><th>Estado</th>' +
+            '</tr></thead><tbody>' +
+            rows.map((lead) => {
+                const when = lead.createdAt ? new Date(lead.createdAt).toLocaleString('pt-PT') : '—';
+                const wa = quizLeadWhatsApp(lead.phone);
+                const phone = lead.phone
+                    ? (wa
+                        ? '<a href="' + escapeHtml(wa) + '" target="_blank" rel="noopener">' + escapeHtml(lead.phone) + '</a>'
+                        : escapeHtml(lead.phone))
+                    : '—';
+                const email = lead.email
+                    ? '<a href="mailto:' + escapeHtml(lead.email) + '">' + escapeHtml(lead.email) + '</a>'
+                    : '—';
+                const extra = [lead.country, lead.plan].filter(Boolean).join(' · ');
+                return '<tr><td>' + escapeHtml(when) + '</td>' +
+                    '<td>' + escapeHtml(lead.quiz || lead.quizId || '') + '</td>' +
+                    '<td>' + escapeHtml(lead.name || '—') + '</td>' +
+                    '<td>' + email + '</td>' +
+                    '<td>' + phone + '</td>' +
+                    '<td>' + escapeHtml(lead.band || '—') + (extra ? '<br><span>' + escapeHtml(extra) + '</span>' : '') + '</td>' +
+                    '<td>' + (lead.converted ? 'Marcou' : 'Só o teste') + '</td></tr>';
+            }).join('') +
+            '</tbody></table>';
+    }
+
+    function fillQuizLeadsFilter() {
+        const select = document.getElementById('quizLeadsQuiz');
+        if (!select) return;
+        const current = select.value;
+        const seen = new Map();
+        quizLeadsCache.forEach((lead) => {
+            if (lead.quizId && !seen.has(lead.quizId)) seen.set(lead.quizId, lead.quiz || lead.quizId);
+        });
+        select.innerHTML = '<option value="">Todos os quizzes</option>' +
+            Array.from(seen.entries()).map(([id, label]) => (
+                '<option value="' + escapeHtml(id) + '">' + escapeHtml(label) + '</option>'
+            )).join('');
+        if (current && seen.has(current)) select.value = current;
+    }
+
+    async function loadAdminQuizLeads() {
+        const list = document.getElementById('adminQuizLeadsList');
+        if (!list) return;
+        list.innerHTML = '<p class="admin-empty-list">Loading…</p>';
+        try {
+            const res = await fetch('/api/admin/quiz-leads');
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Failed to load');
+            quizLeadsCache = data.leads || [];
+            fillQuizLeadsFilter();
+            renderQuizLeads();
+        } catch (err) {
+            list.innerHTML = '<p class="admin-empty-list">' + escapeHtml(err.message || 'Erro') + '</p>';
+        }
+    }
+
+    function exportQuizLeadsCsv() {
+        const rows = filteredQuizLeads();
+        const header = ['Data', 'Quiz', 'Nome', 'Email', 'Telemovel', 'Resultado', 'Pais', 'Plano', 'Estado'];
+        const lines = [header].concat(rows.map((lead) => [
+            lead.createdAt ? new Date(lead.createdAt).toLocaleString('pt-PT') : '',
+            lead.quiz || lead.quizId || '',
+            lead.name || '',
+            lead.email || '',
+            lead.phone || '',
+            lead.band || '',
+            lead.country || '',
+            lead.plan || '',
+            lead.converted ? 'Marcou' : 'So o teste'
+        ]));
+        const csv = lines.map((cols) => cols.map((value) => {
+            const text = String(value == null ? '' : value).replace(/"/g, '""');
+            return '"' + text + '"';
+        }).join(';')).join('\r\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'leads-quizzes.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    const quizLeadsSearch = document.getElementById('quizLeadsSearch');
+    const quizLeadsQuiz = document.getElementById('quizLeadsQuiz');
+    const quizLeadsRefreshBtn = document.getElementById('quizLeadsRefreshBtn');
+    const quizLeadsExportBtn = document.getElementById('quizLeadsExportBtn');
+    if (quizLeadsSearch) quizLeadsSearch.addEventListener('input', renderQuizLeads);
+    if (quizLeadsQuiz) quizLeadsQuiz.addEventListener('change', renderQuizLeads);
+    if (quizLeadsRefreshBtn) quizLeadsRefreshBtn.addEventListener('click', () => loadAdminQuizLeads());
+    if (quizLeadsExportBtn) quizLeadsExportBtn.addEventListener('click', exportQuizLeadsCsv);
 
     async function loadAdminWellnessClub() {
         const list = document.getElementById('adminWellnessClubList');

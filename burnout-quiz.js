@@ -120,6 +120,7 @@
 
     let current = 0;
     let lastEmail = '';
+    let lastPhone = '';
     let lastScores = null;
     const answers = new Array(QUESTIONS.length).fill(null);
 
@@ -232,6 +233,7 @@
                 body: scores.body,
                 band: band.pill,
                 email: lastEmail,
+                phone: lastPhone,
                 at: new Date().toISOString()
             }));
         } catch (e) { /* ignore */ }
@@ -504,7 +506,19 @@
         requestAnimationFrame(tick);
     }
 
-    function submitQuiz(email) {
+    function normalizePhone(raw) {
+        const text = String(raw || '').trim();
+        let d = text.replace(/\D/g, '');
+        const explicitIntl = text.indexOf('+') !== -1 || d.indexOf('00') === 0;
+        if (d.indexOf('00') === 0) d = d.slice(2);
+        if (!d || d.charAt(0) === '0') return '';
+        if (!explicitIntl && d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+        if (!explicitIntl && d.indexOf('351') === 0 && d.length === 12 && d.charAt(3) === '9') return '+' + d;
+        if ((explicitIntl || d.length >= 10) && d.length >= 8 && d.length <= 15) return '+' + d;
+        return '';
+    }
+
+    function submitQuiz(email, phone) {
         const scores = computeScores();
         const band = bandFor(scores.global);
         return fetch('/api/burnout-quiz', {
@@ -512,6 +526,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 email: email,
+                phone: phone,
                 answers: answers,
                 scores: scores,
                 band: band.pill
@@ -536,6 +551,8 @@
 
     $('revealBtn').addEventListener('click', function () {
         const email = $('email').value.trim();
+        const phoneRaw = $('phone') ? $('phone').value.trim() : '';
+        const phone = normalizePhone(phoneRaw);
         const valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
         if (!valid) {
             $('emailError').hidden = false;
@@ -543,23 +560,45 @@
             return;
         }
         $('emailError').hidden = true;
+        if (!phone) {
+            if ($('phoneError')) $('phoneError').hidden = false;
+            if ($('phone')) $('phone').focus();
+            return;
+        }
+        if ($('phoneError')) $('phoneError').hidden = true;
         lastEmail = email;
+        lastPhone = phone;
 
         const btn = $('revealBtn');
         const prevLabel = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'A preparar o resultado…';
 
-        submitQuiz(email).finally(function () {
+        submitQuiz(email, phone).then(function (res) {
             btn.disabled = false;
             btn.textContent = prevLabel;
+            if (!res || !res.ok) {
+                if ($('phoneError')) {
+                    $('phoneError').hidden = false;
+                    $('phoneError').textContent = 'Não foi possível guardar o contacto. Confirma o telemóvel e tenta outra vez.';
+                }
+                return;
+            }
             renderResults();
         });
     });
 
     $('email').addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') $('revealBtn').click();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if ($('phone')) $('phone').focus();
+        }
     });
+    if ($('phone')) {
+        $('phone').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') $('revealBtn').click();
+        });
+    }
 
     function persistQuizThenGo() {
         if (lastScores) {
@@ -570,7 +609,7 @@
                 email: lastEmail || '',
                 firstName: '',
                 lastName: '',
-                phone: ''
+                phone: lastPhone || ''
             }));
         } catch (e) { /* ignore */ }
     }
@@ -592,10 +631,16 @@
     $('restartBtn').addEventListener('click', function () {
         current = 0;
         lastEmail = '';
+        lastPhone = '';
         lastScores = null;
         answers.fill(null);
         $('email').value = '';
         $('emailError').hidden = true;
+        if ($('phone')) $('phone').value = '';
+        if ($('phoneError')) {
+            $('phoneError').hidden = true;
+            $('phoneError').textContent = 'Indica um telemóvel válido. Se não for de Portugal, inclui o indicativo (ex.: +44).';
+        }
         const gauge = $('gaugeArc');
         if (gauge) gauge.style.strokeDashoffset = 314.16;
         $('scoreNum').textContent = '0';

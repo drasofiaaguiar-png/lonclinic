@@ -5287,6 +5287,7 @@ function buildBurnoutQuizEmails(data) {
         'Novo resultado — Índice de Burnout (Lon Clinic)',
         '',
         `Email: ${data.email}`,
+        `Telemóvel: ${data.phone || '—'}`,
         `Índice global: ${global}/100 (${band} — ${copy.levelLabel})`,
         `Pessoal: ${personal} · Trabalho: ${work} · Corpo: ${body}`,
         `Dimensão dominante: ${dominant.key}`,
@@ -5301,6 +5302,7 @@ function buildBurnoutQuizEmails(data) {
 <p style="margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#5c6d64">Novo resultado</p>
 <h2 style="margin:0 0 16px;font-size:20px">Índice de Burnout</h2>
 <p style="margin:0 0 8px"><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+<p style="margin:0 0 8px"><strong>Telemóvel:</strong> ${escapeHtml(data.phone || '—')}</p>
 <p style="margin:0 0 16px"><strong>Índice global:</strong> ${global}/100 · <span style="color:${visual.fg};font-weight:600">${escapeHtml(band)}</span></p>
 ${burnoutDimBar('Burnout pessoal', personal, barFill)}
 ${burnoutDimBar('Burnout no trabalho', work, barFill)}
@@ -5509,9 +5511,14 @@ const QUIZ_RECOVERY_MS = 15 * 60 * 1000;
 const quizLeadMemory = new Map();
 
 function normalizePtMobile(raw) {
-    let d = String(raw || '').replace(/\D/g, '');
-    if (d.indexOf('351') === 0) d = d.slice(3);
-    if (d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+    const text = String(raw || '').trim();
+    let d = text.replace(/\D/g, '');
+    const explicitIntl = text.indexOf('+') !== -1 || d.indexOf('00') === 0;
+    if (d.indexOf('00') === 0) d = d.slice(2);
+    if (!d || d.charAt(0) === '0') return '';
+    if (!explicitIntl && d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+    if (!explicitIntl && d.indexOf('351') === 0 && d.length === 12 && d.charAt(3) === '9') return '+' + d;
+    if ((explicitIntl || d.length >= 10) && d.length >= 8 && d.length <= 15) return '+' + d;
     return '';
 }
 
@@ -11678,12 +11685,16 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
 // ─── API: Burnout quiz (CBI) — save result + email ───
 app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     const email = String(req.body?.email || '').trim().toLowerCase();
+    const phone = normalizePtMobile(req.body?.phone);
     const answers = req.body?.answers;
     const scores = req.body?.scores;
     const band = String(req.body?.band || '').trim().slice(0, 24);
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         return res.status(400).json({ error: 'Email inválido.' });
+    }
+    if (!phone) {
+        return res.status(400).json({ error: 'Indique um telemóvel válido.' });
     }
     if (!Array.isArray(answers) || answers.length !== 18) {
         return res.status(400).json({ error: 'Respostas incompletas.' });
@@ -11694,6 +11705,7 @@ app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
 
     const payload = {
         email,
+        phone,
         answers,
         scores: {
             personal: Number(scores.personal) || 0,
@@ -11714,7 +11726,7 @@ app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
                 claimToken,
                 quizId: 'burnout-cbi',
                 answers: payload.answers,
-                result: { scores: payload.scores, band: payload.band },
+                result: { scores: payload.scores, band: payload.band, leadPhone: phone },
                 score: payload.scores.global
             });
             await db.claimQuizAttempt(id, claimToken, email);
@@ -12676,6 +12688,53 @@ app.get('/api/wellness-club', async (req, res) => {
     } catch (err) {
         console.error('GET /api/wellness-club:', err.message);
         res.status(500).json({ error: 'Failed to load partners' });
+    }
+});
+
+function quizLeadLabel(quizId) {
+    const id = String(quizId || '').trim();
+    if (id === 'burnout-cbi') return 'Burnout (CBI)';
+    if (id === 'nutricao-avaliacao') return 'Avaliação de nutrição';
+    const def = clinicalQuizzes.getQuiz(id);
+    if (def && def.instrument) return def.instrument;
+    return id || 'Quiz';
+}
+
+function publicQuizLead(lead) {
+    return {
+        id: lead.id || '',
+        quizId: lead.quizId || '',
+        quiz: quizLeadLabel(lead.quizId),
+        email: lead.email || '',
+        name: lead.name || lead.leadName || lead.firstName || '',
+        phone: lead.phone || lead.leadPhone || '',
+        band: lead.band || '',
+        country: lead.country || '',
+        plan: lead.plan === 'completo' ? 'Programa completo' : (lead.plan === 'nutricao' ? 'Programa nutrição' : (lead.plan || '')),
+        converted: !!lead.converted || !!(lead.convertedAt && String(lead.convertedAt) !== '0'),
+        createdAt: lead.createdAt || null
+    };
+}
+
+app.get('/api/admin/quiz-leads', requireAdmin, async (req, res) => {
+    try {
+        let leads;
+        if (usePersistentDb && db.getPool()) {
+            leads = await db.listQuizLeads(500);
+        } else {
+            leads = Array.from(quizLeadMemory.values()).map((lead) => ({
+                quizId: lead.quizId,
+                email: lead.email,
+                name: lead.firstName || lead.leadName || '',
+                phone: lead.phone || lead.leadPhone || '',
+                convertedAt: lead.convertedAt,
+                createdAt: lead.recoverAt ? new Date(Number(lead.recoverAt) - QUIZ_RECOVERY_MS).toISOString() : null
+            }));
+        }
+        res.json({ leads: leads.map(publicQuizLead) });
+    } catch (err) {
+        console.error('GET /api/admin/quiz-leads:', err.message);
+        res.status(500).json({ error: 'Failed to load quiz leads' });
     }
 });
 

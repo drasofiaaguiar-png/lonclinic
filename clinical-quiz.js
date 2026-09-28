@@ -462,6 +462,7 @@
                 quizId: cfg.id,
                 email: email,
                 name: extras && extras.name || '',
+                phone: extras && extras.phone || '',
                 country: extras && extras.country || '',
                 yearsAbroad: extras && extras.yearsAbroad || '',
                 consent: !!(extras && extras.consent),
@@ -471,9 +472,14 @@
     }
 
     function normalizePhone(raw) {
-        var d = String(raw || '').replace(/\D/g, '');
-        if (d.indexOf('351') === 0) d = d.slice(3);
-        if (d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+        var text = String(raw || '').trim();
+        var d = text.replace(/\D/g, '');
+        var explicitIntl = text.indexOf('+') !== -1 || d.indexOf('00') === 0;
+        if (d.indexOf('00') === 0) d = d.slice(2);
+        if (!d || d.charAt(0) === '0') return '';
+        if (!explicitIntl && d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+        if (!explicitIntl && d.indexOf('351') === 0 && d.length === 12 && d.charAt(3) === '9') return '+' + d;
+        if ((explicitIntl || d.length >= 10) && d.length >= 8 && d.length <= 15) return '+' + d;
         return '';
     }
 

@@ -133,13 +133,18 @@
                 <div class="bq-card">
                     <p class="bq-step-label">Quase lá</p>
                     <h2>O teu resultado está pronto</h2>
-                    <p class="bq-lead">Indica o teu email para veres o resultado e receberes uma cópia do relatório detalhado.</p>
+                    <p class="bq-lead">Indica o teu email e o telemóvel para veres o resultado e receberes uma cópia do relatório detalhado.</p>
                     <div class="bq-field">
                         <label for="email">O teu email <span aria-hidden="true">*</span></label>
                         <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com" required>
                         <p class="bq-error" id="emailError" hidden>Escreve um email válido para continuar.</p>
                     </div>
-                    <p class="bq-privacy">Usamos o teu email para enviar o relatório e partilhar o resultado com a equipa clínica da Lon Clinic. Este formulário não pede consentimento para comunicações de marketing.</p>
+                    <div class="bq-field">
+                        <label for="phone">Telemóvel <span aria-hidden="true">*</span></label>
+                        <input type="tel" id="phone" inputmode="tel" autocomplete="tel" maxlength="22" placeholder="9XX XXX XXX ou +44 …" required>
+                        <p class="bq-error" id="phoneError" hidden>Indica um telemóvel válido. Se não for de Portugal, inclui o indicativo (ex.: +44).</p>
+                    </div>
+                    <p class="bq-privacy">Usamos o email e o telemóvel para enviar o relatório e partilhar o resultado com a equipa clínica da Lon Clinic. Este formulário não pede consentimento para comunicações de marketing.</p>
                     <div class="bq-actions bq-actions--end">
                         <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
                     </div>
@@ -158,7 +163,7 @@
                     </header>
 
                     <div class="bq-orient" id="bookNow">
-                        <p class="bq-orient-kicker">Opção de apoio, se fizer sentido para ti</p>
+                        <p class="bq-orient-kicker">Passo 2</p>
                         <h3>Sessão de Orientação Inicial (15 min) — Gratuita</h3>
                         <p>Antes de assumires qualquer compromisso financeiro, conversa 15 minutos com um profissional da nossa equipa. Vamos analisar o teu relatório do teste, esclarecer dúvidas e definir o plano ideal para a tua recuperação.</p>
                         <p class="bq-orient-label">O que acontece nesta sessão:</p>
@@ -269,6 +274,6 @@
 
     <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
-    <script src="/burnout-quiz.js?v=20260926h" defer></script>
+    <script src="/burnout-quiz.js?v=20260928-intl" defer></script>
 </body>
 </html>

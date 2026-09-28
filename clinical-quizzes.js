@@ -14,7 +14,7 @@ const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
 const CSS_V = '20260928b';
-const JS_V = '20260928b';
+const JS_V = '20260928d';
 
 const CBI = {
     id: 'cbi',
@@ -558,8 +558,8 @@ function defaultGateHtml() {
                     </div>
                     <div class="bq-field">
                         <label for="leadPhone">WhatsApp</label>
-                        <input type="tel" id="leadPhone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="9XX XXX XXX">
-                        <p class="bq-error" id="phoneError" hidden>Indica um telemóvel português válido.</p>
+                        <input type="tel" id="leadPhone" inputmode="tel" autocomplete="tel" maxlength="22" placeholder="9XX XXX XXX ou +44 …">
+                        <p class="bq-error" id="phoneError" hidden>Indica um telemóvel válido. Se não for de Portugal, inclui o indicativo (ex.: +44).</p>
                     </div>
                     <p class="bq-privacy">Usamos o email e o WhatsApp para enviar o resultado e acompanhar a marcação. Sem spam.</p>
                     <div class="bq-actions bq-actions--end">
