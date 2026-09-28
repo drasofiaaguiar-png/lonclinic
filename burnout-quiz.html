@@ -88,7 +88,15 @@
     </style>
     <link rel="stylesheet" href="/burnout-quiz.css?v=20260926h">
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" id="bqFonts">
+    <script>
+      /* Sem onload="" (a CSP tem script-src-attr 'none'): ativa as fontes quando o CSS chegar. */
+      (function (l) {
+        if (!l) return;
+        if (l.sheet) { l.media = 'all'; return; }
+        l.addEventListener('load', function () { l.media = 'all'; });
+      })(document.getElementById('bqFonts'));
+    </script>
     <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
 </head>
