@@ -48,7 +48,7 @@
                 duration: '20 min (1 person)',
                 bullets: [
                     'Health planning for your trip (vaccines, prophylaxis, advice).',
-                    'First person included; additional travelers can be indicated in the next form.',
+                    'Up to 4 people in the same video call (same destination and travel dates).',
                     'Secure video call; same Lon Clinic payment flow.'
                 ]
             },
@@ -237,7 +237,7 @@
                 duration: '20 min (1 persona)',
                 bullets: [
                     'Planificación de salud para su viaje (vacunas, profilaxis, consejos).',
-                    'Primera persona incluida; viajeros adicionales pueden indicarse en el siguiente formulario.',
+                    'Hasta 4 personas en la misma videollamada (mismo destino y fechas).',
                     'Videollamada segura; mismo flujo de pago de Lon Clinic.'
                 ]
             },
@@ -664,7 +664,7 @@
             serviceKey: 'travel',
             bullets: [
                 'Planeamento de saúde para a sua viagem (vacinas, profilaxias, conselhos).',
-                'Primeira pessoa incluída; viajantes adicionais podem ser indicados no formulário seguinte.',
+                'Até 4 pessoas na mesma videoconsulta (mesmo destino e datas de viagem).',
                 'Videochamada segura; mesmo fluxo de pagamento da Lon Clinic.'
             ]
         },
@@ -1466,6 +1466,70 @@
     document.getElementById('marcarPrice').textContent = consulta.price + (consulta.priceNote || '');
     document.getElementById('marcarDuration').textContent = consulta.duration;
 
+    // Travel: 1–4 people in one video call, tiered price (matches pricing.js TRAVEL_TIER_CENTS.standard).
+    var TRAVEL_TIERS = {
+        1: { cents: 3900, price: '€39', minutes: 20 },
+        2: { cents: 6900, price: '€69', minutes: 30 },
+        3: { cents: 10700, price: '€107', minutes: 40 },
+        4: { cents: 13600, price: '€136', minutes: 40 }
+    };
+    var TRAVELLER_COPY = {
+        pt: { kicker: 'Viajantes', heading: 'Quantas pessoas vão viajar?', sub: 'Mesma videoconsulta, mesmo destino e datas. Cada pessoa preenche a sua ficha.', one: 'pessoa', many: 'pessoas' },
+        en: { kicker: 'Travellers', heading: 'How many people are travelling?', sub: 'One video call, same destination and dates. Each person fills in their own form.', one: 'person', many: 'people' },
+        es: { kicker: 'Viajeros', heading: '¿Cuántas personas viajan?', sub: 'Una videollamada, mismo destino y fechas. Cada persona rellena su ficha.', one: 'persona', many: 'personas' }
+    };
+    var travellerCount = (function () {
+        var n = parseInt(new URLSearchParams(window.location.search).get('travellers'), 10);
+        return n >= 1 && n <= 4 ? n : 1;
+    })();
+
+    function travellerCopy() {
+        var lang = window.CLINIC_I18N ? window.CLINIC_I18N.getLang() : 'pt';
+        return TRAVELLER_COPY[lang] || TRAVELLER_COPY.pt;
+    }
+
+    function travellerDurationLabel(n) {
+        var copy = travellerCopy();
+        return TRAVEL_TIERS[n].minutes + ' min (' + n + ' ' + (n === 1 ? copy.one : copy.many) + ')';
+    }
+
+    function renderTravellerPicker() {
+        if (tipo !== 'travel') return;
+        var section = document.getElementById('marcarTravellersSection');
+        var grid = document.getElementById('marcarTravellers');
+        if (!section || !grid) return;
+        var copy = travellerCopy();
+        var tier = TRAVEL_TIERS[travellerCount];
+        consulta.price = tier.price;
+        consulta.cents = tier.cents;
+        consulta.duration = travellerDurationLabel(travellerCount);
+        section.hidden = false;
+        document.getElementById('marcarTravellersKicker').textContent = copy.kicker;
+        document.getElementById('marcarTravellersHeading').textContent = copy.heading;
+        document.getElementById('marcarTravellersSub').textContent = copy.sub;
+        document.getElementById('marcarPrice').textContent = tier.price;
+        document.getElementById('marcarDuration').textContent = consulta.duration;
+        grid.innerHTML = '';
+        [1, 2, 3, 4].forEach(function (n) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'marcar-plan-card' + (n === travellerCount ? ' is-active' : '');
+            btn.setAttribute('role', 'radio');
+            btn.setAttribute('aria-checked', n === travellerCount ? 'true' : 'false');
+            btn.innerHTML =
+                '<span class="marcar-plan-title">' + n + ' ' + (n === 1 ? copy.one : copy.many) + '</span>' +
+                '<span class="marcar-plan-price">' + TRAVEL_TIERS[n].price + '</span>' +
+                '<span class="marcar-plan-note">' + TRAVEL_TIERS[n].minutes + ' min</span>';
+            btn.addEventListener('click', function () {
+                if (n === travellerCount) return;
+                travellerCount = n;
+                renderTravellerPicker();
+                shellRefresh();
+            });
+            grid.appendChild(btn);
+        });
+    }
+
     var ul = document.getElementById('marcarBullets');
     ul.innerHTML = '';
     consulta.bullets.forEach(function (t) {
@@ -1478,6 +1542,7 @@
     if (window.CLINIC_I18N && window.CLINIC_I18N.getLang() !== 'pt') {
         applyConsultaI18n();
     }
+    renderTravellerPicker();
 
     function loadSchedule() {
         if (usesPsychStaff()) return Promise.resolve();
@@ -2281,7 +2346,7 @@
             dateISO: formatDateLocal(state.date),
             dateLabel: state.dateLabel,
             time: state.time,
-            travellerCount: 1,
+            travellerCount: tipo === 'travel' ? travellerCount : 1,
             hasInsurance: false,
             locale: lang,
             renew: new URLSearchParams(window.location.search).get('renew') || null,
@@ -2323,12 +2388,14 @@
         if (payload.consultLangPolicy) dest += '&langpolicy=en-es-pt';
         if (state.professionalId) dest += '&professionalId=' + encodeURIComponent(state.professionalId);
         if (state.specialty) dest += '&specialty=' + encodeURIComponent(state.specialty);
+        if (tipo === 'travel' && travellerCount > 1) dest += '&travellers=' + travellerCount;
         window.location.href = dest;
     });
 
     // Language change handler
     window.MARCAR_LANG_CHANGED = function (lang) {
         applyConsultaI18n();
+        renderTravellerPicker();
         fillTypeSelect(document.getElementById('marcarTypeSelect'), tipo);
         renderTypePills();
         shellRefresh();
@@ -2518,6 +2585,7 @@
     }
 
     function localizedConsultaDuration() {
+        if (tipo === 'travel') return travellerDurationLabel(travellerCount);
         var i18nData = CONSULTATION_I18N[getLang()];
         return (i18nData && i18nData[tipo]) ? i18nData[tipo].duration : consulta.duration;
     }

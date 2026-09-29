@@ -1374,6 +1374,9 @@ async function initBookingFlow() {
 
     function updateTravellerPriceNote() {
         const tp = getCurrentTravelPrice();
+        document.querySelectorAll('.tc-card').forEach((b) => {
+            b.classList.toggle('selected', parseInt(b.dataset.count, 10) === state.travellerCount);
+        });
         // Sync state price for downstream (review, Stripe)
         state.servicePrice = tp.price;
         state.servicePriceCents = tp.cents;
@@ -2820,6 +2823,8 @@ async function initBookingFlow() {
         const holdQ = urlParams.get('hold');
         const proQ = urlParams.get('professionalId');
         const specQ = urlParams.get('specialty');
+        const travellersQ = parseInt(urlParams.get('travellers'), 10);
+        if (travellersQ >= 1 && travellersQ <= 4) state.travellerCount = travellersQ;
         if (serviceQ) applyServiceKey(resolveIncomingService(serviceQ));
         if (renewQ) state.renewToken = renewQ;
         if (holdQ) state.holdId = holdQ;

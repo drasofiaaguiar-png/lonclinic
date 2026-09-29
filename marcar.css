@@ -1926,3 +1926,19 @@ body.marcar-has-service :is(button, a, input, select, textarea):focus-visible {
         animation-duration: 0.01ms !important;
     }
 }
+
+/* Travel: number of travellers (1–4) — 2×2 on every width */
+.marcar-plans.has-4,
+#marcarBookingFlow .marcar-plans.has-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.marcar-plans.has-4 .marcar-plan-card {
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+
+#marcarBookingFlow #marcarTravellersSection {
+    margin: 28px 0 8px;
+}
