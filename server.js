@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = '13set-otp';
+const CLINIC_PORTAL_BUILD = '29set-pro';
 const CLINIC_PORTAL_PATH = '/admin';
 const PROFESSIONAL_PORTAL_PATH = '/profissional';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');

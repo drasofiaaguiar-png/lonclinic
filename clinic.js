@@ -1,33 +1,45 @@
 /* ========================================
-   Clinic Portal — JavaScript
-   Manage consultations and clinical records
+   Portal dos profissionais — JavaScript
+   Início, marcações, disponibilidade e perfil
 ======================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const SERVICE_LABELS = {
-        longevity: 'Longevity Assessment',
+        longevity: 'Medicina funcional',
+        longevidade: 'Medicina funcional',
+        medicina_funcional: 'Medicina funcional',
         'longevity-plus': 'Longevity Plus',
-        longevidade: 'Longevidade',
-        travel: 'Travel Medicine Consultation',
-        followup: 'Follow-Up Consultation',
+        travel: 'Medicina do viajante',
+        followup: 'Consulta de seguimento',
         entrevista: 'Entrevista de emprego',
         clinica_geral: 'Clínica geral',
-        urgente: 'Urgente',
+        urgente: 'Consulta urgente',
         infeccao_urinaria: 'Infeção urinária',
         saude_mental: 'Saúde mental',
-        burnout: 'Burnout especializada',
-        burnout_mensal: 'Anti-burnout',
+        burnout: 'Burnout',
+        burnout_mensal: 'Anti-burnout (subscrição)',
         burnout_programa: 'Programa anti-burnout',
         burnout_orientacao: 'Orientação burnout (15 min)',
+        nutricao: 'Nutrição',
+        nutricao_quinzenal: 'Nutrição (subscrição quinzenal)',
         nutricao_orientacao: 'Conversa inicial de nutrição (15 min)',
-        renovacao: 'Renovação receita',
+        renovacao: 'Renovação de receita',
         psicologia: 'Psicologia',
+        psicologia_mensal: 'Psicologia (subscrição)',
         terapia_casal: 'Terapia de casal',
         terapia_casal_mensal: 'Terapia de casal (subscrição)'
     };
 
-    // ─── DOM Elements ───
+    function serviceLabel(code) {
+        const raw = String(code || '').trim();
+        if (!raw) return 'Consulta';
+        if (SERVICE_LABELS[raw]) return SERVICE_LABELS[raw];
+        const words = raw.replace(/[_-]+/g, ' ').trim();
+        return words.charAt(0).toUpperCase() + words.slice(1);
+    }
+
+    // ─── DOM: login ───
     const clinicLogin = document.getElementById('clinicLogin');
     const clinicContent = document.getElementById('clinicContent');
     const clinicLoginForm = document.getElementById('clinicLoginForm');
@@ -76,29 +88,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicTotpCodesList = document.getElementById('clinicTotpCodesList');
     const clinicTotpCodesContinue = document.getElementById('clinicTotpCodesContinue');
     let clinicResetEmail = '';
-    const clinicLogoutBtn = document.getElementById('clinicLogoutBtn');
-    const clinicAdminLink = document.getElementById('clinicAdminLink');
-    const clinicGreeting = document.getElementById('clinicGreeting');
-    const clinicUserInfo = document.getElementById('clinicUserInfo');
-    
-    const clinicTable = document.getElementById('clinicTable');
-    const clinicTableBody = document.getElementById('clinicTableBody');
-    const clinicEmpty = document.getElementById('clinicEmpty');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const consultationModal = document.getElementById('consultationModal');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalClose = document.getElementById('modalClose');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const clinicDoxyRoomUrl = document.getElementById('clinicDoxyRoomUrl');
-    const clinicDoxyHint = document.getElementById('clinicDoxyHint');
-    const clinicOpenDoxyBtn = document.getElementById('clinicOpenDoxyBtn');
-    const clinicCopyDoxyBtn = document.getElementById('clinicCopyDoxyBtn');
-    const clinicDoxySubtitle = document.getElementById('clinicDoxySubtitle');
+
+    // ─── DOM: portal ───
+    const clinicPageTitle = document.getElementById('clinicPageTitle');
+    const clinicPageSub = document.getElementById('clinicPageSub');
+    const clinicRefreshBtn = document.getElementById('clinicRefreshBtn');
     const clinicSidebarUser = document.getElementById('clinicSidebarUser');
-    const clinicSidebarToggle = document.getElementById('clinicSidebarToggle');
-    const clinicSidebarBackdrop = document.getElementById('clinicSidebarBackdrop');
-    const clinicSaveScheduleBtn = document.getElementById('clinicSaveScheduleBtn');
+    const clinicSidebarEmail = document.getElementById('clinicSidebarEmail');
+
+    const clinicStatToday = document.getElementById('clinicStatToday');
+    const clinicStatWeek = document.getElementById('clinicStatWeek');
+    const clinicStatAvail = document.getElementById('clinicStatAvail');
+    const clinicStatAvailHint = document.getElementById('clinicStatAvailHint');
+    const clinicAvailNudge = document.getElementById('clinicAvailNudge');
+    const clinicAvailNudgeTitle = document.getElementById('clinicAvailNudgeTitle');
+    const clinicAvailNudgeText = document.getElementById('clinicAvailNudgeText');
+    const clinicHomeUpcoming = document.getElementById('clinicHomeUpcoming');
+
+    const clinicBookingList = document.getElementById('clinicBookingList');
+    const clinicBookingSearch = document.getElementById('clinicBookingSearch');
+
+    const clinicAvailSaveState = document.getElementById('clinicAvailSaveState');
     const clinicAvailRows = document.getElementById('clinicAvailRows');
     const clinicAvailAddForm = document.getElementById('clinicAvailAddForm');
     const clinicAvailWeekday = document.getElementById('clinicAvailWeekday');
@@ -109,26 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicAvailAddPreview = document.getElementById('clinicAvailAddPreview');
     const clinicAvailError = document.getElementById('clinicAvailError');
     const clinicAvailWeeklyHint = document.getElementById('clinicAvailWeeklyHint');
-    const clinicBookingsEmpty = document.getElementById('clinicBookingsEmpty');
-    const clinicBookingsTable = document.getElementById('clinicBookingsTable');
-    const clinicBookingsBody = document.getElementById('clinicBookingsBody');
-    const clinicPatientsEmpty = document.getElementById('clinicPatientsEmpty');
-    const clinicPatientsTable = document.getElementById('clinicPatientsTable');
-    const clinicPatientsBody = document.getElementById('clinicPatientsBody');
-    const clinicIbanForm = document.getElementById('clinicIbanForm');
-    const clinicIban = document.getElementById('clinicIban');
-    const clinicIbanSaveBtn = document.getElementById('clinicIbanSaveBtn');
-    const clinicIbanError = document.getElementById('clinicIbanError');
-    const clinicPayoutMonths = document.getElementById('clinicPayoutMonths');
-    const clinicPayoutError = document.getElementById('clinicPayoutError');
-    const clinicPayRange = document.getElementById('clinicPayRange');
-    const clinicPayHours = document.getElementById('clinicPayHours');
-    const clinicPayPatients = document.getElementById('clinicPayPatients');
-    const clinicPayGross = document.getElementById('clinicPayGross');
-    const clinicPayEmptyWeek = document.getElementById('clinicPayEmptyWeek');
-    const clinicPayIrs = document.getElementById('clinicPayIrs');
-    const clinicPaySs = document.getElementById('clinicPaySs');
-    const clinicPayNet = document.getElementById('clinicPayNet');
+
     const clinicProfilePhoto = document.getElementById('clinicProfilePhoto');
     const clinicProfilePhotoPlaceholder = document.getElementById('clinicProfilePhotoPlaceholder');
     const clinicProfilePhotoInput = document.getElementById('clinicProfilePhotoInput');
@@ -141,26 +132,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicProfileSaveBtn = document.getElementById('clinicProfileSaveBtn');
     const clinicProfileSaveConfirm = document.getElementById('clinicProfileSaveConfirm');
 
-    const CLINIC_PANEL_META = {
-        profile: { title: 'Perfil', subtitle: 'Nome, email e foto da sua ficha' },
-        availabilities: { title: 'Disponibilidades', subtitle: 'Os seus horários na clínica' },
-        bookings: { title: 'Marcações', subtitle: 'Consultas atribuídas a si' }
+    const consultationModal = document.getElementById('consultationModal');
+    const modalKicker = document.getElementById('modalKicker');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    const CLINIC_PANELS = {
+        home: { title: 'Início', subtitle: '' },
+        bookings: { title: 'Marcações', subtitle: 'Consultas atribuídas a si. Toque numa consulta para ver a ficha e registar notas.' },
+        availability: { title: 'Disponibilidade', subtitle: 'Os pacientes só conseguem marcar nos blocos que indicar aqui. As alterações ficam guardadas automaticamente.' },
+        profile: { title: 'Perfil', subtitle: 'O nome e a foto aparecem aos pacientes. O email serve para entrar no portal.' }
     };
     const CLINIC_PANEL_ALIASES = {
+        availabilities: 'availability',
+        disponibilidade: 'availability',
         consultations: 'bookings',
         patients: 'bookings',
-        resources: 'profile',
-        management: 'profile'
+        marcacoes: 'bookings',
+        perfil: 'profile',
+        inicio: 'home'
     };
 
     let clinicRole = 'admin';
     let staffDisplayName = '';
-    let clinicDoxyPatientUrl = '';
-    let activeClinicPanel = 'profile';
-    let clinicBillingSummary = null;
-    let clinicPayPeriod = 'week';
-    const CLINIC_PAY_IRS_KEY = 'lonClinicPayIrsPct';
-    const CLINIC_PAY_SS_KEY = 'lonClinicPaySsPct';
+    let staffEmail = '';
+    let staffHasPhoto = false;
+    let activeClinicPanel = 'home';
+    let clinicBookings = null;
+    let clinicBookingFilter = 'upcoming';
     let clinicScheduleData = null;
     let clinicAvailMode = 'weekday';
     let clinicScheduleDirty = false;
@@ -168,13 +167,127 @@ document.addEventListener('DOMContentLoaded', () => {
     let clinicAvailSaveTimer = null;
     let clinicAvailSaveInFlight = false;
     let clinicAvailSaveAttempts = 0;
+    let sheetReturnFocus = null;
 
-    // ─── Check Authentication Status ───
+    // ─── Helpers ───
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function setMessage(el, message) {
+        if (!el) return;
+        el.textContent = message || '';
+        el.hidden = !message;
+    }
+
+    function pad2(n) {
+        return String(n).padStart(2, '0');
+    }
+
+    function dateKeyOf(d) {
+        return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+    }
+
+    function dateFromKey(key) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(key || ''));
+        return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12) : null;
+    }
+
+    function clinicTodayKey() {
+        return dateKeyOf(new Date());
+    }
+
+    function addDaysKey(key, days) {
+        const d = dateFromKey(key);
+        d.setDate(d.getDate() + days);
+        return dateKeyOf(d);
+    }
+
+    function clinicTimeToMinutes(hhmm) {
+        const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
+        if (!m) return null;
+        return Number(m[1]) * 60 + Number(m[2]);
+    }
+
+    function initials(name) {
+        const parts = String(name || '').replace(/^(dra?\.?|dr\.?)\s+/i, '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return '·';
+        const first = parts[0].charAt(0);
+        const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+        return (first + last).toUpperCase();
+    }
+
+    function firstName(name) {
+        const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return '';
+        if (/^(dra?\.?|dr\.?)$/i.test(parts[0]) && parts[1]) return `${parts[0]} ${parts[1]}`;
+        return parts[0];
+    }
+
+    const DAY_LONG = new Intl.DateTimeFormat('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' });
+    function dayHeading(key) {
+        const today = clinicTodayKey();
+        if (key === today) return 'Hoje';
+        if (key === addDaysKey(today, 1)) return 'Amanhã';
+        if (key === addDaysKey(today, -1)) return 'Ontem';
+        const d = dateFromKey(key);
+        if (!d) return 'Sem data';
+        const label = `${CLINIC_WEEKDAY_SHORT[CLINIC_WEEKDAY_KEYS[d.getDay()]]}, ${d.getDate()} ${CLINIC_MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
+        return d.getFullYear() === new Date().getFullYear() ? label : `${label} ${d.getFullYear()}`;
+    }
+
+    let toastTimer = null;
+    function toast(message, kind) {
+        let el = document.getElementById('proToast');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'proToast';
+            el.className = 'pro-toast';
+            el.setAttribute('role', 'status');
+            document.body.appendChild(el);
+        }
+        el.textContent = message;
+        el.dataset.kind = kind || 'ok';
+        el.classList.add('is-on');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('is-on'), 3200);
+    }
+
+    function renderAvatars() {
+        document.querySelectorAll('[data-clinic-avatar]').forEach((el) => {
+            if (el === clinicProfilePhotoPlaceholder) {
+                el.textContent = initials(staffDisplayName);
+                return;
+            }
+            el.textContent = '';
+            if (staffHasPhoto) {
+                const img = document.createElement('img');
+                img.alt = '';
+                img.src = `/api/clinic/profile/photo?t=${Date.now()}`;
+                el.appendChild(img);
+            } else {
+                el.textContent = initials(staffDisplayName);
+            }
+        });
+    }
+
+    function renderIdentity() {
+        if (clinicSidebarUser) clinicSidebarUser.textContent = staffDisplayName || 'Profissional';
+        if (clinicSidebarEmail) clinicSidebarEmail.textContent = staffEmail || '';
+        renderAvatars();
+        if (activeClinicPanel === 'home') renderPageHead('home');
+    }
+
+    // ─── Auth status ───
     async function checkAuthStatus() {
         try {
             const res = await fetch('/api/clinic/auth-status?fresh=1', { cache: 'no-store', credentials: 'same-origin' });
             const data = await res.json();
-            
             if (data.authenticated) {
                 showClinicPortal(data.displayName || data.username, data.role, data.username);
             } else {
@@ -191,199 +304,122 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function closeClinicSidebar() {
-        if (!clinicContent) return;
-        clinicContent.classList.remove('sidebar-open');
-        if (clinicSidebarBackdrop) clinicSidebarBackdrop.hidden = true;
+    function showLogin() {
+        document.body.classList.remove('clinic-logged-in');
+        closeSheet();
+        clinicLogin.style.display = '';
+        clinicContent.hidden = true;
+        setClinicAuthView('signin');
     }
 
-    function openClinicSidebar() {
-        if (!clinicContent) return;
-        clinicContent.classList.add('sidebar-open');
-        if (clinicSidebarBackdrop) clinicSidebarBackdrop.hidden = false;
+    function showClinicPortal(username, role, loginUsername) {
+        clinicLogin.style.display = 'none';
+        clinicContent.hidden = false;
+        document.body.classList.add('clinic-logged-in');
+        clinicRole = role || 'admin';
+        staffDisplayName = username || loginUsername || '';
+        renderIdentity();
+        const panel = initialClinicPanel();
+        setClinicPanel(panel, { replace: true });
+        if (panel !== 'profile') loadClinicIdentity();
+        if (panel !== 'availability') loadScheduleView();
+        loadBookings();
     }
 
+    // ─── Panels ───
     function resolveClinicPanel(panelId) {
         const raw = String(panelId || '').toLowerCase();
         const mapped = CLINIC_PANEL_ALIASES[raw] || raw;
-        return CLINIC_PANEL_META[mapped] ? mapped : 'profile';
+        return CLINIC_PANELS[mapped] ? mapped : 'home';
     }
 
-    function setClinicPanel(panelId) {
+    function initialClinicPanel() {
+        const hash = String(location.hash || '').replace(/^#/, '');
+        if (hash) return resolveClinicPanel(hash);
+        try {
+            const panel = new URLSearchParams(location.search).get('panel');
+            if (panel) return resolveClinicPanel(panel);
+        } catch (err) { /* ignore */ }
+        return 'home';
+    }
+
+    function renderPageHead(panelId) {
+        const meta = CLINIC_PANELS[panelId];
+        if (panelId === 'home') {
+            const hour = new Date().getHours();
+            const hello = hour < 12 ? 'Bom dia' : (hour < 20 ? 'Boa tarde' : 'Boa noite');
+            const name = firstName(staffDisplayName);
+            clinicPageTitle.textContent = name ? `${hello}, ${name}` : hello;
+            const today = DAY_LONG.format(new Date());
+            clinicPageSub.textContent = today.charAt(0).toUpperCase() + today.slice(1);
+            return;
+        }
+        clinicPageTitle.textContent = meta.title;
+        clinicPageSub.textContent = meta.subtitle;
+    }
+
+    function setClinicPanel(panelId, { replace } = {}) {
         panelId = resolveClinicPanel(panelId);
+        const previous = activeClinicPanel;
         activeClinicPanel = panelId;
 
         document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
-            btn.classList.toggle('is-active', btn.getAttribute('data-clinic-panel') === panelId);
+            const on = btn.getAttribute('data-clinic-panel') === panelId;
+            btn.classList.toggle('is-active', on);
+            if (on) btn.setAttribute('aria-current', 'page');
+            else btn.removeAttribute('aria-current');
         });
         document.querySelectorAll('[data-clinic-panel-content]').forEach((el) => {
-            const match = el.getAttribute('data-clinic-panel-content') === panelId;
-            el.hidden = !match;
-            el.classList.toggle('is-active', match);
+            el.hidden = el.getAttribute('data-clinic-panel-content') !== panelId;
         });
+        renderPageHead(panelId);
+        if (clinicRefreshBtn) clinicRefreshBtn.hidden = !(panelId === 'bookings' || panelId === 'home');
+        renderSaveState();
 
-        const meta = CLINIC_PANEL_META[panelId];
-        if (clinicGreeting) clinicGreeting.textContent = meta.title;
-        if (clinicUserInfo) clinicUserInfo.textContent = meta.subtitle;
-        if (refreshBtn) {
-            refreshBtn.style.display = panelId === 'bookings' ? '' : 'none';
+        const hash = `#${panelId}`;
+        if (location.hash !== hash) {
+            try {
+                if (replace) history.replaceState(null, '', `${location.pathname}${location.search}${hash}`);
+                else history.pushState(null, '', `${location.pathname}${location.search}${hash}`);
+            } catch (err) { /* ignore */ }
         }
-        if (clinicSaveScheduleBtn) {
-            clinicSaveScheduleBtn.style.display = panelId === 'availabilities' ? '' : 'none';
-        }
-        closeClinicSidebar();
-        if (location.hash !== `#${panelId}`) {
-            try { history.replaceState(null, '', `${location.pathname}${location.search}#${panelId}`); } catch (err) { /* ignore */ }
-        }
+        if (previous !== panelId) window.scrollTo(0, 0);
 
-        if (panelId === 'bookings') {
-            loadBookings();
+        if (panelId === 'bookings' || panelId === 'home') {
+            if (clinicBookings) renderBookingViews();
         }
-        if (panelId === 'availabilities') {
-            if (clinicScheduleDirty || clinicAvailSaveInFlight) {
-                void saveClinicAvailability({ quiet: true });
-            } else {
-                loadScheduleView();
-            }
+        if (panelId === 'availability' && previous !== 'availability') {
+            if (clinicScheduleDirty || clinicAvailSaveInFlight) void saveClinicAvailability({ quiet: true });
+            else loadScheduleView();
         }
         if (panelId === 'profile') loadClinicIdentity();
     }
 
-    // ─── Show Login ───
-    function showLogin() {
-        document.body.classList.remove('clinic-logged-in');
-        clinicLogin.style.display = '';
-        clinicContent.style.display = 'none';
-        closeClinicSidebar();
-        if (clinicAdminLink) clinicAdminLink.hidden = true;
-        setClinicAuthView('signin');
-    }
-
-    // ─── Show Clinic Portal ───
-    function showClinicPortal(username, role, loginUsername) {
-        clinicLogin.style.display = 'none';
-        clinicContent.style.display = 'flex';
-        document.body.classList.add('clinic-logged-in');
-        clinicRole = role || 'admin';
-        staffDisplayName = username || loginUsername || '';
-
-        if (clinicSidebarUser) {
-            clinicSidebarUser.textContent = staffDisplayName || 'Portal';
-        }
-        if (clinicAdminLink) clinicAdminLink.hidden = true;
-
-        setClinicPanel(initialClinicPanel());
-        loadScheduleView();
-    }
-
-    function initialClinicPanel() {
-        const hash = String(location.hash || '').replace(/^#/, '').toLowerCase();
-        if (hash) return resolveClinicPanel(hash);
-        try {
-            if (/\/clinic-desk\/perfil\/?$/i.test(location.pathname)) return 'profile';
-            const panel = new URLSearchParams(location.search).get('panel');
-            if (panel) return resolveClinicPanel(panel);
-        } catch (err) { /* ignore */ }
-        return 'profile';
-    }
-
-    async function loadDoxyRoom() {
-        if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
-        try {
-            const res = await fetch('/api/clinic/doxy', { cache: 'no-store', credentials: 'same-origin' });
-            if (res.status === 401) {
-                showLogin();
-                return;
-            }
-            if (!res.ok) throw new Error('Failed to load Doxy room');
-            const data = await res.json();
-            clinicDoxyPatientUrl = data.pending ? '' : (data.patientRoomUrl || '');
-            clinicOpenDoxyBtn.href = data.providerUrl || 'https://doxy.me';
-            if (clinicDoxySubtitle) {
-                clinicDoxySubtitle.textContent = data.pending
-                    ? 'Your Doxy.me room is pending'
-                    : (data.displayName
-                        ? `Open Doxy.me to admit patients waiting for ${data.displayName}`
-                        : 'Open Doxy.me to admit patients from the waiting room');
-            }
-            if (clinicDoxyRoomUrl) clinicDoxyRoomUrl.classList.toggle('is-pending', !!data.pending);
-            if (data.pending) {
-                clinicDoxyRoomUrl.textContent = 'Pending';
-                if (clinicDoxyHint) {
-                    clinicDoxyHint.textContent = 'Your own patient waiting room is not ready yet. You will get a personal Doxy.me link — the clinic room is only for Dra. Sofia Aguiar.';
-                }
-                if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;
-            } else if (clinicDoxyPatientUrl) {
-                clinicDoxyRoomUrl.textContent = clinicDoxyPatientUrl;
-                if (clinicDoxyHint) {
-                    clinicDoxyHint.textContent = 'This is the link patients receive. Sign in to Doxy.me with your Doxy account (separate from Lon Clinic) to see the waiting room and start the call.';
-                }
-                if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = false;
-            } else {
-                clinicDoxyRoomUrl.textContent = 'Pending';
-                if (clinicDoxyRoomUrl) clinicDoxyRoomUrl.classList.add('is-pending');
-                if (clinicDoxyHint) {
-                    clinicDoxyHint.textContent = 'Your own patient waiting room is not ready yet. You will get a personal Doxy.me link — the clinic room is only for Dra. Sofia Aguiar.';
-                }
-                if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;
-            }
-        } catch (err) {
-            console.error('Failed to load Doxy room:', err);
-            clinicDoxyRoomUrl.textContent = 'Could not load room';
-        }
-    }
-
-    if (clinicCopyDoxyBtn) {
-        clinicCopyDoxyBtn.addEventListener('click', async () => {
-            if (!clinicDoxyPatientUrl) return;
-            try {
-                await navigator.clipboard.writeText(clinicDoxyPatientUrl);
-                const prev = clinicCopyDoxyBtn.textContent;
-                clinicCopyDoxyBtn.textContent = 'Copied';
-                setTimeout(() => {
-                    clinicCopyDoxyBtn.textContent = prev;
-                }, 1600);
-            } catch {
-                window.prompt('Copy patient Doxy link', clinicDoxyPatientUrl);
-            }
-        });
-    }
-
-    function formatClinicOverrideDateKey(y, m0, d) {
-        return `${y}-${String(m0 + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    }
-
-    function clinicStartOfToday() {
-        const t = new Date();
-        t.setHours(0, 0, 0, 0);
-        return t;
-    }
-
-    function clinicTodayKey() {
-        const t = clinicStartOfToday();
-        return formatClinicOverrideDateKey(t.getFullYear(), t.getMonth(), t.getDate());
-    }
-
-    function clinicTimeToMinutes(hhmm) {
-        const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
-        if (!m) return null;
-        return Number(m[1]) * 60 + Number(m[2]);
-    }
-
+    // ─── Availability ───
     const CLINIC_WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const CLINIC_WEEKDAY_LABELS = {
         monday: 'Segundas', tuesday: 'Terças', wednesday: 'Quartas', thursday: 'Quintas',
         friday: 'Sextas', saturday: 'Sábados', sunday: 'Domingos'
     };
+    const CLINIC_WEEKDAY_SHORT = {
+        monday: 'Seg', tuesday: 'Ter', wednesday: 'Qua', thursday: 'Qui',
+        friday: 'Sex', saturday: 'Sáb', sunday: 'Dom'
+    };
     const CLINIC_MONTH_NAMES = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
     ];
+    const TIME_OPTIONS = [];
+    for (let m = 6 * 60; m <= 23 * 60; m += 30) TIME_OPTIONS.push(`${pad2(Math.floor(m / 60))}:${pad2(m % 60)}`);
 
-    function clinicWeekdayKeyFromDate(dateKey) {
-        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateKey || ''));
-        if (!m) return '';
-        return CLINIC_WEEKDAY_KEYS[new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).getDay()] || '';
+    function fillTimeSelect(select, value) {
+        const options = TIME_OPTIONS.slice();
+        if (value && !options.includes(value)) {
+            options.push(value);
+            options.sort();
+        }
+        select.innerHTML = options.map((t) => `<option value="${t}">${t}</option>`).join('');
+        select.value = value || options[0];
     }
 
     /**
@@ -430,36 +466,37 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${row.date}|${row.start}|${row.end}`;
     }
 
-    function setClinicAvailError(message) {
-        if (!clinicAvailError) return;
-        clinicAvailError.textContent = message || '';
-        clinicAvailError.style.display = message ? '' : 'none';
-    }
-
-    function clinicMonthKeyFromDate(dateKey) {
-        return String(dateKey || '').slice(0, 7);
+    function upcomingAvailRows() {
+        const todayKey = clinicTodayKey();
+        return ((clinicScheduleData && clinicScheduleData.dayOverrides) || [])
+            .filter((row) => row && row.enabled !== false && row.date >= todayKey);
     }
 
     function clinicMonthLabel(monthKey) {
         const m = /^(\d{4})-(\d{2})$/.exec(String(monthKey || ''));
         if (!m) return String(monthKey || '');
-        return `${CLINIC_MONTH_NAMES[Number(m[2]) - 1]} ${m[1]}`;
+        const name = CLINIC_MONTH_NAMES[Number(m[2]) - 1];
+        return `${name.charAt(0).toUpperCase()}${name.slice(1)} ${m[1]}`;
     }
 
     function fillClinicAvailMonthOptions() {
-        if (!clinicAvailMonth || clinicAvailMonth.options.length) return;
-        const t = clinicStartOfToday();
-        for (let i = 0; i < 12; i++) {
-            const d = new Date(t.getFullYear(), t.getMonth() + i, 1);
-            const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            const opt = document.createElement('option');
-            opt.value = value;
-            opt.textContent = clinicMonthLabel(value);
-            clinicAvailMonth.appendChild(opt);
+        if (clinicAvailMonth && !clinicAvailMonth.options.length) {
+            const t = new Date();
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(t.getFullYear(), t.getMonth() + i, 1);
+                const value = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
+                const opt = document.createElement('option');
+                opt.value = value;
+                opt.textContent = clinicMonthLabel(value);
+                clinicAvailMonth.appendChild(opt);
+            }
+            // After the 20th, people are usually planning next month.
+            if (t.getDate() >= 20 && clinicAvailMonth.options[1]) clinicAvailMonth.selectedIndex = 1;
         }
-        if (clinicAvailDate && !clinicAvailDate.value) {
-            clinicAvailDate.min = clinicTodayKey();
-        }
+        if (clinicAvailDate) clinicAvailDate.min = clinicTodayKey();
+        [clinicAvailStart, clinicAvailEnd].forEach((select) => {
+            if (select && !select.options.length) fillTimeSelect(select, select.dataset.default);
+        });
     }
 
     /** Dates (today onward) of one weekday inside a month, as YYYY-MM-DD keys. */
@@ -474,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const out = [];
         for (let d = 1; d <= daysInMonth; d++) {
             if (new Date(year, month0, d).getDay() !== dow) continue;
-            const key = formatClinicOverrideDateKey(year, month0, d);
+            const key = `${year}-${pad2(month0 + 1)}-${pad2(d)}`;
             if (key >= todayKey) out.push(key);
         }
         return out;
@@ -487,22 +524,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let error = '';
         if (clinicAvailMode === 'date') {
             const date = String((clinicAvailDate && clinicAvailDate.value) || '').trim();
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) error = 'Pick a date.';
-            else if (date < clinicTodayKey()) error = 'That date is already in the past.';
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) error = 'Escolha uma data.';
+            else if (date < clinicTodayKey()) error = 'Essa data já passou.';
             else dates = [date];
         } else {
             const weekday = (clinicAvailWeekday && clinicAvailWeekday.value) || 'monday';
             const month = (clinicAvailMonth && clinicAvailMonth.value) || '';
             dates = clinicDatesForWeekdayInMonth(weekday, month);
-            if (!dates.length) error = `No upcoming ${CLINIC_WEEKDAY_LABELS[weekday] || 'days'} left in ${clinicMonthLabel(month)}.`;
+            if (!dates.length) error = `Já não há ${CLINIC_WEEKDAY_LABELS[weekday].toLowerCase()} por vir em ${clinicMonthLabel(month)}.`;
         }
         const from = clinicTimeToMinutes(start);
         const to = clinicTimeToMinutes(end);
         if (!error) {
-            if (from == null || to == null) error = 'Set a start and an end time.';
-            else if (to <= from) error = 'End time must be after the start time.';
+            if (from == null || to == null) error = 'Indique a hora de início e de fim.';
+            else if (to <= from) error = 'A hora de fim tem de ser depois da hora de início.';
         }
-        return { start, end, dates, error, from, to };
+        return { start, end, dates, error };
     }
 
     function renderClinicAvailPreview() {
@@ -514,15 +551,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const hours = `${v.start}–${v.end}`;
         if (clinicAvailMode === 'date') {
-            const d = new Date(`${v.dates[0]}T12:00:00`);
-            clinicAvailAddPreview.textContent = `Adds 1 line: ${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${hours}.`;
+            clinicAvailAddPreview.textContent = `Vai adicionar ${DAY_LONG.format(dateFromKey(v.dates[0]))}, ${hours}.`;
             return;
         }
-        const weekday = (clinicAvailWeekday && clinicAvailWeekday.value) || 'monday';
-        const month = (clinicAvailMonth && clinicAvailMonth.value) || '';
         const days = v.dates.map((key) => Number(key.slice(8, 10))).join(', ');
+        const n = v.dates.length;
         clinicAvailAddPreview.textContent =
-            `Adds ${v.dates.length} line${v.dates.length === 1 ? '' : 's'}: ${CLINIC_WEEKDAY_LABELS[weekday]} in ${clinicMonthLabel(month)} (${days}), ${hours}.`;
+            `Vai adicionar ${n} ${n === 1 ? 'dia' : 'dias'} (${days}), ${hours}.`;
     }
 
     function setClinicAvailMode(mode) {
@@ -533,21 +568,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-clinic-avail-field]').forEach((el) => {
             el.hidden = el.getAttribute('data-clinic-avail-field') !== clinicAvailMode;
         });
-        setClinicAvailError('');
+        setMessage(clinicAvailError, '');
         renderClinicAvailPreview();
     }
 
     function addClinicAvailFromForm() {
         if (!clinicScheduleData) {
-            setClinicAvailError('Availability is still loading. Try again.');
+            setMessage(clinicAvailError, 'A disponibilidade ainda está a carregar. Tente de novo.');
             return;
         }
         const v = clinicAvailFormValues();
         if (v.error) {
-            setClinicAvailError(v.error);
+            setMessage(clinicAvailError, v.error);
             return;
         }
-        setClinicAvailError('');
+        setMessage(clinicAvailError, '');
         const rows = (clinicScheduleData.dayOverrides || []).slice();
         v.dates.forEach((date) => rows.push({ date, enabled: true, start: v.start, end: v.end }));
         setClinicDayRows(rows);
@@ -555,6 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
         markClinicScheduleDirty();
         if (clinicAvailMode === 'date' && clinicAvailDate) clinicAvailDate.value = '';
         renderClinicAvailPreview();
+        toast(v.dates.length === 1 ? 'Bloco adicionado' : `${v.dates.length} blocos adicionados`);
     }
 
     function renderClinicAvailWeeklyHint() {
@@ -563,32 +599,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const order = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         const parts = order
             .filter((key) => weekly[key] && weekly[key].enabled)
-            .map((key) => `${key.slice(0, 3).replace(/^./, (c) => c.toUpperCase())} ${String(weekly[key].start).slice(0, 5)}–${String(weekly[key].end).slice(0, 5)}`);
-        if (!parts.length) {
+            .map((key) => `${CLINIC_WEEKDAY_SHORT[key]} ${String(weekly[key].start).slice(0, 5)}–${String(weekly[key].end).slice(0, 5)}`);
+        if (!parts.length || !upcomingAvailRows().length) {
             clinicAvailWeeklyHint.hidden = true;
             clinicAvailWeeklyHint.textContent = '';
             return;
         }
         clinicAvailWeeklyHint.hidden = false;
         clinicAvailWeeklyHint.textContent =
-            `O horário semanal da clínica (${parts.join(' · ')}) não se aplica enquanto tiver linhas abaixo — os pacientes só veem esses blocos.`;
+            `O horário semanal da clínica (${parts.join(' · ')}) não se aplica enquanto tiver blocos abaixo — os pacientes só veem esses blocos.`;
     }
 
     function renderClinicAvailRows() {
         if (!clinicAvailRows) return;
         if (!clinicScheduleData) {
-            clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">A carregar…</p>';
+            clinicAvailRows.innerHTML = '<p class="pro-empty">A carregar…</p>';
             return;
         }
         const todayKey = clinicTodayKey();
-        const rows = (clinicScheduleData.dayOverrides || []).filter((row) => row && row.enabled !== false && row.date >= todayKey);
+        const rows = upcomingAvailRows();
+        renderClinicAvailWeeklyHint();
         if (!rows.length) {
-            clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">Ainda não tem disponibilidade. Adicione o primeiro bloco acima — por exemplo segundas 10:00–12:00 em setembro.</p>';
+            clinicAvailRows.innerHTML = `
+                <div class="pro-empty-state">
+                    <strong>Ainda não tem disponibilidade</strong>
+                    <p>Adicione o primeiro bloco acima, por exemplo às segundas das 10:00 às 13:00. Os pacientes passam a poder marcar nesses horários.</p>
+                </div>`;
             return;
         }
         const byMonth = new Map();
         rows.forEach((row) => {
-            const key = clinicMonthKeyFromDate(row.date);
+            const key = row.date.slice(0, 7);
             if (!byMonth.has(key)) byMonth.set(key, []);
             byMonth.get(key).push(row);
         });
@@ -596,119 +637,132 @@ document.addEventListener('DOMContentLoaded', () => {
         Array.from(byMonth.keys()).sort().forEach((monthKey) => {
             const list = byMonth.get(monthKey);
             const section = document.createElement('section');
-            section.className = 'clinic-avail-month';
+            section.className = 'pro-card pro-avail-month';
+
             const head = document.createElement('div');
-            head.className = 'clinic-avail-month-head';
-            const title = document.createElement('h3');
-            title.textContent = clinicMonthLabel(monthKey);
-            const count = document.createElement('span');
-            count.className = 'clinic-avail-month-count';
-            count.textContent = `${list.length} ${list.length === 1 ? 'bloco' : 'blocos'}`;
+            head.className = 'pro-card-head';
+            const hours = list.reduce((sum, row) => sum + (clinicTimeToMinutes(row.end) - clinicTimeToMinutes(row.start)), 0) / 60;
+            const days = new Set(list.map((row) => row.date)).size;
+            head.innerHTML = `
+                <div>
+                    <h2 class="pro-card-title">${escapeHtml(clinicMonthLabel(monthKey))}</h2>
+                    <p class="pro-card-sub">${days} ${days === 1 ? 'dia' : 'dias'} · ${String(Math.round(hours * 10) / 10).replace('.', ',')} h</p>
+                </div>`;
             const removeMonth = document.createElement('button');
             removeMonth.type = 'button';
-            removeMonth.className = 'btn btn-outline btn-sm';
-            removeMonth.textContent = 'Remover mês';
+            removeMonth.className = 'pro-link pro-link-danger';
+            removeMonth.textContent = 'Limpar mês';
             removeMonth.addEventListener('click', () => {
-                if (!window.confirm(`Remover os ${list.length} ${list.length === 1 ? 'bloco' : 'blocos'} de ${clinicMonthLabel(monthKey)}?`)) return;
-                setClinicDayRows((clinicScheduleData.dayOverrides || []).filter((row) => clinicMonthKeyFromDate(row.date) !== monthKey || row.date < todayKey));
+                const n = list.length;
+                if (!window.confirm(`Remover ${n === 1 ? 'o bloco' : `os ${n} blocos`} de ${clinicMonthLabel(monthKey)}?`)) return;
+                setClinicDayRows((clinicScheduleData.dayOverrides || []).filter((row) => row.date.slice(0, 7) !== monthKey || row.date < todayKey));
                 renderClinicAvailRows();
                 markClinicScheduleDirty();
             });
-            head.appendChild(title);
-            head.appendChild(count);
             head.appendChild(removeMonth);
             section.appendChild(head);
 
-            const table = document.createElement('table');
-            table.className = 'clinic-avail-table';
-            const tbody = document.createElement('tbody');
+            const ul = document.createElement('ul');
+            ul.className = 'pro-avail-list';
             let lastDate = '';
             list.forEach((row) => {
-                const tr = document.createElement('tr');
-                tr.className = 'clinic-avail-row';
-                if (row.date === lastDate) tr.classList.add('is-same-day');
+                const li = document.createElement('li');
+                li.className = 'pro-avail-row';
+                const sameDay = row.date === lastDate;
+                if (sameDay) li.classList.add('is-same-day');
                 lastDate = row.date;
                 const key = clinicRowKey(row);
-                const d = new Date(`${row.date}T12:00:00`);
-                const weekdayLabel = d.toLocaleDateString('pt-PT', { weekday: 'short' });
-                const dayLabel = d.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
+                const d = dateFromKey(row.date);
+                const weekday = CLINIC_WEEKDAY_SHORT[CLINIC_WEEKDAY_KEYS[d.getDay()]];
+                const dayLabel = `${d.getDate()} ${CLINIC_MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
 
-                const tdDate = document.createElement('td');
-                tdDate.className = 'clinic-avail-cell-date';
-                tdDate.innerHTML = `<span class="clinic-avail-row-weekday">${weekdayLabel}</span><strong>${dayLabel}</strong>`;
+                const dateCell = document.createElement('div');
+                dateCell.className = 'pro-avail-date';
+                dateCell.innerHTML = sameDay ? '' : `<span>${escapeHtml(weekday)}</span><strong>${d.getDate()}</strong>`;
+                if (row.date === todayKey && !sameDay) dateCell.classList.add('is-today');
 
-                const tdHours = document.createElement('td');
-                tdHours.className = 'clinic-avail-cell-hours';
-                const startInput = document.createElement('input');
-                startInput.type = 'time';
-                startInput.step = '1800';
-                startInput.className = 'admin-time-input';
-                startInput.value = row.start;
-                startInput.setAttribute('aria-label', `Início em ${dayLabel}`);
+                const hoursCell = document.createElement('div');
+                hoursCell.className = 'pro-avail-hours';
+                const startSel = document.createElement('select');
+                startSel.className = 'pro-input pro-input-sm';
+                fillTimeSelect(startSel, row.start);
+                startSel.setAttribute('aria-label', `Início, ${dayLabel}`);
                 const sep = document.createElement('span');
-                sep.className = 'clinic-avail-row-sep';
+                sep.className = 'pro-avail-sep';
                 sep.textContent = '–';
-                const endInput = document.createElement('input');
-                endInput.type = 'time';
-                endInput.step = '1800';
-                endInput.className = 'admin-time-input';
-                endInput.value = row.end;
-                endInput.setAttribute('aria-label', `Fim em ${dayLabel}`);
+                const endSel = document.createElement('select');
+                endSel.className = 'pro-input pro-input-sm';
+                fillTimeSelect(endSel, row.end);
+                endSel.setAttribute('aria-label', `Fim, ${dayLabel}`);
                 const onEdit = () => {
-                    const start = String(startInput.value || '').slice(0, 5);
-                    const end = String(endInput.value || '').slice(0, 5);
-                    const from = clinicTimeToMinutes(start);
-                    const to = clinicTimeToMinutes(end);
-                    if (from == null || to == null || to <= from) {
-                        tr.classList.add('is-invalid');
-                        setClinicAvailError(`${dayLabel}: a hora de fim tem de ser depois da de início.`);
+                    const start = startSel.value;
+                    const end = endSel.value;
+                    if (clinicTimeToMinutes(end) <= clinicTimeToMinutes(start)) {
+                        li.classList.add('is-invalid');
+                        setMessage(clinicAvailError, `${dayLabel}: a hora de fim tem de ser depois da hora de início.`);
+                        clinicAvailError.scrollIntoView({ block: 'nearest' });
                         return;
                     }
-                    tr.classList.remove('is-invalid');
-                    setClinicAvailError('');
-                    const next = (clinicScheduleData.dayOverrides || []).map((item) =>
+                    li.classList.remove('is-invalid');
+                    setMessage(clinicAvailError, '');
+                    setClinicDayRows((clinicScheduleData.dayOverrides || []).map((item) =>
                         clinicRowKey(item) === key ? { ...item, start, end } : item
-                    );
-                    setClinicDayRows(next);
+                    ));
                     renderClinicAvailRows();
                     markClinicScheduleDirty();
                 };
-                startInput.addEventListener('change', onEdit);
-                endInput.addEventListener('change', onEdit);
-                tdHours.appendChild(startInput);
-                tdHours.appendChild(sep);
-                tdHours.appendChild(endInput);
+                startSel.addEventListener('change', onEdit);
+                endSel.addEventListener('change', onEdit);
+                hoursCell.append(startSel, sep, endSel);
 
-                const tdActions = document.createElement('td');
-                tdActions.className = 'clinic-avail-cell-actions';
                 const removeBtn = document.createElement('button');
                 removeBtn.type = 'button';
-                removeBtn.className = 'admin-remove-btn';
-                removeBtn.setAttribute('aria-label', `Remove ${dayLabel} ${row.start}–${row.end}`);
-                removeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+                removeBtn.className = 'pro-icon-btn';
+                removeBtn.setAttribute('aria-label', `Remover ${dayLabel}, ${row.start}–${row.end}`);
+                removeBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
                 removeBtn.addEventListener('click', () => {
                     setClinicDayRows((clinicScheduleData.dayOverrides || []).filter((item) => clinicRowKey(item) !== key));
                     renderClinicAvailRows();
                     markClinicScheduleDirty();
                 });
-                tdActions.appendChild(removeBtn);
 
-                tr.appendChild(tdDate);
-                tr.appendChild(tdHours);
-                tr.appendChild(tdActions);
-                tbody.appendChild(tr);
+                li.append(dateCell, hoursCell, removeBtn);
+                ul.appendChild(li);
             });
-            table.appendChild(tbody);
-            section.appendChild(table);
+            section.appendChild(ul);
             clinicAvailRows.appendChild(section);
         });
     }
 
+    let clinicSaveState = 'idle';
+    function setSaveState(state) {
+        clinicSaveState = state;
+        renderSaveState();
+        if (state === 'saved') {
+            setTimeout(() => {
+                if (clinicSaveState === 'saved') setSaveState('idle');
+            }, 2500);
+        }
+    }
+
+    function renderSaveState() {
+        if (!clinicAvailSaveState) return;
+        const labels = {
+            dirty: 'Alterações por guardar',
+            saving: 'A guardar…',
+            saved: 'Guardado',
+            error: 'Sem ligação — a tentar de novo'
+        };
+        const label = labels[clinicSaveState];
+        clinicAvailSaveState.hidden = !label || activeClinicPanel !== 'availability';
+        clinicAvailSaveState.dataset.state = clinicSaveState;
+        clinicAvailSaveState.textContent = label || '';
+    }
+
     function markClinicScheduleDirty() {
         clinicScheduleDirty = true;
-        if (!clinicSaveScheduleBtn) return;
-        clinicSaveScheduleBtn.classList.add('admin-save-dirty');
-        clinicSaveScheduleBtn.textContent = 'Save availability •';
+        setSaveState('dirty');
+        renderHome();
         queueClinicAvailabilitySave();
     }
 
@@ -721,7 +775,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadScheduleView() {
-        if (!clinicAvailRows) return;
         if (clinicScheduleDirty || clinicAvailSaveInFlight) return;
         fillClinicAvailMonthOptions();
         try {
@@ -731,7 +784,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             if (!res.ok) throw new Error('Failed to load schedule');
-            if (clinicScheduleDirty) return;
             const schedule = await res.json();
             if (clinicScheduleDirty) return;
             clinicScheduleData = {
@@ -741,25 +793,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 timezone: schedule.timezone || 'Europe/Lisbon'
             };
             renderClinicAvailRows();
-            renderClinicAvailWeeklyHint();
             renderClinicAvailPreview();
-            clinicScheduleDirty = false;
-            if (clinicSaveScheduleBtn) {
-                clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
-                clinicSaveScheduleBtn.textContent = 'Save availability';
-                clinicSaveScheduleBtn.disabled = false;
-            }
+            renderHome();
         } catch (err) {
             console.error('Failed to load schedule view:', err);
             if (clinicScheduleData) return;
             if (clinicAvailRows) {
-                clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">Não foi possível carregar a disponibilidade.</p>';
+                clinicAvailRows.innerHTML = '<p class="pro-empty">Não foi possível carregar a disponibilidade. Atualize a página.</p>';
             }
         }
     }
 
     function clinicDayOverridesPayload() {
-        return (clinicScheduleData && clinicScheduleData.dayOverrides || [])
+        return ((clinicScheduleData && clinicScheduleData.dayOverrides) || [])
             .filter((o) => o && o.enabled !== false && o.date)
             .map((o) => ({
                 date: o.date,
@@ -780,10 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         clinicAvailSaveInFlight = true;
-        if (clinicSaveScheduleBtn) {
-            clinicSaveScheduleBtn.disabled = true;
-            clinicSaveScheduleBtn.textContent = 'Saving…';
-        }
+        setSaveState('saving');
         const dayOverrides = clinicDayOverridesPayload();
         try {
             const res = await fetch('/api/clinic/schedule', {
@@ -810,34 +853,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 clinicScheduleData.dayOverrides = fromServer;
                 clinicScheduleDirty = false;
                 if (changed) renderClinicAvailRows();
+                setSaveState('saved');
             }
             clinicAvailSaveAttempts = 0;
-            if (clinicSaveScheduleBtn) {
-                clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
-                clinicSaveScheduleBtn.textContent = 'Saved';
-                setTimeout(() => {
-                    if (!clinicScheduleDirty && clinicSaveScheduleBtn) {
-                        clinicSaveScheduleBtn.textContent = 'Save availability';
-                        clinicSaveScheduleBtn.disabled = false;
-                    }
-                }, 1600);
-            }
             return true;
         } catch (err) {
             console.error('Failed to save availability:', err);
-            if (clinicSaveScheduleBtn) {
-                clinicSaveScheduleBtn.disabled = false;
-                clinicSaveScheduleBtn.textContent = 'Save availability •';
-                clinicSaveScheduleBtn.classList.add('admin-save-dirty');
-            }
+            setSaveState('error');
             if (!quiet) {
-                alert('Failed to save availability. Please try again.');
+                toast('Não foi possível guardar a disponibilidade.', 'error');
             } else if (clinicAvailSaveAttempts < 3) {
                 clinicAvailSaveAttempts += 1;
                 clinicAvailSaveTimer = setTimeout(() => {
                     clinicAvailSaveTimer = null;
                     void saveClinicAvailability({ quiet: true });
                 }, 2000);
+            } else {
+                toast('Não foi possível guardar a disponibilidade. Verifique a ligação.', 'error');
             }
             return false;
         } finally {
@@ -869,7 +901,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [clinicAvailWeekday, clinicAvailMonth, clinicAvailDate, clinicAvailStart, clinicAvailEnd].forEach((el) => {
         if (!el) return;
         el.addEventListener('change', () => {
-            setClinicAvailError('');
+            setMessage(clinicAvailError, '');
             renderClinicAvailPreview();
         });
         el.addEventListener('input', renderClinicAvailPreview);
@@ -881,16 +913,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     fillClinicAvailMonthOptions();
-
-    if (clinicSaveScheduleBtn) {
-        clinicSaveScheduleBtn.addEventListener('click', () => {
-            if (!clinicScheduleData) {
-                alert('Availability is still loading. Try again.');
-                return;
-            }
-            void saveClinicAvailability();
-        });
-    }
 
     window.addEventListener('pagehide', flushClinicAvailabilityBeacon);
     window.addEventListener('beforeunload', (e) => {
@@ -1310,442 +1332,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── Logout ───
-    clinicLogoutBtn.addEventListener('click', async () => {
-        try {
-            const res = await fetch('/api/clinic/logout', {
-                method: 'POST'
-            });
-
-            const data = await res.json();
-            
-            if (res.ok && data.success) {
-                showLogin();
-            } else {
-                console.error('Logout error:', data);
+    document.querySelectorAll('[data-clinic-logout]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            flushClinicAvailabilityBeacon();
+            try {
+                await fetch('/api/clinic/logout', { method: 'POST', credentials: 'same-origin' });
+            } catch (err) {
+                console.error('Logout error:', err);
             }
-        } catch (err) {
-            console.error('Logout error:', err);
-            // Still show login even if logout request fails
+            clinicBookings = null;
+            clinicScheduleData = null;
             showLogin();
-        }
-    });
-
-    function escapeHtml(value) {
-        return String(value ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    function patientIntakeBlock(booking) {
-        const intake = booking.patientIntake || booking.intake;
-        if (intake && (intake.concerns || intake.dob || intake.allergies || intake.medications)) {
-            const row = (label, value) => value
-                ? `<div class="clinic-detail-item"><span class="clinic-detail-label">${escapeHtml(label)}</span><span class="clinic-detail-value">${escapeHtml(value)}</span></div>`
-                : '';
-            return `
-                <div class="clinic-booking-details">
-                    <h3 class="clinic-section-title">Patient intake</h3>
-                    <div class="clinic-details-grid">
-                        ${row('Date of birth', intake.dob)}
-                        ${row('Country', intake.country)}
-                        ${row('Symptoms / reason', intake.concerns)}
-                        ${row('Medications', intake.medications)}
-                        ${row('Allergies', intake.allergies)}
-                        ${row('NHS / SNS', intake.nhs)}
-                    </div>
-                </div>`;
-        }
-        return `
-            <div class="clinic-booking-details">
-                <h3 class="clinic-section-title">Patient intake</h3>
-                <p style="color: var(--text-muted); margin: 0;">Clinical form not submitted yet.</p>
-            </div>`;
-    }
-
-    function formatClinicPayHours(hours) {
-        const n = Number(hours) || 0;
-        if (Math.abs(n - Math.round(n)) < 0.05) return `${Math.round(n)}h`;
-        return `${n.toFixed(1).replace('.', ',')}h`;
-    }
-
-    function formatClinicPayEuro(cents) {
-        const n = (Number(cents) || 0) / 100;
-        const formatted = n.toLocaleString('pt-PT', { minimumFractionDigits: n % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 });
-        return `${formatted} €`;
-    }
-
-    function parseClinicPayPct(el) {
-        if (!el) return null;
-        const raw = String(el.value || '').trim().replace(',', '.');
-        if (!raw) return null;
-        const n = Number(raw);
-        if (!Number.isFinite(n) || n < 0) return null;
-        return n;
-    }
-
-    function updateClinicPayNet() {
-        if (!clinicPayNet || !clinicBillingSummary) return;
-        const period = clinicBillingSummary[clinicPayPeriod] || clinicBillingSummary.week;
-        const gross = Number(period && period.paidCents) || 0;
-        const irs = parseClinicPayPct(clinicPayIrs);
-        const ss = parseClinicPayPct(clinicPaySs);
-        if (irs == null && ss == null) {
-            clinicPayNet.hidden = true;
-            return;
-        }
-        const irsAmt = Math.round(gross * ((irs || 0) / 100));
-        const ssAmt = Math.round(gross * ((ss || 0) / 100));
-        const net = Math.max(0, gross - irsAmt - ssAmt);
-        clinicPayNet.hidden = false;
-        clinicPayNet.textContent = `Líquido estimado: ${formatClinicPayEuro(net)}`;
-    }
-
-    function renderClinicPayCard() {
-        if (!clinicBillingSummary) return;
-        const period = clinicBillingSummary[clinicPayPeriod] || clinicBillingSummary.week || {};
-        if (clinicPayRange) clinicPayRange.textContent = period.rangeLabel || '—';
-        if (clinicPayHours) clinicPayHours.textContent = formatClinicPayHours(period.hours);
-        if (clinicPayPatients) clinicPayPatients.textContent = String(period.patients || 0);
-        if (clinicPayGross) clinicPayGross.textContent = formatClinicPayEuro(period.paidCents);
-        if (clinicPayEmptyWeek) {
-            const week = clinicBillingSummary.week || {};
-            clinicPayEmptyWeek.hidden = (Number(week.consultations) || 0) > 0;
-        }
-        document.querySelectorAll('[data-pay-period]').forEach((btn) => {
-            btn.classList.toggle('is-active', btn.getAttribute('data-pay-period') === clinicPayPeriod);
-        });
-        updateClinicPayNet();
-    }
-
-    async function loadClinicBillingSummary() {
-        if (!clinicPayGross) return;
-        try {
-            const res = await fetch('/api/clinic/billing-summary');
-            if (res.status === 401) {
-                showLogin();
-                return;
-            }
-            if (!res.ok) throw new Error('Failed to load billing summary');
-            clinicBillingSummary = await res.json();
-            renderClinicPayCard();
-        } catch (err) {
-            console.error('Failed to load billing summary:', err);
-            if (clinicPayHours) clinicPayHours.textContent = '—';
-            if (clinicPayPatients) clinicPayPatients.textContent = '—';
-            if (clinicPayGross) clinicPayGross.textContent = '—';
-        }
-    }
-
-    document.querySelectorAll('[data-pay-period]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            clinicPayPeriod = btn.getAttribute('data-pay-period') === 'month' ? 'month' : 'week';
-            renderClinicPayCard();
         });
     });
 
-    try {
-        const savedIrs = localStorage.getItem(CLINIC_PAY_IRS_KEY);
-        const savedSs = localStorage.getItem(CLINIC_PAY_SS_KEY);
-        if (clinicPayIrs && savedIrs != null) clinicPayIrs.value = savedIrs;
-        if (clinicPaySs && savedSs != null) clinicPaySs.value = savedSs;
-    } catch (e) { /* ignore */ }
-
-    [clinicPayIrs, clinicPaySs].forEach((el) => {
-        if (!el) return;
-        el.addEventListener('input', () => {
-            try {
-                if (el === clinicPayIrs) localStorage.setItem(CLINIC_PAY_IRS_KEY, el.value);
-                if (el === clinicPaySs) localStorage.setItem(CLINIC_PAY_SS_KEY, el.value);
-            } catch (e) { /* ignore */ }
-            updateClinicPayNet();
-        });
-    });
-
-    function renderClinicPayouts(data) {
-        if (clinicIban && data && data.iban != null) {
-            clinicIban.value = data.iban;
-        }
-        if (!clinicPayoutMonths) return;
-        const months = (data && data.months) || [];
-        if (!months.length) {
-            clinicPayoutMonths.innerHTML = '<p class="admin-empty-list">No months yet.</p>';
-            return;
-        }
-        clinicPayoutMonths.innerHTML = months.map((m) => {
-            const month = escapeHtml(m.month || '');
-            const line = escapeHtml(m.lineLabel || m.label || m.month || '');
-            const faturaOn = m.hasInvoice ? ' is-on' : '';
-            const paidOn = m.paymentSent ? ' is-on' : '';
-            const faturaText = m.hasInvoice
-                ? `Fatura uploaded${m.invoiceName ? ` (${escapeHtml(m.invoiceName)})` : ''}`
-                : 'Fatura uploaded';
-            const download = m.hasInvoice
-                ? `<a class="btn btn-outline btn-sm" href="/api/clinic/payouts/${month}/invoice">Download fatura</a>`
-                : '';
-            return `<details class="clinic-payout-item">
-                <summary>${line}</summary>
-                <div class="clinic-payout-body">
-                    <label class="btn btn-outline btn-sm">
-                        ${m.hasInvoice ? 'Replace fatura' : 'Upload fatura'}
-                        <input type="file" class="clinic-payout-file" data-payout-month="${month}" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,application/pdf,image/jpeg,image/png,image/webp" hidden>
-                    </label>
-                    ${download}
-                    <div class="clinic-payout-checks">
-                        <p class="clinic-payout-check${faturaOn}">${faturaText}</p>
-                        <p class="clinic-payout-check${paidOn}">Payment sent</p>
-                    </div>
-                </div>
-            </details>`;
-        }).join('');
-    }
-
-    async function loadClinicPayouts() {
-        if (!clinicPayoutMonths && !clinicIban) return;
-        if (clinicPayoutError) clinicPayoutError.style.display = 'none';
-        try {
-            const res = await fetch('/api/clinic/payouts');
-            if (res.status === 401) {
-                showLogin();
-                return;
-            }
-            if (!res.ok) throw new Error('Failed to load payouts');
-            renderClinicPayouts(await res.json());
-        } catch (err) {
-            console.error('Failed to load payouts:', err);
-            if (clinicPayoutMonths) {
-                clinicPayoutMonths.innerHTML = '<p class="admin-empty-list">Could not load monthly payouts.</p>';
-            }
-        }
-    }
-
-    if (clinicIbanForm) {
-        clinicIbanForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (clinicIbanError) clinicIbanError.style.display = 'none';
-            if (clinicIbanSaveBtn) clinicIbanSaveBtn.disabled = true;
-            try {
-                const res = await fetch('/api/clinic/payouts/iban', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ iban: clinicIban ? clinicIban.value : '' })
-                });
-                const data = await res.json().catch(() => ({}));
-                if (res.status === 401) {
-                    showLogin();
-                    return;
-                }
-                if (!res.ok) throw new Error(data.error || 'Failed to save IBAN');
-                if (clinicIban && data.iban != null) clinicIban.value = data.iban;
-                const prev = clinicIbanSaveBtn ? clinicIbanSaveBtn.textContent : '';
-                if (clinicIbanSaveBtn) clinicIbanSaveBtn.textContent = 'Saved';
-                setTimeout(() => {
-                    if (clinicIbanSaveBtn) clinicIbanSaveBtn.textContent = prev || 'Save IBAN';
-                }, 1600);
-            } catch (err) {
-                showProfileError(clinicIbanError, err.message || 'Failed to save IBAN');
-            } finally {
-                if (clinicIbanSaveBtn) clinicIbanSaveBtn.disabled = false;
-            }
-        });
-    }
-
-    if (clinicPayoutMonths) {
-        clinicPayoutMonths.addEventListener('change', async (e) => {
-            const input = e.target.closest('.clinic-payout-file');
-            if (!input) return;
-            const month = input.getAttribute('data-payout-month');
-            const file = input.files && input.files[0];
-            if (!month || !file) return;
-            if (clinicPayoutError) clinicPayoutError.style.display = 'none';
-            const form = new FormData();
-            form.append('file', file);
-            try {
-                const res = await fetch(`/api/clinic/payouts/${encodeURIComponent(month)}/invoice`, {
-                    method: 'POST',
-                    body: form
-                });
-                const data = await res.json().catch(() => ({}));
-                if (res.status === 401) {
-                    showLogin();
-                    return;
-                }
-                if (!res.ok) throw new Error(data.error || 'Failed to upload fatura');
-                await loadClinicPayouts();
-            } catch (err) {
-                showProfileError(clinicPayoutError, err.message || 'Failed to upload fatura');
-            } finally {
-                input.value = '';
-            }
-        });
-    }
-
-    async function loadBookings() {
-        try {
-            const res = await fetch('/api/clinic/bookings');
-            
-            if (res.status === 401) {
-                showLogin();
-                return;
-            }
-            
-            if (!res.ok) {
-                throw new Error('Failed to load bookings');
-            }
-            
-            const data = await res.json();
-            bookingsCache = Array.isArray(data.bookings) ? data.bookings : [];
-            renderBookings(bookingsCache);
-            renderUpcomingBookings(bookingsCache);
-            renderPatients(bookingsCache);
-        } catch (err) {
-            console.error('Failed to load bookings:', err);
-            bookingsCache = [];
-            renderBookings([]);
-            renderUpcomingBookings([]);
-            renderPatients([]);
-        }
-    }
-
-    function renderBookings(bookings) {
-        if (!clinicTableBody) return;
-        clinicTableBody.innerHTML = '';
-        if (!bookings.length) {
-            clinicEmpty.style.display = '';
-            clinicTable.style.display = 'none';
-            return;
-        }
-        clinicEmpty.style.display = 'none';
-        clinicTable.style.display = 'table';
-
-        const now = new Date();
-
-        bookings.forEach(booking => {
-            const row = document.createElement('tr');
-            const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
-            const status = getStatus(booking, now);
-            const hasNotes = booking.hasClinicalNotes;
-            const ref = booking.bookingRef || '';
-
-            row.innerHTML = `
-                <td class="ref-cell">${escapeHtml(ref || '—')}</td>
-                <td class="service-cell">${escapeHtml(serviceLabel)}</td>
-                <td>${escapeHtml(booking.date || '—')}${booking.time ? ' · ' + escapeHtml(booking.time) : ''}</td>
-                <td>${escapeHtml(booking.patientName || '—')}${booking.travellerCount > 1 ? ` +${booking.travellerCount - 1}` : ''}</td>
-                <td>${escapeHtml(booking.email || '—')}</td>
-                <td><span class="dash-status ${status}">${statusLabel(status)}</span></td>
-                <td>
-                    ${hasNotes 
-                        ? '<span style="color: var(--accent); font-weight: 600;">✓ Notas</span>'
-                        : '<span style="color: var(--text-muted);">Sem notas</span>'
-                    }
-                    ${booking.hasPatientIntake
-                        ? '<br><span style="color: var(--accent); font-size: 0.85em;">Ficha ok</span>'
-                        : '<br><span style="color: var(--text-muted); font-size: 0.85em;">Ficha pendente</span>'
-                    }
-                </td>
-                <td>
-                    <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(ref)}">
-                        Abrir
-                    </button>
-                </td>
-            `;
-
-            const viewBtn = row.querySelector('.view-consultation-btn');
-            viewBtn.addEventListener('click', () => showConsultationModal(ref));
-
-            clinicTableBody.appendChild(row);
-        });
-    }
-
-    function renderUpcomingBookings(bookings) {
-        if (!clinicBookingsBody) return;
-        const now = new Date();
-        const upcoming = bookings.filter((b) => !b.cancelled && getStatus(b, now) === 'upcoming');
-        clinicBookingsBody.innerHTML = '';
-        if (!upcoming.length) {
-            clinicBookingsEmpty.style.display = '';
-            clinicBookingsTable.style.display = 'none';
-            return;
-        }
-        clinicBookingsEmpty.style.display = 'none';
-        clinicBookingsTable.style.display = 'table';
-        upcoming.forEach((booking) => {
-            const row = document.createElement('tr');
-            const ref = booking.bookingRef || '';
-            const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
-            row.innerHTML = `
-                <td>${escapeHtml(booking.date || '—')}${booking.time ? ' · ' + escapeHtml(booking.time) : ''}</td>
-                <td>${escapeHtml(booking.patientName || '—')}</td>
-                <td>${escapeHtml(serviceLabel)}</td>
-                <td class="ref-cell">${escapeHtml(ref || '—')}</td>
-                <td>
-                    <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(ref)}">Open</button>
-                </td>
-            `;
-            row.querySelector('.view-consultation-btn').addEventListener('click', () => showConsultationModal(ref));
-            clinicBookingsBody.appendChild(row);
-        });
-    }
-
-    function renderPatients(bookings) {
-        if (!clinicPatientsBody) return;
-        const groups = new Map();
-        bookings.forEach((b) => {
-            if (b.cancelled) return;
-            const key = String(b.email || '').trim().toLowerCase() || String(b.patientName || '').trim().toLowerCase() || b.bookingRef;
-            if (!key) return;
-            if (!groups.has(key)) {
-                groups.set(key, {
-                    name: b.patientName || '—',
-                    email: b.email || '',
-                    visits: []
-                });
-            }
-            groups.get(key).visits.push(b);
-        });
-        const patients = [...groups.values()].sort((a, b) => String(a.name).localeCompare(String(b.name)));
-        clinicPatientsBody.innerHTML = '';
-        if (!patients.length) {
-            clinicPatientsEmpty.style.display = '';
-            clinicPatientsTable.style.display = 'none';
-            return;
-        }
-        clinicPatientsEmpty.style.display = 'none';
-        clinicPatientsTable.style.display = 'table';
-        const now = new Date();
-        patients.forEach((patient) => {
-            const visits = [...patient.visits].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
-            const latest = visits[0];
-            const latestRef = latest && latest.bookingRef ? latest.bookingRef : '';
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${escapeHtml(patient.name)}</td>
-                <td>${escapeHtml(patient.email || '—')}</td>
-                <td>${visits.length}</td>
-                <td>${escapeHtml(latest.date || '—')}${latest.time ? ' · ' + escapeHtml(latest.time) : ''} · ${escapeHtml(getStatus(latest, now))}</td>
-                <td>
-                    ${latestRef ? `<button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(latestRef)}">Latest visit</button>` : ''}
-                </td>
-            `;
-            const btn = row.querySelector('.view-consultation-btn');
-            if (btn) btn.addEventListener('click', () => showConsultationModal(latestRef));
-            clinicPatientsBody.appendChild(row);
-        });
-    }
-
-    // ─── Get Status ───
-    function statusLabel(status) {
-        if (status === 'completed') return 'concluída';
-        if (status === 'cancelled') return 'cancelada';
-        return 'próxima';
-    }
-
+    // ─── Bookings ───
     function parseBookingDate(booking) {
         const isoSource = String((booking && (booking.dateIso || booking.date)) || '').trim();
         const isoMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoSource);
-        if (isoMatch && String(booking.dateIso || booking.date || '').trim().slice(0, 10) === isoMatch[0]) {
+        if (isoMatch) {
             return new Date(Number(isoMatch[1]), Number(isoMatch[2]) - 1, Number(isoMatch[3]), 12, 0, 0, 0);
         }
         const text = String((booking && booking.date) || '').trim();
@@ -1754,8 +1359,8 @@ document.addEventListener('DOMContentLoaded', () => {
             julho: 6, agosto: 7, setembro: 8, outubro: 9, novembro: 10, dezembro: 11,
             january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
             july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
-            enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
-            julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+            enero: 0, febrero: 1, marzo: 2, mayo: 4, junio: 5,
+            julio: 6, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
         };
         const written = /(\d{1,2})\s+de\s+([a-záéíóúãõç]+)\s+de\s+(\d{4})/i.exec(text);
         if (written) {
@@ -1768,218 +1373,442 @@ document.addEventListener('DOMContentLoaded', () => {
         return isNaN(parsed.getTime()) ? null : parsed;
     }
 
-    function getStatus(booking, now) {
-        if (booking.cancelled) return 'cancelled';
-        const parsed = parseBookingDate(booking);
-        if (!parsed) return 'upcoming';
-        const endOfDay = new Date(parsed);
-        endOfDay.setHours(23, 59, 59, 999);
-        if (endOfDay < now) return 'completed';
-        return 'upcoming';
+    function prepareBooking(booking) {
+        const day = parseBookingDate(booking);
+        const dayKey = day ? dateKeyOf(day) : '';
+        const time = /^\d{1,2}:\d{2}/.test(String(booking.time || '')) ? String(booking.time).slice(0, 5).padStart(5, '0') : '';
+        let startsAt = null;
+        if (day) {
+            startsAt = new Date(day);
+            const minutes = clinicTimeToMinutes(time);
+            if (minutes != null) startsAt.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+            else startsAt.setHours(0, 0, 0, 0);
+        }
+        return { ...booking, dayKey, time, startsAt };
     }
 
-    // ─── Show Consultation Modal ───
-    async function showConsultationModal(bookingRef) {
+    function bookingStatus(b, now) {
+        if (b.cancelled) return 'cancelled';
+        if (!b.startsAt) return 'upcoming';
+        const ends = new Date(b.startsAt);
+        if (b.time) ends.setMinutes(ends.getMinutes() + 60);
+        else ends.setHours(23, 59, 59, 999);
+        return ends < now ? 'past' : 'upcoming';
+    }
+
+    const STATUS_LABELS = { upcoming: 'Agendada', past: 'Realizada', cancelled: 'Cancelada' };
+
+    function bookingPatientLabel(b) {
+        const name = b.patientName || b.email || 'Paciente sem nome';
+        return b.travellerCount > 1 ? `${name} +${b.travellerCount - 1}` : name;
+    }
+
+    function bookingRowHtml(b, { showDate } = {}) {
+        const status = b.status;
+        const chips = [];
+        if (status === 'cancelled') {
+            chips.push('<span class="pro-chip pro-chip-danger">Cancelada</span>');
+        } else if (status === 'past') {
+            chips.push(b.hasClinicalNotes
+                ? '<span class="pro-chip">Notas registadas</span>'
+                : '<span class="pro-chip pro-chip-warn">Sem notas</span>');
+        } else {
+            chips.push(b.hasPatientIntake
+                ? '<span class="pro-chip pro-chip-ok">Ficha preenchida</span>'
+                : '<span class="pro-chip pro-chip-warn">Ficha em falta</span>');
+            if (b.hasClinicalNotes) chips.push('<span class="pro-chip">Notas registadas</span>');
+        }
+        const when = showDate
+            ? `<span class="pro-booking-day">${escapeHtml(b.dayKey ? dayHeading(b.dayKey) : (b.date || '—'))}</span>`
+            : '';
+        return `
+            <button type="button" class="pro-booking${status === 'cancelled' ? ' is-cancelled' : ''}" data-booking-ref="${escapeHtml(b.bookingRef || '')}">
+                <span class="pro-booking-time">${when}<strong>${escapeHtml(b.time || '—')}</strong></span>
+                <span class="pro-booking-main">
+                    <strong class="pro-booking-name">${escapeHtml(bookingPatientLabel(b))}</strong>
+                    <span class="pro-booking-service">${escapeHtml(serviceLabel(b.service))}</span>
+                    <span class="pro-booking-chips">${chips.join('')}</span>
+                </span>
+                <span class="pro-booking-ref">${escapeHtml(b.bookingRef || '')}</span>
+                <svg class="pro-booking-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+            </button>`;
+    }
+
+    async function loadBookings() {
         try {
-            const res = await fetch(`/api/clinic/booking/${bookingRef}`);
+            const res = await fetch('/api/clinic/bookings', { credentials: 'same-origin' });
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load bookings');
+            const data = await res.json();
+            const now = new Date();
+            clinicBookings = (Array.isArray(data.bookings) ? data.bookings : []).map((raw) => {
+                const b = prepareBooking(raw);
+                b.status = bookingStatus(b, now);
+                return b;
+            });
+            renderBookingViews();
+        } catch (err) {
+            console.error('Failed to load bookings:', err);
+            if (!clinicBookings) {
+                const msg = '<p class="pro-empty">Não foi possível carregar as marcações. Tente atualizar.</p>';
+                if (clinicBookingList) clinicBookingList.innerHTML = msg;
+                if (clinicHomeUpcoming) clinicHomeUpcoming.innerHTML = msg;
+            }
+        }
+    }
+
+    function sortByStart(list, dir) {
+        return list.slice().sort((a, b) => {
+            const ta = a.startsAt ? a.startsAt.getTime() : Infinity;
+            const tb = b.startsAt ? b.startsAt.getTime() : Infinity;
+            return dir * (ta - tb);
+        });
+    }
+
+    function renderBookingViews() {
+        renderBookingList();
+        renderHome();
+    }
+
+    function renderBookingList() {
+        if (!clinicBookingList || !clinicBookings) return;
+        const counts = { upcoming: 0, past: 0, cancelled: 0 };
+        clinicBookings.forEach((b) => { counts[b.status] += 1; });
+        document.querySelectorAll('[data-clinic-count]').forEach((el) => {
+            const n = counts[el.getAttribute('data-clinic-count')] || 0;
+            el.textContent = n ? String(n) : '';
+        });
+        document.querySelectorAll('[data-clinic-filter]').forEach((btn) => {
+            const on = btn.getAttribute('data-clinic-filter') === clinicBookingFilter;
+            btn.classList.toggle('is-active', on);
+            btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+
+        const q = String((clinicBookingSearch && clinicBookingSearch.value) || '').trim().toLowerCase();
+        let list = clinicBookings.filter((b) => b.status === clinicBookingFilter);
+        if (q) {
+            list = list.filter((b) => [b.patientName, b.email, b.bookingRef, serviceLabel(b.service)]
+                .some((v) => String(v || '').toLowerCase().includes(q)));
+        }
+        list = sortByStart(list, clinicBookingFilter === 'upcoming' ? 1 : -1);
+
+        if (!list.length) {
+            const empty = q
+                ? { title: 'Sem resultados', text: `Nenhuma marcação corresponde a “${q}”.` }
+                : {
+                    upcoming: { title: 'Sem consultas agendadas', text: 'Quando um paciente marcar consigo, a consulta aparece aqui.' },
+                    past: { title: 'Ainda sem consultas realizadas', text: 'As consultas passam para aqui depois de acontecerem.' },
+                    cancelled: { title: 'Nenhuma consulta cancelada', text: '' }
+                }[clinicBookingFilter];
+            clinicBookingList.innerHTML = `
+                <div class="pro-empty-state">
+                    <strong>${escapeHtml(empty.title)}</strong>
+                    ${empty.text ? `<p>${escapeHtml(empty.text)}</p>` : ''}
+                </div>`;
+            return;
+        }
+
+        const groups = [];
+        list.forEach((b) => {
+            const key = b.dayKey || 'sem-data';
+            let group = groups[groups.length - 1];
+            if (!group || group.key !== key) {
+                group = { key, items: [] };
+                groups.push(group);
+            }
+            group.items.push(b);
+        });
+        clinicBookingList.innerHTML = groups.map((g) => `
+            <section class="pro-day">
+                <h3 class="pro-day-title${g.key === clinicTodayKey() ? ' is-today' : ''}">
+                    ${escapeHtml(g.key === 'sem-data' ? 'Sem data' : dayHeading(g.key))}
+                    <span>${g.items.length} ${g.items.length === 1 ? 'consulta' : 'consultas'}</span>
+                </h3>
+                <div class="pro-booking-list">${g.items.map((b) => bookingRowHtml(b)).join('')}</div>
+            </section>`).join('');
+    }
+
+    function renderHome() {
+        if (!clinicHomeUpcoming) return;
+        const todayKey = clinicTodayKey();
+        const weekEnd = addDaysKey(todayKey, 6);
+
+        if (clinicBookings) {
+            const active = clinicBookings.filter((b) => b.status !== 'cancelled');
+            const today = active.filter((b) => b.dayKey === todayKey).length;
+            const week = active.filter((b) => b.status === 'upcoming' && b.dayKey && b.dayKey <= weekEnd).length;
+            clinicStatToday.textContent = String(today);
+            clinicStatWeek.textContent = String(week);
+
+            const upcoming = sortByStart(active.filter((b) => b.status === 'upcoming'), 1).slice(0, 5);
+            clinicHomeUpcoming.innerHTML = upcoming.length
+                ? upcoming.map((b) => bookingRowHtml(b, { showDate: true })).join('')
+                : `<div class="pro-empty-state">
+                        <strong>Sem consultas agendadas</strong>
+                        <p>Mantenha a disponibilidade atualizada para os pacientes poderem marcar.</p>
+                   </div>`;
+        }
+
+        if (clinicScheduleData) {
+            const rows = upcomingAvailRows();
+            const days = new Set(rows.map((r) => r.date));
+            clinicStatAvail.textContent = String(days.size);
+            const last = rows.length ? rows[rows.length - 1].date : '';
+            clinicStatAvailHint.textContent = last
+                ? `${days.size === 1 ? 'dia' : 'dias'} até ${dateFromKey(last).getDate()} ${CLINIC_MONTH_NAMES[dateFromKey(last).getMonth()].slice(0, 3)}`
+                : 'dias com horário';
+
+            const now = new Date();
+            const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            const nextKey = `${next.getFullYear()}-${pad2(next.getMonth() + 1)}`;
+            const hasNext = rows.some((r) => r.date.startsWith(nextKey));
+            let nudge = null;
+            if (!rows.length) {
+                nudge = {
+                    title: 'Não tem horários disponíveis',
+                    text: 'Enquanto não indicar disponibilidade, os pacientes não conseguem marcar consigo.'
+                };
+            } else if (!hasNext && now.getDate() >= 10) {
+                nudge = {
+                    title: `Falta a disponibilidade de ${CLINIC_MONTH_NAMES[next.getMonth()]}`,
+                    text: 'Indique os seus horários para o próximo mês para a agenda abrir a tempo.'
+                };
+            }
+            clinicAvailNudge.hidden = !nudge;
+            if (nudge) {
+                clinicAvailNudgeTitle.textContent = nudge.title;
+                clinicAvailNudgeText.textContent = nudge.text;
+            }
+        }
+    }
+
+    if (clinicRefreshBtn) {
+        clinicRefreshBtn.addEventListener('click', async () => {
+            clinicRefreshBtn.disabled = true;
+            await loadBookings();
+            clinicRefreshBtn.disabled = false;
+        });
+    }
+    document.querySelectorAll('[data-clinic-filter]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            clinicBookingFilter = btn.getAttribute('data-clinic-filter');
+            renderBookingList();
+        });
+    });
+    if (clinicBookingSearch) clinicBookingSearch.addEventListener('input', renderBookingList);
+    document.addEventListener('click', (e) => {
+        const row = e.target.closest('.pro-booking[data-booking-ref]');
+        if (row) {
+            const ref = row.getAttribute('data-booking-ref');
+            if (ref) openBookingSheet(ref, row);
+            return;
+        }
+        const go = e.target.closest('[data-clinic-go]');
+        if (go) setClinicPanel(go.getAttribute('data-clinic-go'));
+    });
+
+    // ─── Consultation sheet ───
+    function openSheet() {
+        consultationModal.hidden = false;
+        document.body.classList.add('pro-sheet-open');
+        requestAnimationFrame(() => consultationModal.classList.add('is-open'));
+        const close = consultationModal.querySelector('.pro-sheet-head [data-clinic-sheet-close]');
+        if (close) close.focus();
+    }
+
+    function closeSheet() {
+        if (!consultationModal || consultationModal.hidden) return;
+        consultationModal.classList.remove('is-open');
+        consultationModal.hidden = true;
+        document.body.classList.remove('pro-sheet-open');
+        if (sheetReturnFocus && document.contains(sheetReturnFocus)) sheetReturnFocus.focus();
+        sheetReturnFocus = null;
+    }
+
+    consultationModal.querySelectorAll('[data-clinic-sheet-close]').forEach((el) => el.addEventListener('click', closeSheet));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSheet();
+    });
+
+    function detailItem(label, valueHtml) {
+        if (!valueHtml) return '';
+        return `<div class="pro-detail"><dt>${escapeHtml(label)}</dt><dd>${valueHtml}</dd></div>`;
+    }
+
+    function formatEuros(cents) {
+        const n = Number(cents);
+        if (!Number.isFinite(n)) return '';
+        const euros = n / 100;
+        return `${euros.toLocaleString('pt-PT', { minimumFractionDigits: euros % 1 ? 2 : 0, maximumFractionDigits: 2 })} €`;
+    }
+
+    function formatStamp(value) {
+        const d = new Date(value);
+        if (isNaN(d.getTime())) return '';
+        return d.toLocaleString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function intakeHtml(booking) {
+        const intake = booking.patientIntake || booking.intake;
+        if (!intake || !(intake.concerns || intake.dob || intake.allergies || intake.medications)) {
+            return '<p class="pro-muted">O paciente ainda não preencheu a ficha clínica.</p>';
+        }
+        const text = (v) => (v ? escapeHtml(v).replace(/\n/g, '<br>') : '');
+        return `<dl class="pro-details">
+            ${detailItem('Motivo da consulta', text(intake.concerns))}
+            ${detailItem('Data de nascimento', text(intake.dob))}
+            ${detailItem('País', text(intake.country))}
+            ${detailItem('Medicação', text(intake.medications))}
+            ${detailItem('Alergias', text(intake.allergies))}
+            ${detailItem('Nº de utente (SNS)', text(intake.nhs))}
+        </dl>`;
+    }
+
+    async function openBookingSheet(bookingRef, trigger) {
+        sheetReturnFocus = trigger || document.activeElement;
+        modalKicker.textContent = '';
+        modalTitle.textContent = 'A carregar…';
+        modalBody.innerHTML = '<p class="pro-empty">A carregar a consulta…</p>';
+        openSheet();
+        try {
+            const res = await fetch(`/api/clinic/booking/${encodeURIComponent(bookingRef)}`, { credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
             }
             if (!res.ok) {
-                alert('This consultation is not assigned to you.');
+                modalTitle.textContent = 'Consulta indisponível';
+                modalBody.innerHTML = '<p class="pro-empty">Esta consulta não está atribuída a si ou já não existe.</p>';
                 return;
             }
-            const booking = await res.json();
-
-            modalTitle.textContent = `Consultation: ${booking.bookingRef}`;
-            
-            const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
-            const notes = booking.clinicalNotes;
-
-            modalBody.innerHTML = `
-                <div class="clinic-booking-details">
-                    <h3 class="clinic-section-title">Booking Information</h3>
-                    <div class="clinic-details-grid">
-                        <div class="clinic-detail-item">
-                            <span class="clinic-detail-label">Service</span>
-                            <span class="clinic-detail-value">${serviceLabel}</span>
-                        </div>
-                        <div class="clinic-detail-item">
-                            <span class="clinic-detail-label">Date & Time</span>
-                            <span class="clinic-detail-value">${booking.date || '—'} at ${booking.time || '—'}</span>
-                        </div>
-                        <div class="clinic-detail-item">
-                            <span class="clinic-detail-label">Patient</span>
-                            <span class="clinic-detail-value">${booking.patientName || '—'}</span>
-                        </div>
-                        <div class="clinic-detail-item">
-                            <span class="clinic-detail-label">Email</span>
-                            <span class="clinic-detail-value">${booking.email || '—'}</span>
-                        </div>
-                        ${booking.travellerCount > 1 ? `
-                        <div class="clinic-detail-item">
-                            <span class="clinic-detail-label">Travellers</span>
-                            <span class="clinic-detail-value">${booking.travellerCount}</span>
-                        </div>
-                        ` : ''}
-                        <div class="clinic-detail-item">
-                            <span class="clinic-detail-label">Amount Paid</span>
-                            <span class="clinic-detail-value">€${(booking.amount / 100).toFixed(0)}</span>
-                        </div>
-                    </div>
-                </div>
-
-                ${patientIntakeBlock(booking)}
-
-                <div class="clinic-notes-section">
-                    <h3 class="clinic-section-title">Clinical Notes</h3>
-                    <form id="clinicalNotesForm" class="clinic-notes-form">
-                        <div class="clinic-form-group">
-                            <label for="consultationDate">Consultation Date</label>
-                            <input type="date" id="consultationDate" value="${notes ? notes.consultationDate || booking.date : booking.date}" required>
-                        </div>
-                        <div class="clinic-form-group">
-                            <label for="clinicalNotes">Clinical Notes</label>
-                            <textarea id="clinicalNotes" rows="6" placeholder="Enter consultation notes, observations, and findings...">${notes ? notes.notes || '' : ''}</textarea>
-                        </div>
-                        <div class="clinic-form-group">
-                            <label for="diagnosis">Diagnosis</label>
-                            <textarea id="diagnosis" rows="3" placeholder="Enter diagnosis or assessment...">${notes ? notes.diagnosis || '' : ''}</textarea>
-                        </div>
-                        <div class="clinic-form-group">
-                            <label for="prescriptions">Prescriptions & Recommendations</label>
-                            <textarea id="prescriptions" rows="3" placeholder="Enter prescriptions, medications, or recommendations...">${notes ? notes.prescriptions || '' : ''}</textarea>
-                        </div>
-                        <div class="clinic-form-group">
-                            <label for="followUp">Follow-Up Plan</label>
-                            <textarea id="followUp" rows="3" placeholder="Enter follow-up instructions or next steps...">${notes ? notes.followUp || '' : ''}</textarea>
-                        </div>
-                        <div class="clinic-form-group">
-                            <label for="createdBy">Recorded By</label>
-                            <input type="text" id="createdBy" value="${notes ? notes.createdBy || 'Doctor' : 'Doctor'}" placeholder="Doctor name">
-                        </div>
-                        ${notes ? `
-                        <div class="clinic-notes-meta">
-                            <p><strong>Created:</strong> ${new Date(notes.createdAt).toLocaleString()}</p>
-                            <p><strong>Last Updated:</strong> ${new Date(notes.updatedAt).toLocaleString()}</p>
-                        </div>
-                        ` : ''}
-                        <div class="clinic-form-actions">
-                            <button type="button" class="btn btn-outline" id="cancelNotesBtn">Cancel</button>
-                            ${notes ? `<button type="button" class="btn btn-outline" id="exportPdfBtn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                                Export PDF
-                            </button>` : ''}
-                            <button type="submit" class="btn btn-primary">Save Clinical Notes</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-
-            // Add form handler
-            const form = document.getElementById('clinicalNotesForm');
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await saveClinicalNotes(bookingRef);
-            });
-
-            // Cancel button
-            const cancelBtn = document.getElementById('cancelNotesBtn');
-            cancelBtn.addEventListener('click', () => {
-                consultationModal.style.display = 'none';
-            });
-
-            // Export PDF button
-            const exportPdfBtn = document.getElementById('exportPdfBtn');
-            if (exportPdfBtn) {
-                exportPdfBtn.addEventListener('click', () => {
-                    exportClinicalNotesToPDF(booking, notes);
-                });
-            }
-
-            consultationModal.style.display = 'flex';
+            renderBookingSheet(prepareBooking(await res.json()));
         } catch (err) {
             console.error('Failed to load consultation:', err);
-            alert('Failed to load consultation details. Please try again.');
+            modalTitle.textContent = 'Erro';
+            modalBody.innerHTML = '<p class="pro-empty">Não foi possível carregar a consulta. Tente de novo.</p>';
         }
     }
 
-    // ─── Save Clinical Notes ───
-    async function saveClinicalNotes(bookingRef) {
-        const consultationDate = document.getElementById('consultationDate').value;
-        const notes = document.getElementById('clinicalNotes').value;
-        const diagnosis = document.getElementById('diagnosis').value;
-        const prescriptions = document.getElementById('prescriptions').value;
-        const followUp = document.getElementById('followUp').value;
-        const createdBy = document.getElementById('createdBy').value || 'Doctor';
+    function renderBookingSheet(booking) {
+        const status = bookingStatus(booking, new Date());
+        const notes = booking.clinicalNotes || null;
+        const when = booking.dayKey
+            ? `${DAY_LONG.format(dateFromKey(booking.dayKey))}${booking.time ? `, ${booking.time}` : ''}`
+            : [booking.date, booking.time].filter(Boolean).join(', ');
+        const noteDate = (notes && /^\d{4}-\d{2}-\d{2}$/.test(String(notes.consultationDate || '')) && notes.consultationDate) || booking.dayKey || '';
+        const field = (id, label, rows, value, placeholder) => `
+            <label class="pro-field">
+                <span>${label}</span>
+                <textarea id="${id}" class="pro-input" rows="${rows}" placeholder="${placeholder}">${escapeHtml(value || '')}</textarea>
+            </label>`;
 
+        modalKicker.textContent = serviceLabel(booking.service);
+        modalTitle.textContent = bookingPatientLabel(booking);
+        modalBody.innerHTML = `
+            <div class="pro-sheet-summary">
+                <span class="pro-chip pro-chip-${status === 'cancelled' ? 'danger' : (status === 'past' ? 'muted' : 'ok')}">${STATUS_LABELS[status]}</span>
+                <span>${escapeHtml(when || '—')}</span>
+            </div>
+
+            <section class="pro-sheet-section">
+                <h3>Marcação</h3>
+                <dl class="pro-details">
+                    ${detailItem('Email', booking.email ? `<a href="mailto:${escapeHtml(booking.email)}">${escapeHtml(booking.email)}</a>` : '—')}
+                    ${detailItem('Referência', `<span class="pro-mono">${escapeHtml(booking.bookingRef || '—')}</span>`)}
+                    ${booking.travellerCount > 1 ? detailItem('Viajantes', escapeHtml(booking.travellerCount)) : ''}
+                    ${booking.amount != null ? detailItem('Valor pago', escapeHtml(formatEuros(booking.amount))) : ''}
+                </dl>
+            </section>
+
+            <section class="pro-sheet-section">
+                <h3>Ficha clínica do paciente</h3>
+                ${intakeHtml(booking)}
+            </section>
+
+            <section class="pro-sheet-section">
+                <h3>Notas clínicas</h3>
+                ${notes ? `<p class="pro-muted pro-small">Última alteração ${escapeHtml(formatStamp(notes.updatedAt || notes.createdAt))}${notes.createdBy ? ` · ${escapeHtml(notes.createdBy)}` : ''}</p>` : ''}
+                <form id="clinicalNotesForm" class="pro-form">
+                    <div class="pro-form-row">
+                        <label class="pro-field">
+                            <span>Data da consulta</span>
+                            <input type="date" id="consultationDate" class="pro-input" value="${escapeHtml(noteDate)}" required>
+                        </label>
+                        <label class="pro-field">
+                            <span>Registado por</span>
+                            <input type="text" id="createdBy" class="pro-input" value="${escapeHtml((notes && notes.createdBy) || staffDisplayName)}">
+                        </label>
+                    </div>
+                    ${field('clinicalNotes', 'Notas da consulta', 6, notes && notes.notes, 'Observações, história clínica, achados…')}
+                    ${field('diagnosis', 'Diagnóstico / avaliação', 3, notes && notes.diagnosis, '')}
+                    ${field('prescriptions', 'Prescrições e recomendações', 3, notes && notes.prescriptions, '')}
+                    ${field('followUp', 'Plano de seguimento', 3, notes && notes.followUp, 'Próximos passos, reavaliação…')}
+                    <p class="pro-error" id="clinicNotesError" role="alert" hidden></p>
+                    <div class="pro-form-actions pro-sheet-actions">
+                        ${notes ? '<button type="button" class="pro-btn pro-btn-ghost" id="exportPdfBtn">Exportar PDF</button>' : ''}
+                        <button type="submit" class="pro-btn pro-btn-primary" id="saveNotesBtn">Guardar notas</button>
+                    </div>
+                </form>
+            </section>`;
+
+        document.getElementById('clinicalNotesForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await saveClinicalNotes(booking.bookingRef);
+        });
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        if (exportPdfBtn) exportPdfBtn.addEventListener('click', () => exportClinicalNotesToPDF(booking, notes));
+    }
+
+    async function saveClinicalNotes(bookingRef) {
+        const val = (id) => document.getElementById(id).value;
+        const errorEl = document.getElementById('clinicNotesError');
+        const btn = document.getElementById('saveNotesBtn');
+        setMessage(errorEl, '');
+        btn.disabled = true;
+        btn.textContent = 'A guardar…';
         try {
             const res = await fetch('/api/clinic/notes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
                 body: JSON.stringify({
                     bookingRef,
-                    consultationDate,
-                    notes,
-                    diagnosis,
-                    prescriptions,
-                    followUp,
-                    createdBy
+                    consultationDate: val('consultationDate'),
+                    notes: val('clinicalNotes'),
+                    diagnosis: val('diagnosis'),
+                    prescriptions: val('prescriptions'),
+                    followUp: val('followUp'),
+                    createdBy: val('createdBy') || staffDisplayName
                 })
             });
-
-            const data = await res.json();
-
-            if (res.ok && data.success) {
-                alert('Clinical notes saved successfully!');
-                consultationModal.style.display = 'none';
-                loadBookings(); // Refresh the table
-            } else {
-                throw new Error(data.error || 'Failed to save notes');
+            if (res.status === 401) {
+                showLogin();
+                return;
             }
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.success) throw new Error(data.error || 'Failed to save notes');
+            closeSheet();
+            toast('Notas guardadas');
+            loadBookings();
         } catch (err) {
             console.error('Failed to save clinical notes:', err);
-            alert('Failed to save clinical notes. Please try again.');
+            setMessage(errorEl, 'Não foi possível guardar as notas. O texto continua aqui — tente de novo.');
+            btn.disabled = false;
+            btn.textContent = 'Guardar notas';
         }
     }
 
-    function showProfileError(el, message) {
-        if (!el) return;
-        el.textContent = message;
-        el.style.display = 'block';
-    }
-
-    function hideProfileError(el) {
-        if (!el) return;
-        el.textContent = '';
-        el.style.display = 'none';
-    }
-
-    function showProfileSavedConfirm(el) {
-        if (!el) return;
-        el.hidden = false;
-        el.classList.add('is-on');
-        clearTimeout(el._hideTimer);
-        el._hideTimer = setTimeout(() => {
-            el.hidden = true;
-            el.classList.remove('is-on');
-        }, 5000);
-    }
-
-    function hideProfileSavedConfirm(el) {
-        if (!el || el.dataset.locked === '1') return;
-        clearTimeout(el._hideTimer);
-        el.hidden = true;
-        el.classList.remove('is-on');
-    }
-
+    // ─── Profile ───
     function isValidClinicEmail(raw) {
         const email = String(raw || '').trim().toLowerCase();
         return email.length >= 5 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     function setClinicProfilePhoto(hasPhoto) {
+        staffHasPhoto = !!hasPhoto;
         if (clinicProfilePhoto) {
             if (hasPhoto) {
                 clinicProfilePhoto.src = `/api/clinic/profile/photo?t=${Date.now()}`;
@@ -1990,13 +1819,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (clinicProfilePhotoPlaceholder) clinicProfilePhotoPlaceholder.hidden = !!hasPhoto;
-        if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Substituir foto' : 'Adicionar foto';
+        if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Mudar foto' : 'Adicionar foto';
+        renderAvatars();
     }
 
     async function loadClinicIdentity() {
-        if (!clinicProfileForm) return;
-        hideProfileError(clinicProfileFormError);
-        hideProfileError(clinicPhotoError);
         try {
             const res = await fetch('/api/clinic/me', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
@@ -2005,59 +1832,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (!res.ok) throw new Error('Failed to load profile');
             const data = await res.json();
-            if (clinicFullName) clinicFullName.value = data.fullName || '';
-            if (clinicProfileEmail) clinicProfileEmail.value = data.email || '';
+            if (clinicFullName && document.activeElement !== clinicFullName) clinicFullName.value = data.fullName || '';
+            if (clinicProfileEmail && document.activeElement !== clinicProfileEmail) clinicProfileEmail.value = data.email || '';
+            if (data.fullName) staffDisplayName = data.fullName;
+            staffEmail = data.email || '';
             setClinicProfilePhoto(!!data.hasPhoto);
-            if (data.fullName && clinicSidebarUser) clinicSidebarUser.textContent = data.fullName;
+            renderIdentity();
         } catch (err) {
             console.error('Failed to load clinic identity:', err);
-            showProfileError(clinicProfileFormError, 'Não foi possível carregar o perfil.');
+            setMessage(clinicProfileFormError, 'Não foi possível carregar o perfil.');
         }
     }
 
-    // ─── Event Listeners ───
-    if (refreshBtn) refreshBtn.addEventListener('click', loadBookings);
-    document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            setClinicPanel(btn.getAttribute('data-clinic-panel'));
-        });
-    });
-    if (clinicSidebarToggle) {
-        clinicSidebarToggle.addEventListener('click', () => {
-            if (clinicContent.classList.contains('sidebar-open')) closeClinicSidebar();
-            else openClinicSidebar();
-        });
-    }
-    if (clinicSidebarBackdrop) {
-        clinicSidebarBackdrop.addEventListener('click', closeClinicSidebar);
-    }
     if (clinicProfileForm) {
-        clinicProfileForm.addEventListener('input', () => hideProfileSavedConfirm(clinicProfileSaveConfirm));
+        clinicProfileForm.addEventListener('input', () => { if (clinicProfileSaveConfirm) clinicProfileSaveConfirm.hidden = true; });
         clinicProfileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            hideProfileError(clinicProfileFormError);
-            hideProfileSavedConfirm(clinicProfileSaveConfirm);
-            const fullName = String(clinicFullName && clinicFullName.value ? clinicFullName.value : '').trim();
-            const email = String(clinicProfileEmail && clinicProfileEmail.value ? clinicProfileEmail.value : '').trim();
+            setMessage(clinicProfileFormError, '');
+            if (clinicProfileSaveConfirm) clinicProfileSaveConfirm.hidden = true;
+            const fullName = String(clinicFullName.value || '').trim();
+            const email = String(clinicProfileEmail.value || '').trim();
             if (!fullName) {
-                showProfileError(clinicProfileFormError, 'Introduza o nome.');
-                if (clinicFullName) clinicFullName.focus();
+                setMessage(clinicProfileFormError, 'Introduza o nome.');
+                clinicFullName.focus();
                 return;
             }
             if (clinicRole !== 'admin' && !email) {
-                showProfileError(clinicProfileFormError, 'Introduza o email.');
-                if (clinicProfileEmail) clinicProfileEmail.focus();
+                setMessage(clinicProfileFormError, 'Introduza o email.');
+                clinicProfileEmail.focus();
                 return;
             }
             if (email && !isValidClinicEmail(email)) {
-                showProfileError(
-                    clinicProfileFormError,
-                    'Introduza um email completo, por exemplo nome@gmail.com.'
-                );
-                if (clinicProfileEmail) clinicProfileEmail.focus();
+                setMessage(clinicProfileFormError, 'Introduza um email completo, por exemplo nome@gmail.com.');
+                clinicProfileEmail.focus();
                 return;
             }
-            if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = true;
+            clinicProfileSaveBtn.disabled = true;
             try {
                 const res = await fetch('/api/clinic/me', {
                     method: 'PUT',
@@ -2070,26 +1880,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     showLogin();
                     return;
                 }
-                if (!res.ok) throw new Error(data.error || 'Failed to save profile');
+                if (!res.ok) throw new Error(data.error || 'Não foi possível guardar o perfil.');
                 staffDisplayName = data.fullName || fullName;
-                if (clinicSidebarUser) clinicSidebarUser.textContent = staffDisplayName || 'Portal';
-                if (clinicFullName) clinicFullName.value = data.fullName || fullName;
-                if (clinicProfileEmail) clinicProfileEmail.value = data.email || email;
-                showProfileSavedConfirm(clinicProfileSaveConfirm);
+                staffEmail = data.email || email;
+                clinicFullName.value = staffDisplayName;
+                clinicProfileEmail.value = staffEmail;
+                renderIdentity();
+                if (clinicProfileSaveConfirm) clinicProfileSaveConfirm.hidden = false;
             } catch (err) {
-                showProfileError(clinicProfileFormError, err.message || 'Failed to save profile');
+                setMessage(clinicProfileFormError, err.message || 'Não foi possível guardar o perfil.');
             } finally {
-                if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = false;
+                clinicProfileSaveBtn.disabled = false;
             }
         });
     }
+
     if (clinicProfilePhotoInput) {
         clinicProfilePhotoInput.addEventListener('change', async () => {
-            hideProfileError(clinicPhotoError);
+            setMessage(clinicPhotoError, '');
             const file = clinicProfilePhotoInput.files && clinicProfilePhotoInput.files[0];
             if (!file) return;
+            if (file.size > 4 * 1024 * 1024) {
+                setMessage(clinicPhotoError, 'A foto tem mais de 4 MB. Escolha uma imagem mais pequena.');
+                clinicProfilePhotoInput.value = '';
+                return;
+            }
             const form = new FormData();
             form.append('photo', file);
+            if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = 'A enviar…';
             try {
                 const res = await fetch('/api/clinic/profile/photo', {
                     method: 'POST',
@@ -2101,163 +1919,99 @@ document.addEventListener('DOMContentLoaded', () => {
                     showLogin();
                     return;
                 }
-                if (!res.ok) throw new Error(data.error || 'Failed to upload photo');
+                if (!res.ok) throw new Error(data.error || 'Não foi possível enviar a foto.');
                 setClinicProfilePhoto(true);
+                toast('Foto atualizada');
             } catch (err) {
-                showProfileError(clinicPhotoError, err.message || 'Failed to upload photo');
+                setMessage(clinicPhotoError, err.message || 'Não foi possível enviar a foto.');
+                setClinicProfilePhoto(staffHasPhoto);
             } finally {
                 clinicProfilePhotoInput.value = '';
             }
         });
     }
-    modalOverlay.addEventListener('click', () => {
-        consultationModal.style.display = 'none';
+
+    // ─── Navigation ───
+    document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
+        btn.addEventListener('click', () => setClinicPanel(btn.getAttribute('data-clinic-panel')));
     });
-    modalClose.addEventListener('click', () => {
-        consultationModal.style.display = 'none';
+    window.addEventListener('popstate', () => {
+        if (!clinicContent.hidden) setClinicPanel(initialClinicPanel(), { replace: true });
     });
 
-    // ─── Export Clinical Notes to PDF ───
+    // ─── Export clinical notes to PDF ───
     function exportClinicalNotesToPDF(booking, notes) {
         if (typeof window.jspdf === 'undefined') {
-            alert('PDF library not loaded. Please refresh the page and try again.');
+            toast('Não foi possível gerar o PDF. Atualize a página e tente de novo.', 'error');
             return;
         }
-
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        const SERVICE_LABELS = {
-            longevity: 'Longevity Assessment',
-            travel: 'Travel Medicine Consultation',
-            followup: 'Follow-Up Consultation',
-            entrevista: 'Entrevista de emprego'
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 20;
+        const width = pageWidth - 2 * margin;
+        let y = margin;
+
+        const ensure = (h) => {
+            if (y + h > pageHeight - 25) {
+                doc.addPage();
+                y = margin;
+            }
+        };
+        const line = (text, { size = 10, style = 'normal', gap = 6 } = {}) => {
+            doc.setFontSize(size);
+            doc.setFont(undefined, style);
+            doc.splitTextToSize(String(text), width).forEach((l) => {
+                ensure(gap);
+                doc.text(l, margin, y);
+                y += gap;
+            });
+        };
+        const block = (title, text) => {
+            if (!text) return;
+            y += 2;
+            line(title, { style: 'bold' });
+            line(text, { gap: 5 });
+            y += 3;
         };
 
-        const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const margin = 20;
-        let yPos = margin;
+        line('Registo de consulta', { size: 18, style: 'bold', gap: 10 });
+        line('Marcação', { size: 12, style: 'bold', gap: 8 });
+        line(`Referência: ${booking.bookingRef || '—'}`);
+        line(`Serviço: ${serviceLabel(booking.service)}`);
+        line(`Data e hora: ${[booking.date, booking.time].filter(Boolean).join(', ') || '—'}`);
+        line(`Paciente: ${booking.patientName || '—'}`);
+        line(`Email: ${booking.email || '—'}`);
+        if (booking.travellerCount > 1) line(`Viajantes: ${booking.travellerCount}`);
+        y += 5;
 
-        // Header
-        doc.setFontSize(18);
-        doc.setFont(undefined, 'bold');
-        doc.text('Clinical Consultation Record', margin, yPos);
-        yPos += 10;
-
-        // Booking Information
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text('Booking Information', margin, yPos);
-        yPos += 8;
-
-        doc.setFontSize(10);
-        doc.setFont(undefined, 'normal');
-        doc.text(`Booking Reference: ${booking.bookingRef}`, margin, yPos);
-        yPos += 6;
-        doc.text(`Service: ${serviceLabel}`, margin, yPos);
-        yPos += 6;
-        doc.text(`Date & Time: ${booking.date || '—'} at ${booking.time || '—'}`, margin, yPos);
-        yPos += 6;
-        doc.text(`Patient: ${booking.patientName || '—'}`, margin, yPos);
-        yPos += 6;
-        doc.text(`Email: ${booking.email || '—'}`, margin, yPos);
-        yPos += 6;
-        if (booking.travellerCount > 1) {
-            doc.text(`Number of Travellers: ${booking.travellerCount}`, margin, yPos);
-            yPos += 6;
-        }
-        yPos += 5;
-
-        // Clinical Notes
         if (notes) {
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.text('Clinical Notes', margin, yPos);
-            yPos += 8;
-
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-
-            // Consultation Date
-            if (notes.consultationDate) {
-                doc.setFont(undefined, 'bold');
-                doc.text('Consultation Date:', margin, yPos);
-                doc.setFont(undefined, 'normal');
-                doc.text(notes.consultationDate, margin + 50, yPos);
-                yPos += 8;
-            }
-
-            // Clinical Notes
-            if (notes.notes) {
-                doc.setFont(undefined, 'bold');
-                doc.text('Notes:', margin, yPos);
-                yPos += 6;
-                doc.setFont(undefined, 'normal');
-                const notesLines = doc.splitTextToSize(notes.notes, pageWidth - 2 * margin);
-                doc.text(notesLines, margin, yPos);
-                yPos += notesLines.length * 5 + 5;
-            }
-
-            // Diagnosis
-            if (notes.diagnosis) {
-                doc.setFont(undefined, 'bold');
-                doc.text('Diagnosis:', margin, yPos);
-                yPos += 6;
-                doc.setFont(undefined, 'normal');
-                const diagnosisLines = doc.splitTextToSize(notes.diagnosis, pageWidth - 2 * margin);
-                doc.text(diagnosisLines, margin, yPos);
-                yPos += diagnosisLines.length * 5 + 5;
-            }
-
-            // Prescriptions
-            if (notes.prescriptions) {
-                doc.setFont(undefined, 'bold');
-                doc.text('Prescriptions & Recommendations:', margin, yPos);
-                yPos += 6;
-                doc.setFont(undefined, 'normal');
-                const prescriptionLines = doc.splitTextToSize(notes.prescriptions, pageWidth - 2 * margin);
-                doc.text(prescriptionLines, margin, yPos);
-                yPos += prescriptionLines.length * 5 + 5;
-            }
-
-            // Follow-Up
-            if (notes.followUp) {
-                doc.setFont(undefined, 'bold');
-                doc.text('Follow-Up Plan:', margin, yPos);
-                yPos += 6;
-                doc.setFont(undefined, 'normal');
-                const followUpLines = doc.splitTextToSize(notes.followUp, pageWidth - 2 * margin);
-                doc.text(followUpLines, margin, yPos);
-                yPos += followUpLines.length * 5 + 5;
-            }
-
-            // Metadata
-            yPos += 5;
-            doc.setFontSize(8);
-            doc.setFont(undefined, 'italic');
-            doc.text(`Recorded by: ${notes.createdBy || 'Doctor'}`, margin, yPos);
-            yPos += 4;
-            doc.text(`Created: ${new Date(notes.createdAt).toLocaleString()}`, margin, yPos);
-            yPos += 4;
-            doc.text(`Last Updated: ${new Date(notes.updatedAt).toLocaleString()}`, margin, yPos);
+            line('Notas clínicas', { size: 12, style: 'bold', gap: 8 });
+            if (notes.consultationDate) line(`Data da consulta: ${notes.consultationDate}`);
+            block('Notas da consulta', notes.notes);
+            block('Diagnóstico / avaliação', notes.diagnosis);
+            block('Prescrições e recomendações', notes.prescriptions);
+            block('Plano de seguimento', notes.followUp);
+            y += 4;
+            line(`Registado por: ${notes.createdBy || '—'}`, { size: 8, style: 'italic', gap: 4 });
+            if (notes.createdAt) line(`Criado: ${formatStamp(notes.createdAt)}`, { size: 8, style: 'italic', gap: 4 });
+            if (notes.updatedAt) line(`Última alteração: ${formatStamp(notes.updatedAt)}`, { size: 8, style: 'italic', gap: 4 });
         } else {
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'italic');
-            doc.text('No clinical notes recorded yet.', margin, yPos);
+            line('Ainda sem notas clínicas registadas.', { style: 'italic' });
         }
 
-        // Footer
-        const pageHeight = doc.internal.pageSize.getHeight();
-        doc.setFontSize(8);
-        doc.setFont(undefined, 'normal');
-        doc.text('Atividade registada na Entidade Reguladora da Saúde', margin, pageHeight - 15);
-        doc.text('© 2026 Longevity Clinic. Confidential medical record.', margin, pageHeight - 10);
-
-        // Save PDF
-        const fileName = `Clinical_Notes_${booking.bookingRef}_${new Date().toISOString().split('T')[0]}.pdf`;
-        doc.save(fileName);
+        const pages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pages; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            doc.text('Atividade registada na Entidade Reguladora da Saúde', margin, pageHeight - 15);
+            doc.text(`© ${new Date().getFullYear()} Lon Clinic. Registo clínico confidencial.`, margin, pageHeight - 10);
+        }
+        doc.save(`Notas_clinicas_${booking.bookingRef || 'consulta'}_${clinicTodayKey()}.pdf`);
     }
 
-    // ─── Initial Load ───
+    // ─── Initial load ───
     checkAuthStatus();
 });
