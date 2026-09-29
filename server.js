@@ -1060,10 +1060,157 @@ function setStaffDeviceCookie(res) {
     );
 }
 
+/* ─── Professional trusted devices + new-login alerts ───
+   A browser that completes a professional login is trusted for 7 days. A login
+   from any other browser emails the professional and the clinic, with a link
+   that suspends the account if it was not them. */
+const PRO_DEVICE_COOKIE = 'lon_pro_device';
+const PRO_DEVICE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const PRO_BLOCK_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const PRO_BLOCK_PATH = '/profissional/bloquear-acesso';
+const proTrustedDevicesMemory = new Map();
+
+function hashProDeviceToken(token) {
+    return crypto.createHmac('sha256', SESSION_SECRET).update(`pro-device:${token}`).digest('hex');
+}
+
+async function isTrustedProDevice(req, professionalId) {
+    const token = readCookie(req, PRO_DEVICE_COOKIE);
+    if (!token || !/^[a-f0-9]{64}$/.test(token)) return false;
+    const tokenHash = hashProDeviceToken(token);
+    if (usePersistentDb) return db.isStaffTrustedDevice(tokenHash, professionalId);
+    const rec = proTrustedDevicesMemory.get(tokenHash);
+    return !!(rec && Number(rec.professionalId) === Number(professionalId) && rec.expiresAt > Date.now());
+}
+
+async function trustProDevice(req, res, professionalId) {
+    const token = crypto.randomBytes(32).toString('hex');
+    const tokenHash = hashProDeviceToken(token);
+    const expiresAt = new Date(Date.now() + PRO_DEVICE_TTL_MS);
+    if (usePersistentDb) {
+        await db.insertStaffTrustedDevice({
+            tokenHash,
+            professionalId,
+            userAgent: req.get('user-agent'),
+            expiresAt
+        });
+    } else {
+        proTrustedDevicesMemory.set(tokenHash, { professionalId: Number(professionalId), expiresAt: expiresAt.getTime() });
+    }
+    res.append(
+        'Set-Cookie',
+        `${PRO_DEVICE_COOKIE}=${token}; Path=/; Max-Age=${Math.floor(PRO_DEVICE_TTL_MS / 1000)}; SameSite=Lax; Secure; HttpOnly`
+    );
+}
+
+async function forgetProDevices(professionalId) {
+    if (usePersistentDb) return db.deleteStaffTrustedDevicesForProfessional(professionalId);
+    for (const [k, rec] of proTrustedDevicesMemory) {
+        if (Number(rec.professionalId) === Number(professionalId)) proTrustedDevicesMemory.delete(k);
+    }
+}
+
+function signProBlockToken(professionalId) {
+    const payload = Buffer.from(JSON.stringify({
+        p: Number(professionalId),
+        exp: Date.now() + PRO_BLOCK_LINK_TTL_MS
+    })).toString('base64url');
+    const sig = crypto.createHmac('sha256', SESSION_SECRET).update(`pro-block:${payload}`).digest('base64url');
+    return `${payload}.${sig}`;
+}
+
+function verifyProBlockToken(raw) {
+    const [payload, sig] = String(raw || '').split('.');
+    if (!payload || !sig) return null;
+    const expected = crypto.createHmac('sha256', SESSION_SECRET).update(`pro-block:${payload}`).digest('base64url');
+    const a = Buffer.from(sig);
+    const b = Buffer.from(expected);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+    try {
+        const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+        const id = Number(data && data.p);
+        if (!Number.isInteger(id) || id <= 0 || !(data.exp > Date.now())) return null;
+        return id;
+    } catch {
+        return null;
+    }
+}
+
+function describeUserAgent(ua) {
+    const s = String(ua || '');
+    const browser = /Edg\//.test(s) ? 'Edge'
+        : /OPR\/|Opera/.test(s) ? 'Opera'
+        : /Firefox\//.test(s) ? 'Firefox'
+        : /Chrome\//.test(s) ? 'Chrome'
+        : /Safari\//.test(s) ? 'Safari'
+        : 'navegador desconhecido';
+    const os = /iPhone|iPad/.test(s) ? 'iPhone/iPad'
+        : /Android/.test(s) ? 'Android'
+        : /Windows/.test(s) ? 'Windows'
+        : /Mac OS X|Macintosh/.test(s) ? 'Mac'
+        : /Linux/.test(s) ? 'Linux'
+        : 'sistema desconhecido';
+    return `${browser} em ${os}`;
+}
+
+async function sendProNewDeviceAlert(req, professionalId) {
+    if (!isEmailConfigured) return;
+    const pro = await findProfessionalByIdInternal(professionalId);
+    if (!pro) return;
+    const name = pro.displayName || pro.username;
+    const when = new Intl.DateTimeFormat('pt-PT', {
+        timeZone: 'Europe/Lisbon',
+        dateStyle: 'long',
+        timeStyle: 'short'
+    }).format(new Date());
+    const device = describeUserAgent(req.get('user-agent'));
+    const ip = requestClientIp(req) || 'desconhecido';
+    const blockUrl = `${PUBLIC_SITE_URL}${PRO_BLOCK_PATH}?t=${encodeURIComponent(signProBlockToken(pro.id))}`;
+    const details = `Quando: ${when}\nDispositivo: ${device}\nEndereço IP: ${ip}`;
+    const detailsHtml = `<ul><li>Quando: ${escapeHtml(when)}</li><li>Dispositivo: ${escapeHtml(device)}</li><li>Endereço IP: ${escapeHtml(ip)}</li></ul>`;
+
+    const to = await resolveProfessionalNotifyEmail(pro);
+    if (to) {
+        try {
+            await deliverEmail({
+                from: EMAIL_FROM,
+                to,
+                subject: 'Novo acesso ao portal dos profissionais — Lon Clinic',
+                text: `Olá ${name},\n\nHouve um acesso à sua conta no portal dos profissionais a partir de um dispositivo novo.\n\n${details}\n\nSe foi você, não precisa de fazer nada.\n\nSe NÃO foi você, bloqueie a conta de imediato:\n${blockUrl}\n\nLon Clinic`,
+                html: `<p>Olá ${escapeHtml(name)},</p><p>Houve um acesso à sua conta no portal dos profissionais a partir de um dispositivo novo.</p>${detailsHtml}<p>Se foi você, não precisa de fazer nada.</p><p><strong>Se não foi você</strong>, bloqueie a conta de imediato:<br><a href="${escapeHtml(blockUrl)}">Não fui eu — bloquear acesso</a></p><p>Lon Clinic</p>`
+            });
+        } catch (err) {
+            console.error(`   ⚠️  New-device alert to ${redactPhi(to)} failed: ${err.message}`);
+        }
+    }
+    await sendClinicOpsEmail(
+        `Portal profissionais: novo dispositivo — ${name}`,
+        `<p><strong>${escapeHtml(name)}</strong> (${escapeHtml(pro.username)}) entrou no portal a partir de um dispositivo novo.</p>${detailsHtml}<p>Se o acesso parecer suspeito: <a href="${escapeHtml(blockUrl)}">bloquear esta conta</a> (ou desativar a ficha em Admin → Profissionais).</p>`,
+        `${name} (${pro.username}) entrou no portal a partir de um dispositivo novo.\n\n${details}\n\nSe parecer suspeito, bloquear: ${blockUrl}`
+    );
+}
+
+/** Called on every professional login. Unknown browser → trust it and send the alert. */
+async function handleProLoginDevice(req, res, professionalId) {
+    try {
+        if (await isTrustedProDevice(req, professionalId)) return;
+        await trustProDevice(req, res, professionalId);
+        logAudit(req, 'pro_new_device_login', String(professionalId)).catch(() => {});
+        sendProNewDeviceAlert(req, professionalId).catch((err) => {
+            console.error('sendProNewDeviceAlert:', err.message);
+        });
+    } catch (err) {
+        console.error('handleProLoginDevice:', err.message);
+    }
+}
+
 function establishStaffSession(req, res, sessionFields, payload) {
-    const finish = () => {
+    const finish = async () => {
         Object.assign(req.session, sessionFields);
         setStaffDeviceCookie(res);
+        if (sessionFields.clinicRole === 'clinician' && sessionFields.professionalId) {
+            await handleProLoginDevice(req, res, sessionFields.professionalId);
+        }
         req.session.save((err) => {
             if (err) {
                 console.error('session.save:', err.message);
@@ -14213,6 +14360,60 @@ app.post('/api/clinic/otp/verify', rateLimitStaffOtp, async (req, res) => {
     } catch (err) {
         console.error('POST /api/clinic/otp/verify:', err.message);
         return res.status(500).json({ error: 'Não foi possível verificar o código.' });
+    }
+});
+
+function proBlockPage(title, bodyHtml) {
+    return `<!DOCTYPE html>
+<html lang="pt-PT"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>${escapeHtml(title)} — Lon Clinic</title>
+<style>body{font-family:system-ui,-apple-system,sans-serif;background:#f6f5f2;color:#1d1d1b;margin:0;padding:48px 16px}
+main{max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+h1{font-size:1.35rem;margin:0 0 16px}p{line-height:1.5}button{background:#b3261e;color:#fff;border:0;border-radius:8px;padding:12px 20px;font-size:1rem;cursor:pointer}</style>
+</head><body><main><h1>${escapeHtml(title)}</h1>${bodyHtml}</main></body></html>`;
+}
+
+// The emailed link only opens this page; the block itself needs the button (a POST),
+// so mail scanners that prefetch links cannot suspend an account by accident.
+app.get(PRO_BLOCK_PATH, rateLimitErasure, (req, res) => {
+    res.set({ 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' });
+    const token = String(req.query.t || '');
+    if (!verifyProBlockToken(token)) {
+        return res.status(400).send(proBlockPage('Link inválido ou expirado',
+            `<p>Este link já não é válido. Se suspeita de um acesso indevido, contacte a clínica: <a href="mailto:${escapeHtml(CONTACT_EMAIL)}">${escapeHtml(CONTACT_EMAIL)}</a>.</p>`));
+    }
+    res.send(proBlockPage('Bloquear acesso à conta',
+        `<p>Se não reconhece o acesso ao portal dos profissionais, bloqueie a conta. Todas as sessões abertas terminam de imediato e ninguém consegue voltar a entrar até a clínica reativar a conta.</p>
+<form method="post" action="${PRO_BLOCK_PATH}"><input type="hidden" name="t" value="${escapeHtml(token)}"><button type="submit">Não fui eu — bloquear a conta</button></form>`));
+});
+
+app.post(PRO_BLOCK_PATH, rateLimitErasure, express.urlencoded({ extended: false, limit: '4kb' }), async (req, res) => {
+    res.set({ 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' });
+    const professionalId = verifyProBlockToken(req.body && req.body.t);
+    if (!professionalId) {
+        return res.status(400).send(proBlockPage('Link inválido ou expirado',
+            `<p>Contacte a clínica: <a href="mailto:${escapeHtml(CONTACT_EMAIL)}">${escapeHtml(CONTACT_EMAIL)}</a>.</p>`));
+    }
+    try {
+        const pro = await findProfessionalByIdInternal(professionalId);
+        if (pro) {
+            if (pro.active !== false) await patchProfessionalInternal(pro, { active: false });
+            await forgetProDevices(pro.id);
+            logAudit(req, 'pro_account_blocked_by_link', String(pro.id)).catch(() => {});
+            const name = pro.displayName || pro.username;
+            console.log(`   🚫 Professional account suspended via "not me" link: ${pro.username}`);
+            sendClinicOpsEmail(
+                `URGENTE: conta bloqueada — ${name}`,
+                `<p>A conta de <strong>${escapeHtml(name)}</strong> (${escapeHtml(pro.username)}) foi bloqueada através do link "Não fui eu" do alerta de novo acesso.</p><p>Fale com o profissional, confirme que o email dele está seguro (password nova) e só depois reative a ficha em Admin → Profissionais.</p>`,
+                `A conta de ${name} (${pro.username}) foi bloqueada através do link "Não fui eu". Confirme com o profissional e reative em Admin → Profissionais.`
+            ).catch(() => {});
+        }
+        return res.send(proBlockPage('Conta bloqueada',
+            `<p>A conta foi bloqueada e todas as sessões foram terminadas. A clínica foi avisada e vai entrar em contacto.</p><p>Por precaução, mude já a password do seu email.</p>`));
+    } catch (err) {
+        console.error(`POST ${PRO_BLOCK_PATH}:`, err.message);
+        return res.status(500).send(proBlockPage('Não foi possível bloquear',
+            `<p>Contacte a clínica de imediato: <a href="mailto:${escapeHtml(CONTACT_EMAIL)}">${escapeHtml(CONTACT_EMAIL)}</a>.</p>`));
     }
 });
 

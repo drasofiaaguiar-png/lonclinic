@@ -869,6 +869,16 @@ async function initSchema(p) {
     `);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_staff_otps_email ON staff_otps (LOWER(email), created_at DESC)`);
     await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_trusted_devices (
+            token_hash VARCHAR(64) PRIMARY KEY,
+            professional_id INTEGER NOT NULL,
+            user_agent TEXT,
+            expires_at TIMESTAMPTZ NOT NULL,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_staff_trusted_devices_pro ON staff_trusted_devices (professional_id)`);
+    await p.query(`
         CREATE TABLE IF NOT EXISTS deletion_requests (
             id UUID PRIMARY KEY,
             email VARCHAR(320) NOT NULL,
@@ -4501,6 +4511,33 @@ async function markStaffOtpUsed(id) {
 async function purgeExpiredStaffOtps() {
     const p = getPool();
     await p.query(`DELETE FROM staff_otps WHERE expires_at < NOW() - INTERVAL '1 day'`);
+    await p.query(`DELETE FROM staff_trusted_devices WHERE expires_at < NOW()`);
+}
+
+async function insertStaffTrustedDevice({ tokenHash, professionalId, userAgent, expiresAt }) {
+    const p = getPool();
+    await p.query(
+        `INSERT INTO staff_trusted_devices (token_hash, professional_id, user_agent, expires_at)
+         VALUES ($1, $2, $3, $4)
+         ON CONFLICT (token_hash) DO NOTHING`,
+        [tokenHash, Number(professionalId), String(userAgent || '').slice(0, 300), expiresAt]
+    );
+}
+
+async function isStaffTrustedDevice(tokenHash, professionalId) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT 1 FROM staff_trusted_devices
+         WHERE token_hash = $1 AND professional_id = $2 AND expires_at > NOW()
+         LIMIT 1`,
+        [tokenHash, Number(professionalId)]
+    );
+    return r.rows.length > 0;
+}
+
+async function deleteStaffTrustedDevicesForProfessional(professionalId) {
+    const p = getPool();
+    await p.query(`DELETE FROM staff_trusted_devices WHERE professional_id = $1`, [Number(professionalId)]);
 }
 
 function rowToDeletionRequest(row) {
@@ -4914,6 +4951,9 @@ module.exports = {
     bumpStaffOtpAttempts,
     markStaffOtpUsed,
     purgeExpiredStaffOtps,
+    insertStaffTrustedDevice,
+    isStaffTrustedDevice,
+    deleteStaffTrustedDevicesForProfessional,
     insertDeletionRequest,
     listDeletionRequests,
     findDeletionRequestById,
