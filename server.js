@@ -20305,14 +20305,25 @@ app.post('/api/admin/invitations/:id/cancel', requireAdmin, async (req, res) => 
 });
 
 // ─── Helper ───
+// Hosts whose own origin may appear in links (Stripe return URLs, emails). Any other
+// Host header gets the official site, so a forged Host cannot put a foreign
+// domain into a link the clinic sends. Extra hosts: ALLOWED_HOSTS=a.com,b.com
+const EXTRA_BASE_URL_HOSTS = new Set(
+    [process.env.RAILWAY_PUBLIC_DOMAIN, ...String(process.env.ALLOWED_HOSTS || '').split(',')]
+        .map((h) => String(h || '').trim().toLowerCase().replace(/^https?:\/\//, '').replace(/[/:].*$/, ''))
+        .filter(Boolean)
+);
+
 function getBaseUrl(req) {
-    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const rawHost = String(req.get('host') || '');
     const host = rawHost.split(':')[0].toLowerCase();
-    if (host === 'lonclinic.com' || host === 'www.lonclinic.com') {
-        return seo.SITE_ORIGIN;
+    if (host === 'localhost' || host === '127.0.0.1') {
+        return `${req.protocol === 'https' ? 'https' : 'http'}://${rawHost}`;
     }
-    return `${protocol}://${rawHost}`;
+    if (EXTRA_BASE_URL_HOSTS.has(host) && /^[a-z0-9.-]+(:\d+)?$/i.test(rawHost)) {
+        return `https://${rawHost}`;
+    }
+    return seo.SITE_ORIGIN;
 }
 
 // Express's default 404 has no Cache-Control, so Cloudflare caches "Cannot GET"
