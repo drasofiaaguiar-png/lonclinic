@@ -1061,7 +1061,8 @@ function setStaffDeviceCookie(res) {
 }
 
 /* ─── Professional trusted devices + new-login alerts ───
-   A browser that completes a professional login is trusted for 7 days. A login
+   A browser that completes a professional login is trusted for 7 days, renewed on
+   each login from it, so only new or 7-day-idle browsers alert. A login
    from any other browser emails the professional and the clinic, with a link
    that suspends the account if it was not them. */
 const PRO_DEVICE_COOKIE = 'lon_pro_device';
@@ -1074,13 +1075,29 @@ function hashProDeviceToken(token) {
     return crypto.createHmac('sha256', SESSION_SECRET).update(`pro-device:${token}`).digest('hex');
 }
 
-async function isTrustedProDevice(req, professionalId) {
+function setProDeviceCookie(res, token) {
+    res.append(
+        'Set-Cookie',
+        `${PRO_DEVICE_COOKIE}=${token}; Path=/; Max-Age=${Math.floor(PRO_DEVICE_TTL_MS / 1000)}; SameSite=Lax; Secure; HttpOnly`
+    );
+}
+
+/** A trusted device that logs in again gets another 7 days, so only new or idle devices alert. */
+async function renewTrustedProDevice(req, res, professionalId) {
     const token = readCookie(req, PRO_DEVICE_COOKIE);
     if (!token || !/^[a-f0-9]{64}$/.test(token)) return false;
     const tokenHash = hashProDeviceToken(token);
-    if (usePersistentDb) return db.isStaffTrustedDevice(tokenHash, professionalId);
-    const rec = proTrustedDevicesMemory.get(tokenHash);
-    return !!(rec && Number(rec.professionalId) === Number(professionalId) && rec.expiresAt > Date.now());
+    const expiresAt = new Date(Date.now() + PRO_DEVICE_TTL_MS);
+    let trusted = false;
+    if (usePersistentDb) {
+        trusted = await db.renewStaffTrustedDevice(tokenHash, professionalId, expiresAt);
+    } else {
+        const rec = proTrustedDevicesMemory.get(tokenHash);
+        trusted = !!(rec && Number(rec.professionalId) === Number(professionalId) && rec.expiresAt > Date.now());
+        if (trusted) rec.expiresAt = expiresAt.getTime();
+    }
+    if (trusted) setProDeviceCookie(res, token);
+    return trusted;
 }
 
 async function trustProDevice(req, res, professionalId) {
@@ -1097,10 +1114,7 @@ async function trustProDevice(req, res, professionalId) {
     } else {
         proTrustedDevicesMemory.set(tokenHash, { professionalId: Number(professionalId), expiresAt: expiresAt.getTime() });
     }
-    res.append(
-        'Set-Cookie',
-        `${PRO_DEVICE_COOKIE}=${token}; Path=/; Max-Age=${Math.floor(PRO_DEVICE_TTL_MS / 1000)}; SameSite=Lax; Secure; HttpOnly`
-    );
+    setProDeviceCookie(res, token);
 }
 
 async function forgetProDevices(professionalId) {
@@ -1193,7 +1207,7 @@ async function sendProNewDeviceAlert(req, professionalId) {
 /** Called on every professional login. Unknown browser → trust it and send the alert. */
 async function handleProLoginDevice(req, res, professionalId) {
     try {
-        if (await isTrustedProDevice(req, professionalId)) return;
+        if (await renewTrustedProDevice(req, res, professionalId)) return;
         await trustProDevice(req, res, professionalId);
         logAudit(req, 'pro_new_device_login', String(professionalId)).catch(() => {});
         sendProNewDeviceAlert(req, professionalId).catch((err) => {

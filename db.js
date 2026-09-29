@@ -4524,13 +4524,14 @@ async function insertStaffTrustedDevice({ tokenHash, professionalId, userAgent, 
     );
 }
 
-async function isStaffTrustedDevice(tokenHash, professionalId) {
+/** True if the device is still trusted; its expiry then moves to newExpiresAt (sliding window). */
+async function renewStaffTrustedDevice(tokenHash, professionalId, newExpiresAt) {
     const p = getPool();
     const r = await p.query(
-        `SELECT 1 FROM staff_trusted_devices
+        `UPDATE staff_trusted_devices SET expires_at = $3
          WHERE token_hash = $1 AND professional_id = $2 AND expires_at > NOW()
-         LIMIT 1`,
-        [tokenHash, Number(professionalId)]
+         RETURNING 1`,
+        [tokenHash, Number(professionalId), newExpiresAt]
     );
     return r.rows.length > 0;
 }
@@ -4952,7 +4953,7 @@ module.exports = {
     markStaffOtpUsed,
     purgeExpiredStaffOtps,
     insertStaffTrustedDevice,
-    isStaffTrustedDevice,
+    renewStaffTrustedDevice,
     deleteStaffTrustedDevicesForProfessional,
     insertDeletionRequest,
     listDeletionRequests,
