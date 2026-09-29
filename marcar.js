@@ -1185,7 +1185,7 @@
         var params = new URLSearchParams(window.location.search);
         if (params.get('langpolicy') === 'en-es-pt') return true;
         var ref = params.get('ref') || '';
-        return /-(fr|de)$/i.test(ref);
+        return /-(fr|de|it)$/i.test(ref);
     }
 
     function showConsultLangBanner() {

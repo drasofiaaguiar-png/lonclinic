@@ -2860,7 +2860,7 @@ async function initBookingFlow() {
         if (bookingSourceQ) {
             try { sessionStorage.setItem('booking_source', bookingSourceQ); } catch (e) { /* ignore */ }
         }
-        if (urlParams.get('langpolicy') === 'en-es-pt' || /-(fr|de)$/i.test(refQ)) {
+        if (urlParams.get('langpolicy') === 'en-es-pt' || /-(fr|de|it)$/i.test(refQ)) {
             state.consultLangPolicy = true;
         }
 

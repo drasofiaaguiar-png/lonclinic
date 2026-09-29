@@ -11,6 +11,7 @@
         if (lang.indexOf('es') === 0) return 'es';
         if (lang.indexOf('fr') === 0) return 'fr';
         if (lang.indexOf('de') === 0) return 'de';
+        if (lang.indexOf('it') === 0) return 'it';
         return 'pt';
     }
 
@@ -274,6 +275,7 @@
         if (lang === 'es') return 'Ver disponibilidad de esta semana';
         if (lang === 'fr') return 'Voir les disponibilités de la semaine';
         if (lang === 'de') return 'Verfügbarkeit dieser Woche anzeigen';
+        if (lang === 'it') return 'Vedi la disponibilità della settimana';
         return 'Ver disponibilidade desta semana';
     }
 
@@ -525,7 +527,7 @@
         try {
             var u = new URL(href || '', window.location.origin);
             if (u.searchParams.get('langpolicy') === 'en-es-pt') return true;
-            return /-(fr|de)$/i.test(u.searchParams.get('ref') || '');
+            return /-(fr|de|it)$/i.test(u.searchParams.get('ref') || '');
         } catch (e) {
             return false;
         }
@@ -533,13 +535,14 @@
 
     function pageNeedsLangPolicy(fallbackHref) {
         var lang = pageLang();
-        return lang === 'fr' || lang === 'de' || hrefNeedsLangPolicy(fallbackHref);
+        return lang === 'fr' || lang === 'de' || lang === 'it' || hrefNeedsLangPolicy(fallbackHref);
     }
 
     var CONSULT_LANG_NOTICE_EN = 'Consultations strictly provided in English and Portuguese';
     var CONSULT_LANG_NOTICE_LOCAL = {
         fr: 'Les consultations se d\u00e9roulent exclusivement en anglais ou en portugais. Pas de consultation en fran\u00e7ais.',
-        de: 'Sprechstunden ausschlie\u00dflich auf Englisch oder Portugiesisch. Keine Beratung auf Deutsch.'
+        de: 'Sprechstunden ausschlie\u00dflich auf Englisch oder Portugiesisch. Keine Beratung auf Deutsch.',
+        it: 'I consulti si svolgono esclusivamente in inglese o portoghese. Nessun consulto in italiano.'
     };
 
     function injectLangPolicyStyles() {

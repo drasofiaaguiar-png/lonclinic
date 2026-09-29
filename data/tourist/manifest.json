@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-20",
+  "updated": "2026-09-29",
   "notes": "Tourist clinic — visitantes já em Portugal, sem SNS. Distinto da travel clinic (vacinas / pré-viagem). Uma URL por língua + hub /tourist-clinic.",
   "hub": {
     "titleTag": "Tourist Clinic Portugal — See a Doctor Online (2026)",
@@ -3407,6 +3407,2599 @@
         { "href": "/arzt-portugal-tourist-finden", "label": "Arzt als Tourist finden" },
         { "href": "/consulta/renovacao-receita", "label": "Rezeptverlängerung (portugiesische Seite)" },
         { "href": "/equipa/rita-aguiar", "label": "Die Ärztin" }
+      ]
+    },
+    {
+      "slug": "food-poisoning-portugal-what-to-do",
+      "group": "food-poisoning-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "Food poisoning in Portugal",
+      "hubBlurb": "Rehydration, pharmacy options, red flags — a stomach bug on holiday.",
+      "titleTag": "Food Poisoning or Diarrhoea in Portugal: What to Do (2026)",
+      "description": "Stomach bug on holiday in Portugal? Rehydration, what pharmacies sell without a prescription, red flags, and a €39 video consultation with a doctor.",
+      "h1": "Food Poisoning or Diarrhoea in Portugal — What Should I Do?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-food-en&lang=en",
+      "bookingLabel": "Book consultation",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.",
+      "ctaTitle": "Not getting better?",
+      "ctaLead": "Book a video consultation with Lon Clinic in English, Spanish or Portuguese — from wherever you are in Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Most food poisoning and traveller’s diarrhoea settles in one to three days. The priority is fluids: small, frequent sips, and oral rehydration salts from any pharmacy (ask for “soro de reidratação oral”).",
+        "See a doctor if it is not improving after 48 hours, you cannot keep fluids down, or you are worried — an online consultation is €39. Blood in the stool, high fever, severe pain or signs of dehydration: emergency room or 112."
+      ],
+      "onlineTitle": "When an online consultation can help",
+      "urgentTitle": "Go to the ER now",
+      "safeOnline": [
+        "Adult with diarrhoea and/or vomiting for one to three days, still managing to drink",
+        "No blood or black stool, fever below 38.5 °C",
+        "You want to know whether you need medication — or a medical note for your insurer",
+        "You can join a video call from your phone or laptop"
+      ],
+      "goToUrgent": [
+        "Blood in the stool, or black, tarry stool",
+        "Cannot keep any fluids down for more than 6–8 hours, or passing very little urine",
+        "Dizziness when standing, confusion or fainting",
+        "Severe or constant abdominal pain, or a hard, swollen belly",
+        "Fever above 38.5 °C and feeling very unwell",
+        "Babies and young children, frail older people, pregnancy or a weakened immune system — seek in-person care early"
+      ],
+      "howTitle": "How the online consultation works",
+      "howItWorks": [
+        {
+          "title": "Book a slot",
+          "text": "Same-day appointments are often available, seven days a week. €39, shown before you pay. Consultations in English, Spanish or Portuguese."
+        },
+        {
+          "title": "Video assessment",
+          "text": "The doctor asks about your symptoms, fluids, what you ate and your usual medicines, and checks for signs of dehydration."
+        },
+        {
+          "title": "A plan — and a prescription if indicated",
+          "text": "Clear advice on fluids and food, and, if needed, a Portuguese electronic prescription valid at any pharmacy. A medical note when clinically justified."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "What to do in the first 24 hours",
+          "items": [
+            {
+              "title": "Fluids first",
+              "text": "Oral rehydration salts (sachets dissolved in water) replace salt and sugar better than water alone. Sip little and often. Clear soup and diluted juice also help; avoid alcohol."
+            },
+            {
+              "title": "Eat when you can",
+              "text": "No need to fast. Plain food — rice, bread, bananas, soup — as soon as you feel like it."
+            },
+            {
+              "title": "Wash your hands",
+              "text": "Soap and water after the toilet and before food. Stomach bugs spread quickly in shared holiday accommodation."
+            }
+          ]
+        },
+        {
+          "h2": "What Portuguese pharmacies sell without a prescription",
+          "paragraphs": [
+            "Oral rehydration salts, paracetamol and — for adults without fever or blood in the stool — loperamide to reduce the number of trips to the toilet. The pharmacist will ask a few questions; mention other medicines and any pregnancy.",
+            "Antibiotics and stronger anti-sickness medicines need a prescription in Portugal. Most traveller’s diarrhoea does not need an antibiotic at all — a doctor decides when it does."
+          ]
+        },
+        {
+          "h2": "Food poisoning, a virus, or something else?",
+          "paragraphs": [
+            "In the first days it makes little difference: fluids, rest, and watching for red flags. Norovirus spreads from person to person and often starts with sudden vomiting; bacterial food poisoning usually follows a specific meal by a few hours to a couple of days.",
+            "Diarrhoea lasting more than a week, or coming back after you get home, needs a proper assessment — sometimes with a stool test."
+          ]
+        },
+        {
+          "h2": "Where to get help — pharmacy vs online vs ER",
+          "table": {
+            "headers": [
+              "Option",
+              "When",
+              "Cost"
+            ],
+            "rows": [
+              [
+                "Pharmacy (farmácia)",
+                "Mild symptoms, rehydration salts, advice",
+                "The products you buy"
+              ],
+              [
+                "Lon Clinic online",
+                "Not improving after 48 h, need a plan, prescription or note",
+                "€39"
+              ],
+              [
+                "Hospital ER (urgência)",
+                "Red flags: blood, dehydration, severe pain",
+                "Often billed to visitors without EHIC/GHIC"
+              ]
+            ]
+          }
+        }
+      ],
+      "faq": [
+        {
+          "q": "Do I need antibiotics for traveller’s diarrhoea?",
+          "a": "Usually not. Most cases settle on their own with fluids. A doctor may prescribe an antibiotic for severe cases — for example high fever or many episodes a day — after assessing you."
+        },
+        {
+          "q": "Can I take loperamide (Imodium)?",
+          "a": "Adults without fever and without blood in the stool can usually take it for a short time. Do not use it for children, or if there is blood, high fever or severe abdominal pain. Ask the pharmacist."
+        },
+        {
+          "q": "Can I get a medical note for my travel insurance?",
+          "a": "If you had to cancel a flight or excursion, the doctor can issue a medical certificate after the video consultation when it is clinically justified. See our guide on doctor’s notes for travel insurance."
+        },
+        {
+          "q": "Is tap water safe in Portugal?",
+          "a": "Yes. Tap water in Portugal is treated and generally safe to drink. Holiday stomach bugs usually come from food, other people or swimming water — not from the tap."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Tourist clinic"
+        },
+        {
+          "href": "/consulta/diarreia-do-viajante",
+          "label": "Traveller’s diarrhoea (Portuguese page)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "The doctor"
+        }
+      ]
+    },
+    {
+      "slug": "antibiotics-portugal-without-prescription",
+      "group": "antibiotics-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "Antibiotics in Portugal",
+      "hubBlurb": "Prescription only — how visitors get assessed, and when an antibiotic is the right answer.",
+      "titleTag": "Can I Buy Antibiotics in Portugal Without a Prescription? (2026)",
+      "description": "No — antibiotics need a prescription in Portugal. How tourists get assessed quickly: €39 video consultation, electronic prescription valid at any pharmacy if indicated.",
+      "h1": "Antibiotics in Portugal Without a Prescription? What Tourists Can Do",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-antibiotics-en&lang=en",
+      "bookingLabel": "Book consultation",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.",
+      "ctaTitle": "Think you need an antibiotic?",
+      "ctaLead": "Book a video consultation with Lon Clinic in English, Spanish or Portuguese — from wherever you are in Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Pharmacies in Portugal do not sell antibiotics without a doctor’s prescription — including the common ones you may be able to buy more easily at home.",
+        "The quickest legal route for a non-emergency infection is a video consultation (€39). If the doctor decides an antibiotic is right, you get a Portuguese electronic prescription for any pharmacy. If it is not, you get a plan that actually helps."
+      ],
+      "onlineTitle": "When an online consultation makes sense",
+      "urgentTitle": "Go to the ER now",
+      "safeOnline": [
+        "Symptoms of a common infection: cystitis, sore throat, sinus pain, earache, an infected cut or bite",
+        "You are an adult, feel unwell but can talk and move normally",
+        "You want a doctor’s view on whether you need an antibiotic at all",
+        "You can join a video call from your phone or laptop"
+      ],
+      "goToUrgent": [
+        "Trouble breathing, swelling of the face or tongue, or a rash spreading fast — call 112",
+        "High fever with confusion, a stiff neck, or a purple rash that does not fade under a glass",
+        "Red, hot skin spreading quickly, or red streaks from a wound",
+        "Toothache with facial swelling or difficulty swallowing",
+        "Fever with loin pain, or vomiting you cannot stop",
+        "Pregnancy with fever"
+      ],
+      "howTitle": "How the online consultation works",
+      "howItWorks": [
+        {
+          "title": "Book a slot",
+          "text": "Same-day appointments are often available, seven days a week. €39, shown before you pay. Consultations in English, Spanish or Portuguese."
+        },
+        {
+          "title": "Video assessment",
+          "text": "The doctor asks about your symptoms, allergies and usual medicines, and looks at what can be seen on camera — throat, skin, eyes."
+        },
+        {
+          "title": "Prescription, if indicated",
+          "text": "A Portuguese electronic prescription by SMS or email, valid at any pharmacy. Not a questionnaire, and no antibiotic “just in case”."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Why the pharmacy says no",
+          "paragraphs": [
+            "Antibiotics are prescription-only medicines in Portugal. Pharmacists apply this strictly, including for visitors who bring an empty box.",
+            "A prescription from another EU country can in principle be dispensed in Portugal if it contains the required details, but many pharmacies are cautious with foreign paper prescriptions, and prescriptions from outside the EU are not accepted. A Portuguese electronic prescription avoids the problem."
+          ]
+        },
+        {
+          "h2": "When antibiotics help — and when they do not",
+          "items": [
+            {
+              "title": "Often needed",
+              "text": "Uncomplicated cystitis in women, some skin infections, and some cases of tonsillitis or sinusitis that are not improving."
+            },
+            {
+              "title": "Usually not needed",
+              "text": "Colds, flu, COVID, most sore throats and coughs, and most traveller’s diarrhoea. These are viral or settle on their own — an antibiotic adds side effects without speeding recovery."
+            },
+            {
+              "title": "Needs a dentist",
+              "text": "Toothache and dental abscess need a dentist. An antibiotic alone does not fix the tooth."
+            }
+          ]
+        },
+        {
+          "h2": "Getting a prescription as a visitor — SNS vs private vs online",
+          "table": {
+            "headers": [
+              "Option",
+              "Speed",
+              "Cost",
+              "Best for"
+            ],
+            "rows": [
+              [
+                "SNS (public)",
+                "Slow for visitors",
+                "Often billed without EHIC/GHIC",
+                "Emergencies"
+              ],
+              [
+                "Private in person",
+                "Fast",
+                "Often high without insurance",
+                "Cases that need an examination or tests"
+              ],
+              [
+                "Lon Clinic online",
+                "Same-day slots",
+                "€39",
+                "Common infections without red flags"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "Collecting the medicine",
+          "paragraphs": [
+            "The electronic prescription arrives by SMS or email with a code. Show it at any farmácia in Portugal. Visitors pay the pharmacy price, which for common antibiotics is usually modest."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I buy amoxicillin over the counter in Portugal?",
+          "a": "No. Amoxicillin, like every other antibiotic, needs a prescription in Portugal."
+        },
+        {
+          "q": "Will the doctor prescribe an antibiotic if I ask for one?",
+          "a": "Only if it is clinically indicated after the assessment. If it is not, the doctor explains why and what will help instead. The €39 is for the consultation, not a guaranteed prescription."
+        },
+        {
+          "q": "Is my prescription from home valid in Portugal?",
+          "a": "EU prescriptions can in principle be dispensed if they contain the required details; non-EU prescriptions are not valid. If the pharmacy refuses, a video consultation can issue a Portuguese electronic prescription when appropriate."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "€39 for the video consultation, prescription included if issued. The medicine itself is paid at the pharmacy."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Tourist clinic"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consultations by complaint (Portuguese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "The doctor"
+        }
+      ]
+    },
+    {
+      "slug": "doctors-note-travel-insurance-portugal",
+      "group": "insurance-note-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "Doctor’s note for travel insurance",
+      "hubBlurb": "Too ill to travel — a medical certificate after a real assessment, when justified.",
+      "titleTag": "Doctor’s Note for Travel Insurance in Portugal (2026 Guide)",
+      "description": "Too ill to fly or had to cancel part of your trip in Portugal? Get assessed on video (€39). Medical certificate issued when clinically justified, receipt included.",
+      "h1": "Need a Doctor’s Note for Your Travel Insurance in Portugal?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-insurance-note-en&lang=en",
+      "bookingLabel": "Book consultation",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.",
+      "ctaTitle": "Ill and need it documented?",
+      "ctaLead": "Book a video consultation with Lon Clinic in English, Spanish or Portuguese — from wherever you are in Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Most travel insurers only pay for a cancelled flight, excursion or extra hotel nights if a doctor confirms you were ill at the time. That means seeing a doctor while you are ill — not afterwards.",
+        "A Lon Clinic video consultation costs €39. If the doctor finds it clinically justified, they issue a medical certificate with the illness and dates, and you get a receipt for the consultation. No certificate without a consultation, and no backdating."
+      ],
+      "onlineTitle": "When an online consultation works",
+      "urgentTitle": "Go in person or to the ER",
+      "safeOnline": [
+        "You are ill now — a stomach bug, fever, a chest infection — and it affects your travel plans",
+        "Your insurer asks for a medical certificate or a doctor’s report",
+        "You can join a video call and describe or show your symptoms",
+        "No red flags that need the emergency room"
+      ],
+      "goToUrgent": [
+        "Chest pain, trouble breathing, stroke signs or fainting — call 112",
+        "An injury that may be a fracture — it needs an X-ray in person",
+        "Your insurer requires an in-person examination or a hospital report",
+        "Very high fever, confusion, dehydration, or getting worse quickly"
+      ],
+      "howTitle": "How it works",
+      "howItWorks": [
+        {
+          "title": "Book while you are ill",
+          "text": "Same-day slots are often available. In the booking notes, say what the insurer needs (certificate, dates, fitness to travel)."
+        },
+        {
+          "title": "Video assessment",
+          "text": "The doctor takes your history, examines what can be seen on camera, and gives you medical advice first."
+        },
+        {
+          "title": "Certificate, if justified",
+          "text": "When clinically justified, the certificate is issued after the consultation, together with a receipt. If your insurer has its own form, send it — the doctor will tell you whether it can be completed on this basis."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "What insurers usually ask for",
+          "items": [
+            {
+              "title": "Diagnosis or main symptoms",
+              "text": "What was wrong, in medical terms."
+            },
+            {
+              "title": "Dates",
+              "text": "When you were assessed and the period you were unfit to travel or take part in the activity."
+            },
+            {
+              "title": "Doctor’s details",
+              "text": "Name, professional registration number (Ordem dos Médicos) and signature. Lon Clinic is registered with the Portuguese health regulator (ERS 45475)."
+            },
+            {
+              "title": "Receipt",
+              "text": "Proof of what you paid for the consultation, if you claim it back."
+            }
+          ]
+        },
+        {
+          "h2": "What we cannot do",
+          "paragraphs": [
+            "We do not certify days on which you were not assessed, and we do not write certificates to order. The doctor records what they find.",
+            "Injuries that need imaging, and forms that require a physical examination, are better handled in person."
+          ]
+        },
+        {
+          "h2": "EHIC/GHIC is not travel insurance",
+          "paragraphs": [
+            "An EHIC or GHIC covers necessary care in the public system. It does not cover private or online consultations, and it does not cover trip cancellation.",
+            "Cancellation and curtailment are travel insurance matters — check your policy’s conditions and deadlines, and keep every receipt."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Will I definitely get a certificate?",
+          "a": "No. The consultation is €39 whether or not a certificate is issued. The doctor issues one only when it is clinically justified."
+        },
+        {
+          "q": "Can you write a note for yesterday?",
+          "a": "The doctor can record your history as you report it and certify what they assess. They cannot certify a day on which they did not see you."
+        },
+        {
+          "q": "Is there an extra fee for the certificate?",
+          "a": "No extra document fee at checkout. You pay for the consultation."
+        },
+        {
+          "q": "Will my insurer accept a telemedicine certificate?",
+          "a": "Most insurers accept a certificate from a registered doctor, but policies differ. Check with your insurer first, especially if they have their own form or a list of approved providers."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Tourist clinic"
+        },
+        {
+          "href": "/consulta/atestado-medico",
+          "label": "Medical certificate (Portuguese page)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "The doctor"
+        }
+      ]
+    },
+    {
+      "slug": "sunburn-insect-bites-portugal-what-to-do",
+      "group": "skin-sun-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "Sunburn, bites and stings",
+      "hubBlurb": "Sunburn, sun rash, insect bites, weever fish and jellyfish — what to do on holiday.",
+      "titleTag": "Sunburn, Insect Bites and Stings in Portugal: What to Do (2026)",
+      "description": "Bad sunburn, a sun rash, an infected bite or a weever fish sting in Portugal? First aid, pharmacy options, red flags, and a €39 video consultation.",
+      "h1": "Sunburn, Bites or a Sting in Portugal — What Should I Do?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-skin-en&lang=en",
+      "bookingLabel": "Book consultation",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.",
+      "ctaTitle": "Want a doctor to look at it?",
+      "ctaLead": "Book a video consultation with Lon Clinic in English, Spanish or Portuguese — from wherever you are in Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Most holiday skin problems — sunburn, heat rash, mosquito bites — are handled with first aid and a trip to the pharmacy.",
+        "See a doctor if the skin is getting redder and hotter after 48 hours, there are blisters over a large area, or a bite looks infected — a video consultation is €39. Swelling of the face or trouble breathing after a sting: call 112."
+      ],
+      "onlineTitle": "When an online consultation can help",
+      "urgentTitle": "Get help now",
+      "safeOnline": [
+        "Sunburn with pain or small blisters, but you feel well",
+        "An itchy rash after sun exposure, or lots of insect bites",
+        "A bite or scratch that is red and sore, without fever or red streaks",
+        "You can show the skin on camera in good light"
+      ],
+      "goToUrgent": [
+        "Swelling of the lips, tongue or throat, wheezing or fainting after a sting — call 112",
+        "Blistering sunburn over a large area with fever, chills, confusion or vomiting (possible heat stroke)",
+        "Redness spreading fast, red streaks, or fever with a skin wound",
+        "A Portuguese man o’ war sting with chest pain, breathing difficulty or severe pain",
+        "Fever and a rash in the days after a tick bite — see a doctor the same day"
+      ],
+      "howTitle": "How the online consultation works",
+      "howItWorks": [
+        {
+          "title": "Book a slot",
+          "text": "Same-day appointments are often available, seven days a week. €39, shown before you pay. Consultations in English, Spanish or Portuguese."
+        },
+        {
+          "title": "Show the skin on video",
+          "text": "Good daylight and a close-up help. The doctor asks when it started, what you were doing and which medicines you take."
+        },
+        {
+          "title": "Treatment, if indicated",
+          "text": "Advice on what to buy at the pharmacy, and a Portuguese electronic prescription if you need a prescription-only treatment."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Weever fish (peixe-aranha) — common on Portuguese beaches",
+          "paragraphs": [
+            "The weever fish hides in the sand in shallow water, especially in the Algarve and on the west coast. Stepping on it causes sudden, intense pain in the foot.",
+            "First aid: soak the foot in water as hot as you can tolerate without scalding (test it with your other hand) for 30 to 90 minutes. Lifeguards know the drill. Paracetamol or ibuprofen helps. If the wound turns red, hot and swollen over the next days, see a doctor.",
+            "Beach shoes in shallow water, especially at low tide, prevent most stings."
+          ]
+        },
+        {
+          "h2": "Jellyfish and the Portuguese man o’ war (caravela-portuguesa)",
+          "paragraphs": [
+            "Get out of the water. Rinse with seawater — not fresh water — and lift off any visible tentacles with tweezers or a gloved hand, without rubbing. Warm water can ease the pain afterwards.",
+            "Man o’ war stings are more painful and can cause general symptoms. Follow the lifeguards and the beach flags; if there is chest pain, difficulty breathing or collapse, call 112."
+          ]
+        },
+        {
+          "h2": "Sunburn and sun rash",
+          "items": [
+            {
+              "title": "Cool, not cold",
+              "text": "Cool showers or damp cloths, plenty to drink, and after-sun or a light moisturiser."
+            },
+            {
+              "title": "Pain relief",
+              "text": "Paracetamol or ibuprofen from the pharmacy, if you can normally take them."
+            },
+            {
+              "title": "Leave blisters alone",
+              "text": "Do not pop them. Cover broken blisters with a clean dressing and stay out of the sun."
+            },
+            {
+              "title": "Sun rash",
+              "text": "An itchy, bumpy rash on sun-exposed skin in the first days of a holiday is often polymorphic light eruption. Shade and an antihistamine from the pharmacy usually help; severe or persistent cases can be assessed on video."
+            }
+          ]
+        },
+        {
+          "h2": "Mosquitoes and ticks",
+          "paragraphs": [
+            "Mosquito bites in Portugal are usually just itchy: an antihistamine tablet or cream from the pharmacy, and try not to scratch. Madeira has Aedes mosquitoes — use repellent there.",
+            "Remove ticks with fine tweezers close to the skin and note the date. Fever, headache or a rash in the following two weeks needs a doctor: Mediterranean spotted fever occurs in Portugal and is treatable."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can a doctor assess a rash on video?",
+          "a": "Often, yes — with good light and a close-up. If the doctor needs to examine you in person or run tests, they will tell you."
+        },
+        {
+          "q": "Can I get treatment for an infected bite?",
+          "a": "If the doctor diagnoses a bacterial skin infection, they can prescribe treatment by electronic prescription. Many red bites are just inflammation and do not need an antibiotic."
+        },
+        {
+          "q": "What should I ask for at the pharmacy?",
+          "a": "For sunburn: after-sun or a soothing gel, and pain relief. For itchy bites: an oral antihistamine or a mild cream. Tell the pharmacist about other medicines and pregnancy."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "€39 for the video consultation. A prescription, if issued, is included."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Tourist clinic"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consultations by complaint (Portuguese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "The doctor"
+        }
+      ]
+    },
+    {
+      "slug": "intoxication-alimentaire-portugal-que-faire",
+      "group": "food-poisoning-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Intoxication alimentaire au Portugal",
+      "hubBlurb": "Réhydratation, pharmacie, signes d’alerte — une gastro en vacances.",
+      "titleTag": "Intoxication Alimentaire ou Gastro au Portugal : Que Faire (2026)",
+      "description": "Diarrhée ou vomissements en vacances au Portugal ? Réhydratation, ce que la pharmacie vend sans ordonnance, signes d’alerte et téléconsultation à 39 €.",
+      "h1": "Intoxication Alimentaire ou Gastro au Portugal — Que Faire ?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-food-fr&lang=en",
+      "bookingLabel": "Réserver",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l’ordre portugais, environ 30 min. Ordonnance électronique incluse si indiquée.",
+      "ctaTitle": "Ça ne s’améliore pas ?",
+      "ctaLead": "Réservez une téléconsultation Lon Clinic en anglais, espagnol ou portugais — où que vous soyez au Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La plupart des intoxications alimentaires et turista guérissent en un à trois jours. La priorité : boire, par petites gorgées fréquentes, et des sels de réhydratation orale en pharmacie (demandez « soro de reidratação oral »).",
+        "Consultez si rien ne s’améliore après 48 heures, si vous ne gardez rien ou si vous êtes inquiet·e — la téléconsultation coûte 39 €. Sang dans les selles, forte fièvre, douleur intense ou signes de déshydratation : urgences ou 112."
+      ],
+      "onlineTitle": "Quand la téléconsultation peut aider",
+      "urgentTitle": "Allez aux urgences maintenant",
+      "safeOnline": [
+        "Adulte avec diarrhée et/ou vomissements depuis un à trois jours, qui arrive à boire",
+        "Pas de sang ni de selles noires, fièvre en dessous de 38,5 °C",
+        "Vous voulez savoir s’il faut un traitement — ou un certificat pour l’assurance",
+        "Vous pouvez rejoindre un appel vidéo depuis votre téléphone ou ordinateur"
+      ],
+      "goToUrgent": [
+        "Sang dans les selles, ou selles noires goudronneuses",
+        "Impossible de garder le moindre liquide depuis plus de 6 à 8 heures, ou très peu d’urine",
+        "Vertiges en se levant, confusion ou malaise",
+        "Douleur abdominale intense ou continue, ou ventre dur et gonflé",
+        "Fièvre au-dessus de 38,5 °C avec très mauvais état général",
+        "Bébés et jeunes enfants, personnes âgées fragiles, grossesse ou immunité affaiblie — consultez en présentiel rapidement"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réservez un créneau",
+          "text": "Des rendez-vous le jour même sont souvent disponibles, 7 jours sur 7. 39 €, affiché avant paiement. Consultations en anglais, espagnol ou portugais."
+        },
+        {
+          "title": "Évaluation en visio",
+          "text": "Le médecin vous interroge sur les symptômes, ce que vous buvez, ce que vous avez mangé et vos traitements habituels, et recherche des signes de déshydratation."
+        },
+        {
+          "title": "Un plan — et une ordonnance si indiquée",
+          "text": "Des consignes claires pour boire et manger et, si nécessaire, une ordonnance électronique portugaise valable dans toute pharmacie. Un certificat si c’est cliniquement justifié."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Que faire dans les premières 24 heures",
+          "items": [
+            {
+              "title": "D’abord, boire",
+              "text": "Les sels de réhydratation orale (sachets à dissoudre dans l’eau) compensent mieux le sel et le sucre perdus que l’eau seule. Buvez peu mais souvent. Bouillon et jus dilué aident aussi ; évitez l’alcool."
+            },
+            {
+              "title": "Mangez quand vous pouvez",
+              "text": "Inutile de jeûner. Des aliments simples — riz, pain, banane, soupe — dès que l’appétit revient."
+            },
+            {
+              "title": "Lavez-vous les mains",
+              "text": "Eau et savon après les toilettes et avant de manger. Les gastros se transmettent vite dans les locations partagées."
+            }
+          ]
+        },
+        {
+          "h2": "Ce que les pharmacies portugaises vendent sans ordonnance",
+          "paragraphs": [
+            "Sels de réhydratation orale, paracétamol et — chez l’adulte sans fièvre ni sang dans les selles — lopéramide pour espacer les selles. Le pharmacien posera quelques questions ; signalez vos autres traitements et une éventuelle grossesse.",
+            "Les antibiotiques et les antivomitifs plus puissants nécessitent une ordonnance au Portugal. La plupart des turista ne nécessitent aucun antibiotique — c’est au médecin d’en décider."
+          ]
+        },
+        {
+          "h2": "Intoxication, virus ou autre chose ?",
+          "paragraphs": [
+            "Les premiers jours, cela change peu : boire, se reposer, surveiller les signes d’alerte. Le norovirus se transmet de personne à personne et commence souvent par des vomissements brutaux ; l’intoxication bactérienne suit en général un repas précis, de quelques heures à deux jours après.",
+            "Une diarrhée qui dure plus d’une semaine, ou qui revient au retour, mérite une vraie évaluation — parfois avec une analyse de selles."
+          ]
+        },
+        {
+          "h2": "Où trouver de l’aide — pharmacie, en ligne ou urgences",
+          "table": {
+            "headers": [
+              "Option",
+              "Quand",
+              "Coût"
+            ],
+            "rows": [
+              [
+                "Pharmacie (farmácia)",
+                "Symptômes légers, sels de réhydratation, conseil",
+                "Les produits achetés"
+              ],
+              [
+                "Lon Clinic en ligne",
+                "Pas d’amélioration en 48 h, besoin d’un plan, d’une ordonnance ou d’un certificat",
+                "39 €"
+              ],
+              [
+                "Urgences de l’hôpital",
+                "Signes d’alerte : sang, déshydratation, douleur intense",
+                "Souvent facturé sans CEAM"
+              ]
+            ]
+          }
+        }
+      ],
+      "faq": [
+        {
+          "q": "Faut-il un antibiotique pour la turista ?",
+          "a": "En général, non. La plupart des cas guérissent seuls en buvant. Le médecin peut prescrire un antibiotique dans les formes sévères — forte fièvre ou très nombreuses selles par jour — après vous avoir évalué·e."
+        },
+        {
+          "q": "Puis-je prendre du lopéramide (Imodium) ?",
+          "a": "Un adulte sans fièvre et sans sang dans les selles peut généralement en prendre sur une courte durée. Pas chez l’enfant, ni en cas de sang, de forte fièvre ou de douleur abdominale intense. Demandez au pharmacien."
+        },
+        {
+          "q": "Puis-je obtenir un certificat pour mon assurance voyage ?",
+          "a": "Si vous avez dû annuler un vol ou une excursion, le médecin peut établir un certificat après la téléconsultation lorsque c’est cliniquement justifié. Voir notre guide sur le certificat médical pour l’assurance voyage."
+        },
+        {
+          "q": "L’eau du robinet est-elle potable au Portugal ?",
+          "a": "Oui. L’eau du robinet au Portugal est traitée et en général sûre. Les gastros de vacances viennent surtout de la nourriture, d’autres personnes ou de l’eau de baignade — pas du robinet."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinique touriste"
+        },
+        {
+          "href": "/consulta/diarreia-do-viajante",
+          "label": "Diarrhée du voyageur (page en portugais)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médecin"
+        }
+      ]
+    },
+    {
+      "slug": "antibiotique-portugal-sans-ordonnance",
+      "group": "antibiotics-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Antibiotiques au Portugal",
+      "hubBlurb": "Uniquement sur ordonnance — comment être évalué·e, et quand l’antibiotique est la bonne réponse.",
+      "titleTag": "Acheter un Antibiotique sans Ordonnance au Portugal ? (2026)",
+      "description": "Non : au Portugal, les antibiotiques exigent une ordonnance. Comment être vu·e rapidement en tant que touriste : téléconsultation 39 €, ordonnance électronique si indiquée.",
+      "h1": "Antibiotique sans Ordonnance au Portugal ? Ce que Peut Faire un Touriste",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-antibiotics-fr&lang=en",
+      "bookingLabel": "Réserver",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l’ordre portugais, environ 30 min. Ordonnance électronique incluse si indiquée.",
+      "ctaTitle": "Vous pensez avoir besoin d’un antibiotique ?",
+      "ctaLead": "Réservez une téléconsultation Lon Clinic en anglais, espagnol ou portugais — où que vous soyez au Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Les pharmacies au Portugal ne vendent pas d’antibiotiques sans ordonnance médicale — y compris les plus courants.",
+        "La voie légale la plus rapide pour une infection non urgente est une téléconsultation (39 €). Si le médecin juge l’antibiotique indiqué, vous recevez une ordonnance électronique portugaise valable dans toute pharmacie. Sinon, vous repartez avec un plan qui aide vraiment."
+      ],
+      "onlineTitle": "Quand la téléconsultation a du sens",
+      "urgentTitle": "Allez aux urgences maintenant",
+      "safeOnline": [
+        "Symptômes d’une infection courante : cystite, mal de gorge, sinusite, mal d’oreille, plaie ou piqûre infectée",
+        "Vous êtes adulte, vous vous sentez mal mais parlez et bougez normalement",
+        "Vous voulez l’avis d’un médecin sur la nécessité d’un antibiotique",
+        "Vous pouvez rejoindre un appel vidéo depuis votre téléphone ou ordinateur"
+      ],
+      "goToUrgent": [
+        "Difficulté à respirer, gonflement du visage ou de la langue, ou éruption qui s’étend vite — appelez le 112",
+        "Forte fièvre avec confusion, raideur de la nuque, ou taches violacées qui ne s’effacent pas sous un verre",
+        "Peau rouge et chaude qui s’étend rapidement, ou traînées rouges depuis une plaie",
+        "Mal de dents avec gonflement du visage ou difficulté à avaler",
+        "Fièvre avec douleur lombaire, ou vomissements incoercibles",
+        "Grossesse avec fièvre"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réservez un créneau",
+          "text": "Des rendez-vous le jour même sont souvent disponibles, 7 jours sur 7. 39 €, affiché avant paiement. Consultations en anglais, espagnol ou portugais."
+        },
+        {
+          "title": "Évaluation en visio",
+          "text": "Le médecin vous interroge sur les symptômes, les allergies et vos traitements, et examine ce qui est visible à la caméra — gorge, peau, yeux."
+        },
+        {
+          "title": "Ordonnance, si indiquée",
+          "text": "Ordonnance électronique portugaise par SMS ou e-mail, valable dans toute pharmacie. Pas un questionnaire, et pas d’antibiotique « au cas où »."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Pourquoi le pharmacien refuse",
+          "paragraphs": [
+            "Au Portugal, les antibiotiques sont des médicaments soumis à prescription. Les pharmaciens appliquent la règle strictement, y compris pour les touristes qui apportent leur boîte vide.",
+            "Une ordonnance d’un autre pays de l’UE peut en principe être délivrée au Portugal si elle comporte les mentions requises, mais beaucoup de pharmacies restent prudentes avec les ordonnances papier étrangères, et celles hors UE ne sont pas acceptées. Une ordonnance électronique portugaise règle le problème."
+          ]
+        },
+        {
+          "h2": "Quand l’antibiotique aide — et quand il n’aide pas",
+          "items": [
+            {
+              "title": "Souvent nécessaire",
+              "text": "Cystite simple chez la femme, certaines infections de la peau, certaines angines ou sinusites qui ne s’améliorent pas."
+            },
+            {
+              "title": "Généralement inutile",
+              "text": "Rhume, grippe, COVID, la plupart des maux de gorge et des toux, et la plupart des turista. Ce sont des virus ou des maux qui passent seuls — l’antibiotique ajoute des effets indésirables sans accélérer la guérison."
+            },
+            {
+              "title": "Il faut un dentiste",
+              "text": "Rage de dents et abcès dentaire relèvent du dentiste. L’antibiotique seul ne soigne pas la dent."
+            }
+          ]
+        },
+        {
+          "h2": "Obtenir une ordonnance en tant que visiteur — SNS, privé ou en ligne",
+          "table": {
+            "headers": [
+              "Option",
+              "Rapidité",
+              "Coût",
+              "Idéal pour"
+            ],
+            "rows": [
+              [
+                "SNS (public)",
+                "Lent pour les visiteurs",
+                "Souvent facturé sans CEAM",
+                "Urgences"
+              ],
+              [
+                "Privé en personne",
+                "Rapide",
+                "Souvent élevé sans assurance",
+                "Cas nécessitant examen ou analyses"
+              ],
+              [
+                "Lon Clinic en ligne",
+                "Créneaux le jour même",
+                "39 €",
+                "Infections courantes sans signe d’alerte"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "Retirer le médicament",
+          "paragraphs": [
+            "L’ordonnance électronique arrive par SMS ou e-mail avec un code. Présentez-le dans n’importe quelle farmácia du Portugal. Les visiteurs paient le prix pharmacie, en général modeste pour les antibiotiques courants."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Puis-je acheter de l’amoxicilline sans ordonnance au Portugal ?",
+          "a": "Non. L’amoxicilline, comme tout antibiotique, exige une ordonnance au Portugal."
+        },
+        {
+          "q": "Le médecin me prescrira-t-il un antibiotique si je le demande ?",
+          "a": "Seulement s’il est cliniquement indiqué après l’évaluation. Sinon, il vous explique pourquoi et ce qui vous aidera. Les 39 € rémunèrent la consultation, pas une ordonnance garantie."
+        },
+        {
+          "q": "Mon ordonnance française est-elle valable au Portugal ?",
+          "a": "Les ordonnances de l’UE peuvent en principe être délivrées si elles comportent les mentions requises ; celles hors UE ne sont pas valables. Si la pharmacie refuse, une téléconsultation peut établir une ordonnance électronique portugaise si c’est approprié."
+        },
+        {
+          "q": "Combien ça coûte ?",
+          "a": "39 € la téléconsultation, ordonnance incluse si elle est émise. Le médicament se paie à la pharmacie."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinique touriste"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consultations par motif (en portugais)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médecin"
+        }
+      ]
+    },
+    {
+      "slug": "certificat-medical-assurance-voyage-portugal",
+      "group": "insurance-note-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Certificat médical pour l’assurance",
+      "hubBlurb": "Trop malade pour voyager — un certificat après une vraie évaluation, si justifié.",
+      "titleTag": "Certificat Médical pour l’Assurance Voyage au Portugal (2026)",
+      "description": "Malade et incapable de prendre l’avion, ou excursion annulée au Portugal ? Évaluation en visio (39 €). Certificat médical si cliniquement justifié, facture incluse.",
+      "h1": "Besoin d’un Certificat Médical pour votre Assurance Voyage au Portugal ?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-insurance-note-fr&lang=en",
+      "bookingLabel": "Réserver",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l’ordre portugais, environ 30 min. Ordonnance électronique incluse si indiquée.",
+      "ctaTitle": "Malade et besoin d’un justificatif ?",
+      "ctaLead": "Réservez une téléconsultation Lon Clinic en anglais, espagnol ou portugais — où que vous soyez au Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La plupart des assurances voyage ne remboursent un vol, une excursion ou des nuits d’hôtel supplémentaires que si un médecin confirme que vous étiez malade à ce moment-là. Il faut donc consulter pendant la maladie — pas après.",
+        "Une téléconsultation Lon Clinic coûte 39 €. Si le médecin le juge cliniquement justifié, il établit un certificat indiquant la maladie et les dates, et vous recevez une facture. Pas de certificat sans consultation, et pas d’antidatage."
+      ],
+      "onlineTitle": "Quand la téléconsultation convient",
+      "urgentTitle": "Consultez en personne ou aux urgences",
+      "safeOnline": [
+        "Vous êtes malade maintenant — gastro, fièvre, infection respiratoire — et cela perturbe votre voyage",
+        "Votre assureur demande un certificat ou un rapport médical",
+        "Vous pouvez rejoindre un appel vidéo et décrire ou montrer vos symptômes",
+        "Aucun signe d’alerte nécessitant les urgences"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, difficulté à respirer, signes d’AVC ou malaise — appelez le 112",
+        "Une blessure qui pourrait être une fracture — radio en présentiel nécessaire",
+        "Votre assureur exige un examen en personne ou un compte rendu hospitalier",
+        "Fièvre très élevée, confusion, déshydratation, ou aggravation rapide"
+      ],
+      "howTitle": "Comment ça marche",
+      "howItWorks": [
+        {
+          "title": "Réservez pendant la maladie",
+          "text": "Des créneaux le jour même sont souvent disponibles. Dans les notes de réservation, précisez ce que demande l’assureur (certificat, dates, aptitude au voyage)."
+        },
+        {
+          "title": "Évaluation en visio",
+          "text": "Le médecin recueille votre histoire, examine ce qui est visible à la caméra et vous donne d’abord un avis médical."
+        },
+        {
+          "title": "Certificat, si justifié",
+          "text": "Lorsque c’est cliniquement justifié, le certificat est établi après la consultation, avec la facture. Si votre assureur a son propre formulaire, envoyez-le — le médecin vous dira s’il peut le remplir dans ces conditions."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Ce que demandent généralement les assureurs",
+          "items": [
+            {
+              "title": "Diagnostic ou symptômes principaux",
+              "text": "Ce que vous aviez, en termes médicaux."
+            },
+            {
+              "title": "Dates",
+              "text": "La date de l’évaluation et la période pendant laquelle vous ne pouviez pas voyager ou participer à l’activité."
+            },
+            {
+              "title": "Coordonnées du médecin",
+              "text": "Nom, numéro d’inscription à l’Ordem dos Médicos et signature. Lon Clinic est enregistrée auprès du régulateur de santé portugais (ERS 45475)."
+            },
+            {
+              "title": "Facture",
+              "text": "La preuve de ce que vous avez payé pour la consultation, si vous en demandez le remboursement."
+            }
+          ]
+        },
+        {
+          "h2": "Ce que nous ne faisons pas",
+          "paragraphs": [
+            "Nous ne certifions pas des jours où vous n’avez pas été évalué·e, et nous ne rédigeons pas de certificat sur commande. Le médecin consigne ce qu’il constate.",
+            "Les blessures qui nécessitent une imagerie et les formulaires exigeant un examen physique se gèrent mieux en présentiel."
+          ]
+        },
+        {
+          "h2": "La CEAM n’est pas une assurance voyage",
+          "paragraphs": [
+            "La Carte européenne d’assurance maladie couvre les soins nécessaires dans le système public. Elle ne couvre ni les consultations privées ou en ligne, ni l’annulation du voyage.",
+            "L’annulation ou l’interruption du séjour relève de l’assurance voyage — vérifiez les conditions et délais de votre contrat, et gardez toutes les factures."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Aurai-je forcément un certificat ?",
+          "a": "Non. La consultation coûte 39 €, qu’un certificat soit établi ou non. Le médecin ne l’établit que s’il est cliniquement justifié."
+        },
+        {
+          "q": "Pouvez-vous faire un certificat pour hier ?",
+          "a": "Le médecin peut consigner votre histoire telle que vous la rapportez et certifier ce qu’il évalue. Il ne peut pas certifier un jour où il ne vous a pas vu·e."
+        },
+        {
+          "q": "Le certificat est-il payant en plus ?",
+          "a": "Aucun frais de document supplémentaire au paiement. Vous payez la consultation."
+        },
+        {
+          "q": "Mon assureur accepte-t-il un certificat de téléconsultation ?",
+          "a": "La plupart des assureurs acceptent le certificat d’un médecin inscrit à l’ordre, mais les contrats varient. Vérifiez d’abord auprès de votre assureur, surtout s’il a son propre formulaire ou un réseau de prestataires agréés."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinique touriste"
+        },
+        {
+          "href": "/consulta/atestado-medico",
+          "label": "Certificat médical (page en portugais)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médecin"
+        }
+      ]
+    },
+    {
+      "slug": "coup-de-soleil-piqures-portugal-que-faire",
+      "group": "skin-sun-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Coups de soleil et piqûres",
+      "hubBlurb": "Coup de soleil, lucite, piqûres, vive et méduses — que faire en vacances.",
+      "titleTag": "Coup de Soleil, Piqûres et Méduses au Portugal : Que Faire (2026)",
+      "description": "Gros coup de soleil, lucite, piqûre infectée ou piqûre de vive au Portugal ? Premiers secours, pharmacie, signes d’alerte et téléconsultation à 39 €.",
+      "h1": "Coup de Soleil, Piqûre ou Méduse au Portugal — Que Faire ?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-skin-fr&lang=en",
+      "bookingLabel": "Réserver",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l’ordre portugais, environ 30 min. Ordonnance électronique incluse si indiquée.",
+      "ctaTitle": "Vous voulez l’avis d’un médecin ?",
+      "ctaLead": "Réservez une téléconsultation Lon Clinic en anglais, espagnol ou portugais — où que vous soyez au Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La plupart des soucis de peau en vacances — coups de soleil, bourbouille, piqûres de moustique — se gèrent avec les premiers secours et un passage en pharmacie.",
+        "Consultez si la peau est plus rouge et plus chaude après 48 heures, s’il y a des cloques sur une grande surface, ou si une piqûre semble infectée — la téléconsultation coûte 39 €. Gonflement du visage ou difficulté à respirer après une piqûre : appelez le 112."
+      ],
+      "onlineTitle": "Quand la téléconsultation peut aider",
+      "urgentTitle": "Demandez de l’aide maintenant",
+      "safeOnline": [
+        "Coup de soleil douloureux ou avec petites cloques, mais vous allez bien",
+        "Éruption qui démange après le soleil, ou de nombreuses piqûres d’insectes",
+        "Une piqûre ou griffure rouge et douloureuse, sans fièvre ni traînées rouges",
+        "Vous pouvez montrer la peau à la caméra avec une bonne lumière"
+      ],
+      "goToUrgent": [
+        "Gonflement des lèvres, de la langue ou de la gorge, sifflement ou malaise après une piqûre — appelez le 112",
+        "Coup de soleil avec cloques étendues et fièvre, frissons, confusion ou vomissements (possible coup de chaleur)",
+        "Rougeur qui s’étend vite, traînées rouges, ou fièvre avec une plaie",
+        "Piqûre de galère portugaise avec douleur thoracique, gêne respiratoire ou douleur intense",
+        "Fièvre et éruption dans les jours qui suivent une piqûre de tique — consultez le jour même"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réservez un créneau",
+          "text": "Des rendez-vous le jour même sont souvent disponibles, 7 jours sur 7. 39 €, affiché avant paiement. Consultations en anglais, espagnol ou portugais."
+        },
+        {
+          "title": "Montrez la peau en visio",
+          "text": "La lumière du jour et un gros plan aident. Le médecin demande quand c’est apparu, ce que vous faisiez et quels traitements vous prenez."
+        },
+        {
+          "title": "Traitement, si indiqué",
+          "text": "Des conseils sur quoi acheter en pharmacie et, si un traitement sur ordonnance est nécessaire, une ordonnance électronique portugaise."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "La vive (peixe-aranha) — fréquente sur les plages portugaises",
+          "paragraphs": [
+            "La vive s’enfouit dans le sable en eau peu profonde, notamment en Algarve et sur la côte ouest. Marcher dessus provoque une douleur brutale et intense au pied.",
+            "Premiers secours : plongez le pied dans une eau aussi chaude que supportable sans vous brûler (testez avec l’autre main) pendant 30 à 90 minutes. Les sauveteurs connaissent le geste. Paracétamol ou ibuprofène soulagent. Si la plaie devient rouge, chaude et gonflée les jours suivants, consultez.",
+            "Des chaussures de plage dans l’eau peu profonde, surtout à marée basse, évitent la plupart des piqûres."
+          ]
+        },
+        {
+          "h2": "Méduses et galère portugaise (caravela-portuguesa)",
+          "paragraphs": [
+            "Sortez de l’eau. Rincez à l’eau de mer — pas à l’eau douce — et retirez les filaments visibles avec une pince ou une main gantée, sans frotter. De l’eau chaude peut ensuite calmer la douleur.",
+            "La piqûre de galère portugaise est plus douloureuse et peut donner des symptômes généraux. Suivez les sauveteurs et les drapeaux de la plage ; en cas de douleur thoracique, de gêne respiratoire ou de malaise, appelez le 112."
+          ]
+        },
+        {
+          "h2": "Coup de soleil et lucite",
+          "items": [
+            {
+              "title": "Frais, pas froid",
+              "text": "Douches fraîches ou linges humides, beaucoup d’eau à boire, et après-soleil ou crème hydratante légère."
+            },
+            {
+              "title": "Contre la douleur",
+              "text": "Paracétamol ou ibuprofène en pharmacie, si vous les prenez habituellement sans problème."
+            },
+            {
+              "title": "Ne percez pas les cloques",
+              "text": "Couvrez les cloques ouvertes d’un pansement propre et restez à l’ombre."
+            },
+            {
+              "title": "Lucite",
+              "text": "Une éruption qui démange, en petits boutons, sur la peau exposée dans les premiers jours de vacances est souvent une lucite polymorphe. L’ombre et un antihistaminique de pharmacie aident en général ; les formes intenses ou persistantes peuvent être évaluées en visio."
+            }
+          ]
+        },
+        {
+          "h2": "Moustiques et tiques",
+          "paragraphs": [
+            "Au Portugal, les piqûres de moustique ne font en général que démanger : un antihistaminique en comprimé ou en crème, et évitez de gratter. Madère compte des moustiques Aedes — utilisez un répulsif.",
+            "Retirez les tiques avec une pince fine, au ras de la peau, et notez la date. Fièvre, maux de tête ou éruption dans les deux semaines suivantes : consultez. La fièvre boutonneuse méditerranéenne existe au Portugal et se soigne."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un médecin peut-il évaluer une éruption en visio ?",
+          "a": "Souvent, oui — avec une bonne lumière et un gros plan. Si un examen en personne ou des analyses sont nécessaires, le médecin vous le dira."
+        },
+        {
+          "q": "Peut-on traiter une piqûre infectée ?",
+          "a": "Si le médecin diagnostique une infection bactérienne de la peau, il peut prescrire un traitement par ordonnance électronique. Beaucoup de piqûres rouges ne sont qu’une inflammation et ne nécessitent pas d’antibiotique."
+        },
+        {
+          "q": "Que demander à la pharmacie ?",
+          "a": "Pour un coup de soleil : après-soleil ou gel apaisant, et un antalgique. Pour des piqûres qui démangent : un antihistaminique oral ou une crème douce. Signalez vos autres traitements et une éventuelle grossesse."
+        },
+        {
+          "q": "Combien ça coûte ?",
+          "a": "39 € la téléconsultation. L’ordonnance, si elle est émise, est incluse."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinique touriste"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consultations par motif (en portugais)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médecin"
+        }
+      ]
+    },
+    {
+      "slug": "intoxicacion-alimentaria-portugal-que-hacer",
+      "group": "food-poisoning-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Intoxicación alimentaria en Portugal",
+      "hubBlurb": "Rehidratación, farmacia, señales de alarma — un problema de estómago de vacaciones.",
+      "titleTag": "Intoxicación Alimentaria o Diarrea en Portugal: Qué Hacer (2026)",
+      "description": "¿Diarrea o vómitos de vacaciones en Portugal? Rehidratación, qué vende la farmacia sin receta, señales de alarma y videoconsulta médica por 39 €.",
+      "h1": "Intoxicación Alimentaria o Diarrea en Portugal — ¿Qué Hago?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-food-es&lang=es",
+      "bookingLabel": "Reservar consulta",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 min. Receta electrónica incluida si está indicada. Sin tasas extra en el checkout.",
+      "ctaTitle": "¿No mejora?",
+      "ctaLead": "Reserve una videoconsulta con Lon Clinic en inglés, español o portugués — esté donde esté en Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La mayoría de las intoxicaciones alimentarias y diarreas del viajero se resuelven en uno a tres días. Lo prioritario es beber: sorbos pequeños y frecuentes, y sales de rehidratación oral de cualquier farmacia (pida «soro de reidratação oral»).",
+        "Consulte a un médico si no mejora en 48 horas, no tolera líquidos o está preocupado — la videoconsulta cuesta 39 €. Sangre en las heces, fiebre alta, dolor intenso o signos de deshidratación: urgencias o 112."
+      ],
+      "onlineTitle": "Cuándo ayuda una consulta online",
+      "urgentTitle": "Vaya a urgencias ahora",
+      "safeOnline": [
+        "Adulto con diarrea y/o vómitos desde hace uno a tres días, que consigue beber",
+        "Sin sangre ni heces negras, fiebre por debajo de 38,5 °C",
+        "Quiere saber si necesita medicación — o un informe médico para el seguro",
+        "Puede hacer una videollamada desde el móvil o el portátil"
+      ],
+      "goToUrgent": [
+        "Sangre en las heces, o heces negras como alquitrán",
+        "No retiene ningún líquido durante más de 6–8 horas, u orina muy poco",
+        "Mareo al ponerse de pie, confusión o desmayo",
+        "Dolor abdominal intenso o constante, o abdomen duro e hinchado",
+        "Fiebre por encima de 38,5 °C con mal estado general",
+        "Bebés y niños pequeños, personas mayores frágiles, embarazo o defensas bajas — busque atención presencial pronto"
+      ],
+      "howTitle": "Cómo funciona la consulta online",
+      "howItWorks": [
+        {
+          "title": "Reserve un horario",
+          "text": "A menudo hay citas el mismo día, los siete días de la semana. 39 €, visibles antes de pagar. Consultas en inglés, español o portugués."
+        },
+        {
+          "title": "Valoración por vídeo",
+          "text": "La médica pregunta por los síntomas, lo que bebe, lo que comió y su medicación habitual, y busca signos de deshidratación."
+        },
+        {
+          "title": "Un plan — y receta si está indicada",
+          "text": "Indicaciones claras sobre líquidos y comida y, si hace falta, una receta electrónica portuguesa válida en cualquier farmacia. Informe médico cuando esté clínicamente justificado."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Qué hacer en las primeras 24 horas",
+          "items": [
+            {
+              "title": "Primero, líquidos",
+              "text": "Las sales de rehidratación oral (sobres disueltos en agua) reponen sal y azúcar mejor que el agua sola. Beba poco y a menudo. El caldo y el zumo diluido también ayudan; evite el alcohol."
+            },
+            {
+              "title": "Coma cuando pueda",
+              "text": "No hace falta ayunar. Comida sencilla — arroz, pan, plátano, sopa — en cuanto le apetezca."
+            },
+            {
+              "title": "Lávese las manos",
+              "text": "Agua y jabón después del baño y antes de comer. Los virus intestinales se contagian rápido en alojamientos compartidos."
+            }
+          ]
+        },
+        {
+          "h2": "Qué venden las farmacias portuguesas sin receta",
+          "paragraphs": [
+            "Sales de rehidratación oral, paracetamol y — en adultos sin fiebre ni sangre en las heces — loperamida para reducir las deposiciones. El farmacéutico hará algunas preguntas; mencione otros medicamentos y un posible embarazo.",
+            "Los antibióticos y los antieméticos más potentes necesitan receta en Portugal. La mayoría de las diarreas del viajero no necesitan antibiótico — lo decide un médico."
+          ]
+        },
+        {
+          "h2": "¿Intoxicación, virus u otra cosa?",
+          "paragraphs": [
+            "En los primeros días apenas cambia nada: líquidos, reposo y vigilar las señales de alarma. El norovirus se contagia de persona a persona y suele empezar con vómitos bruscos; la intoxicación bacteriana suele aparecer entre unas horas y un par de días después de una comida concreta.",
+            "Una diarrea de más de una semana, o que vuelve al regresar a casa, necesita una valoración adecuada — a veces con análisis de heces."
+          ]
+        },
+        {
+          "h2": "Dónde pedir ayuda — farmacia vs online vs urgencias",
+          "table": {
+            "headers": [
+              "Opción",
+              "Cuándo",
+              "Coste"
+            ],
+            "rows": [
+              [
+                "Farmacia (farmácia)",
+                "Síntomas leves, sales de rehidratación, consejo",
+                "Los productos que compre"
+              ],
+              [
+                "Lon Clinic online",
+                "Sin mejoría en 48 h, necesita un plan, receta o informe",
+                "39 €"
+              ],
+              [
+                "Urgencias del hospital",
+                "Señales de alarma: sangre, deshidratación, dolor intenso",
+                "A menudo se factura a visitantes sin TSE"
+              ]
+            ]
+          }
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Necesito antibiótico para la diarrea del viajero?",
+          "a": "Normalmente no. La mayoría se cura sola con líquidos. El médico puede recetar un antibiótico en casos graves — por ejemplo con fiebre alta o muchas deposiciones al día — tras valorarle."
+        },
+        {
+          "q": "¿Puedo tomar loperamida (Fortasec)?",
+          "a": "Los adultos sin fiebre y sin sangre en las heces suelen poder tomarla durante poco tiempo. No la use en niños, ni si hay sangre, fiebre alta o dolor abdominal intenso. Pregunte en la farmacia."
+        },
+        {
+          "q": "¿Me pueden hacer un informe para el seguro de viaje?",
+          "a": "Si tuvo que cancelar un vuelo o una excursión, la médica puede emitir un certificado tras la videoconsulta cuando esté clínicamente justificado. Vea nuestra guía sobre el certificado médico para el seguro de viaje."
+        },
+        {
+          "q": "¿Se puede beber el agua del grifo en Portugal?",
+          "a": "Sí. El agua del grifo en Portugal está tratada y en general es segura. Los problemas de estómago en vacaciones suelen venir de la comida, de otras personas o del agua de baño — no del grifo."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clínica turista"
+        },
+        {
+          "href": "/consulta/diarreia-do-viajante",
+          "label": "Diarrea del viajero (página en portugués)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médica"
+        }
+      ]
+    },
+    {
+      "slug": "antibiotico-portugal-sin-receta",
+      "group": "antibiotics-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Antibióticos en Portugal",
+      "hubBlurb": "Solo con receta — cómo le valora un médico y cuándo el antibiótico es la respuesta.",
+      "titleTag": "¿Se Pueden Comprar Antibióticos sin Receta en Portugal? (2026)",
+      "description": "No: en Portugal los antibióticos necesitan receta. Cómo conseguir valoración rápida como turista: videoconsulta 39 €, receta electrónica válida en cualquier farmacia si está indicada.",
+      "h1": "¿Antibiótico sin Receta en Portugal? Qué Puede Hacer un Turista",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-antibiotics-es&lang=es",
+      "bookingLabel": "Reservar consulta",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 min. Receta electrónica incluida si está indicada. Sin tasas extra en el checkout.",
+      "ctaTitle": "¿Cree que necesita un antibiótico?",
+      "ctaLead": "Reserve una videoconsulta con Lon Clinic en inglés, español o portugués — esté donde esté en Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Las farmacias en Portugal no venden antibióticos sin receta médica — tampoco los habituales que quizá compre con más facilidad en casa.",
+        "La vía legal más rápida para una infección que no es urgente es una videoconsulta (39 €). Si la médica decide que el antibiótico está indicado, recibe una receta electrónica portuguesa para cualquier farmacia. Si no lo está, recibe un plan que de verdad ayuda."
+      ],
+      "onlineTitle": "Cuándo tiene sentido la consulta online",
+      "urgentTitle": "Vaya a urgencias ahora",
+      "safeOnline": [
+        "Síntomas de una infección común: cistitis, dolor de garganta, dolor de senos, dolor de oído, una herida o picadura infectada",
+        "Es adulto, se encuentra mal pero habla y se mueve con normalidad",
+        "Quiere la opinión de un médico sobre si realmente necesita antibiótico",
+        "Puede hacer una videollamada desde el móvil o el portátil"
+      ],
+      "goToUrgent": [
+        "Dificultad para respirar, hinchazón de cara o lengua, o una erupción que se extiende rápido — llame al 112",
+        "Fiebre alta con confusión, rigidez de nuca, o manchas moradas que no desaparecen al presionar con un vaso",
+        "Piel roja y caliente que se extiende rápido, o líneas rojas desde una herida",
+        "Dolor de muelas con hinchazón de la cara o dificultad para tragar",
+        "Fiebre con dolor lumbar, o vómitos que no paran",
+        "Embarazo con fiebre"
+      ],
+      "howTitle": "Cómo funciona la consulta online",
+      "howItWorks": [
+        {
+          "title": "Reserve un horario",
+          "text": "A menudo hay citas el mismo día, los siete días de la semana. 39 €, visibles antes de pagar. Consultas en inglés, español o portugués."
+        },
+        {
+          "title": "Valoración por vídeo",
+          "text": "La médica pregunta por síntomas, alergias y medicación habitual, y observa lo que se puede ver por cámara — garganta, piel, ojos."
+        },
+        {
+          "title": "Receta, si está indicada",
+          "text": "Receta electrónica portuguesa por SMS o email, válida en cualquier farmacia. No es un cuestionario, ni un antibiótico «por si acaso»."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Por qué la farmacia dice que no",
+          "paragraphs": [
+            "En Portugal los antibióticos son medicamentos sujetos a receta. Los farmacéuticos lo cumplen de forma estricta, también con turistas que traen la caja vacía.",
+            "Una receta de otro país de la UE puede, en principio, dispensarse en Portugal si tiene los datos exigidos, pero muchas farmacias son prudentes con recetas extranjeras en papel, y las de fuera de la UE no se aceptan. Una receta electrónica portuguesa evita el problema."
+          ]
+        },
+        {
+          "h2": "Cuándo sirve un antibiótico — y cuándo no",
+          "items": [
+            {
+              "title": "A menudo necesario",
+              "text": "Cistitis no complicada en mujeres, algunas infecciones de piel y algunos casos de amigdalitis o sinusitis que no mejoran."
+            },
+            {
+              "title": "Normalmente innecesario",
+              "text": "Resfriados, gripe, COVID, la mayoría de dolores de garganta y toses, y casi todas las diarreas del viajero. Son víricos o se curan solos — el antibiótico añade efectos secundarios sin acelerar la curación."
+            },
+            {
+              "title": "Necesita un dentista",
+              "text": "El dolor de muelas y el absceso dental necesitan un dentista. El antibiótico solo no arregla el diente."
+            }
+          ]
+        },
+        {
+          "h2": "Conseguir receta como visitante — SNS vs privado vs online",
+          "table": {
+            "headers": [
+              "Opción",
+              "Rapidez",
+              "Coste",
+              "Ideal para"
+            ],
+            "rows": [
+              [
+                "SNS (público)",
+                "Lento para visitantes",
+                "A menudo facturado sin TSE",
+                "Urgencias"
+              ],
+              [
+                "Privado presencial",
+                "Rápido",
+                "A menudo caro sin seguro",
+                "Casos que necesitan exploración o pruebas"
+              ],
+              [
+                "Lon Clinic online",
+                "Citas el mismo día",
+                "39 €",
+                "Infecciones comunes sin señales de alarma"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "Recoger el medicamento",
+          "paragraphs": [
+            "La receta electrónica llega por SMS o email con un código. Muéstrelo en cualquier farmácia de Portugal. Los visitantes pagan el precio de farmacia, que para los antibióticos habituales suele ser moderado."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puedo comprar amoxicilina sin receta en Portugal?",
+          "a": "No. La amoxicilina, como cualquier antibiótico, necesita receta en Portugal."
+        },
+        {
+          "q": "¿La médica me recetará un antibiótico si lo pido?",
+          "a": "Solo si está clínicamente indicado tras la valoración. Si no, le explica por qué y qué le ayudará. Los 39 € son por la consulta, no por una receta garantizada."
+        },
+        {
+          "q": "¿Vale en Portugal mi receta de España?",
+          "a": "Las recetas de la UE pueden dispensarse en principio si tienen los datos exigidos; las de fuera de la UE no son válidas. Si la farmacia la rechaza, una videoconsulta puede emitir una receta electrónica portuguesa cuando proceda."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "39 € por la videoconsulta, receta incluida si se emite. El medicamento se paga en la farmacia."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clínica turista"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consultas por motivo (en portugués)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médica"
+        }
+      ]
+    },
+    {
+      "slug": "certificado-medico-seguro-viaje-portugal",
+      "group": "insurance-note-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Certificado médico para el seguro",
+      "hubBlurb": "Demasiado enfermo para viajar — certificado tras una valoración real, si está justificado.",
+      "titleTag": "Certificado Médico para el Seguro de Viaje en Portugal (2026)",
+      "description": "¿Enfermo y sin poder volar o con parte del viaje cancelado en Portugal? Valoración por vídeo (39 €). Certificado médico cuando esté clínicamente justificado, con factura.",
+      "h1": "¿Necesita un Certificado Médico para su Seguro de Viaje en Portugal?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-insurance-note-es&lang=es",
+      "bookingLabel": "Reservar consulta",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 min. Receta electrónica incluida si está indicada. Sin tasas extra en el checkout.",
+      "ctaTitle": "¿Está enfermo y necesita documentarlo?",
+      "ctaLead": "Reserve una videoconsulta con Lon Clinic en inglés, español o portugués — esté donde esté en Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La mayoría de los seguros de viaje solo pagan un vuelo, una excursión o noches extra de hotel si un médico confirma que usted estaba enfermo en ese momento. Es decir: ver a un médico mientras está enfermo, no después.",
+        "Una videoconsulta con Lon Clinic cuesta 39 €. Si la médica lo considera clínicamente justificado, emite un certificado con la enfermedad y las fechas, y recibe factura de la consulta. Sin consulta no hay certificado, y no se emiten con fecha atrasada."
+      ],
+      "onlineTitle": "Cuándo sirve la consulta online",
+      "urgentTitle": "Vaya en persona o a urgencias",
+      "safeOnline": [
+        "Está enfermo ahora — gastroenteritis, fiebre, una infección respiratoria — y afecta a sus planes de viaje",
+        "Su seguro pide un certificado o informe médico",
+        "Puede hacer una videollamada y describir o mostrar los síntomas",
+        "Sin señales de alarma que requieran urgencias"
+      ],
+      "goToUrgent": [
+        "Dolor en el pecho, dificultad para respirar, signos de ictus o desmayo — llame al 112",
+        "Una lesión que puede ser una fractura — necesita radiografía presencial",
+        "Su seguro exige exploración presencial o un informe hospitalario",
+        "Fiebre muy alta, confusión, deshidratación o empeoramiento rápido"
+      ],
+      "howTitle": "Cómo funciona",
+      "howItWorks": [
+        {
+          "title": "Reserve mientras está enfermo",
+          "text": "A menudo hay citas el mismo día. En las notas de la reserva, indique qué pide el seguro (certificado, fechas, aptitud para viajar)."
+        },
+        {
+          "title": "Valoración por vídeo",
+          "text": "La médica recoge la historia, observa lo que se puede ver por cámara y, ante todo, le da el consejo médico."
+        },
+        {
+          "title": "Certificado, si está justificado",
+          "text": "Cuando está clínicamente justificado, el certificado se emite tras la consulta, junto con la factura. Si su seguro tiene formulario propio, envíelo — la médica le dirá si puede completarlo así."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Qué suelen pedir las aseguradoras",
+          "items": [
+            {
+              "title": "Diagnóstico o síntomas principales",
+              "text": "Qué le pasaba, en términos médicos."
+            },
+            {
+              "title": "Fechas",
+              "text": "Cuándo fue valorado y el periodo en que no podía viajar o participar en la actividad."
+            },
+            {
+              "title": "Datos del médico",
+              "text": "Nombre, número de colegiado (Ordem dos Médicos) y firma. Lon Clinic está registrada en el regulador sanitario portugués (ERS 45475)."
+            },
+            {
+              "title": "Factura",
+              "text": "Justificante de lo que pagó por la consulta, si quiere reclamarlo."
+            }
+          ]
+        },
+        {
+          "h2": "Lo que no hacemos",
+          "paragraphs": [
+            "No certificamos días en que no fue valorado ni hacemos certificados a la carta. La médica registra lo que encuentra.",
+            "Las lesiones que necesitan pruebas de imagen y los formularios que exigen exploración física se resuelven mejor en persona."
+          ]
+        },
+        {
+          "h2": "La TSE no es un seguro de viaje",
+          "paragraphs": [
+            "La Tarjeta Sanitaria Europea cubre la atención necesaria en el sistema público. No cubre consultas privadas ni online, ni la cancelación del viaje.",
+            "La cancelación o interrupción del viaje depende del seguro de viaje — revise las condiciones y plazos de su póliza y guarde todas las facturas."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Me darán el certificado seguro?",
+          "a": "No. La consulta cuesta 39 € se emita o no el certificado. La médica solo lo emite cuando está clínicamente justificado."
+        },
+        {
+          "q": "¿Pueden hacerme un certificado de ayer?",
+          "a": "La médica puede registrar su historia tal como la cuenta y certificar lo que valora. No puede certificar un día en que no le vio."
+        },
+        {
+          "q": "¿El certificado tiene coste extra?",
+          "a": "No hay tasa extra por el documento al pagar. Paga la consulta."
+        },
+        {
+          "q": "¿Aceptará mi seguro un certificado de telemedicina?",
+          "a": "La mayoría acepta el certificado de un médico colegiado, pero cada póliza es distinta. Consulte antes con su aseguradora, sobre todo si tiene formulario propio o una lista de proveedores concertados."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clínica turista"
+        },
+        {
+          "href": "/consulta/atestado-medico",
+          "label": "Certificado médico (página en portugués)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médica"
+        }
+      ]
+    },
+    {
+      "slug": "quemadura-solar-picaduras-portugal-que-hacer",
+      "group": "skin-sun-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Quemaduras solares y picaduras",
+      "hubBlurb": "Quemaduras de sol, alergia solar, picaduras, pez araña y medusas — qué hacer en vacaciones.",
+      "titleTag": "Quemadura Solar, Picaduras y Medusas en Portugal: Qué Hacer (2026)",
+      "description": "¿Quemadura solar fuerte, alergia al sol, una picadura infectada o un pez araña en Portugal? Primeros auxilios, farmacia, señales de alarma y videoconsulta por 39 €.",
+      "h1": "Quemadura Solar, Picaduras o Medusas en Portugal — ¿Qué Hago?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-skin-es&lang=es",
+      "bookingLabel": "Reservar consulta",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 min. Receta electrónica incluida si está indicada. Sin tasas extra en el checkout.",
+      "ctaTitle": "¿Quiere que lo vea un médico?",
+      "ctaLead": "Reserve una videoconsulta con Lon Clinic en inglés, español o portugués — esté donde esté en Portugal.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La mayoría de los problemas de piel en vacaciones — quemaduras solares, sarpullido por calor, picaduras de mosquito — se resuelven con primeros auxilios y una visita a la farmacia.",
+        "Consulte a un médico si la piel está más roja y caliente después de 48 horas, hay ampollas en una zona extensa o una picadura parece infectada — la videoconsulta cuesta 39 €. Hinchazón de la cara o dificultad para respirar tras una picadura: llame al 112."
+      ],
+      "onlineTitle": "Cuándo ayuda una consulta online",
+      "urgentTitle": "Pida ayuda ya",
+      "safeOnline": [
+        "Quemadura solar con dolor o pequeñas ampollas, pero se encuentra bien",
+        "Erupción con picor tras tomar el sol, o muchas picaduras de insecto",
+        "Una picadura o arañazo rojo y doloroso, sin fiebre ni líneas rojas",
+        "Puede mostrar la piel por cámara con buena luz"
+      ],
+      "goToUrgent": [
+        "Hinchazón de labios, lengua o garganta, pitos o desmayo tras una picadura — llame al 112",
+        "Quemadura con ampollas extensas y fiebre, escalofríos, confusión o vómitos (posible golpe de calor)",
+        "Enrojecimiento que se extiende rápido, líneas rojas, o fiebre con una herida en la piel",
+        "Picadura de carabela portuguesa con dolor torácico, dificultad para respirar o dolor intenso",
+        "Fiebre y erupción en los días siguientes a una picadura de garrapata — vea a un médico ese mismo día"
+      ],
+      "howTitle": "Cómo funciona la consulta online",
+      "howItWorks": [
+        {
+          "title": "Reserve un horario",
+          "text": "A menudo hay citas el mismo día, los siete días de la semana. 39 €, visibles antes de pagar. Consultas en inglés, español o portugués."
+        },
+        {
+          "title": "Muestre la piel por vídeo",
+          "text": "Ayudan la luz natural y un primer plano. La médica pregunta cuándo empezó, qué estaba haciendo y qué medicación toma."
+        },
+        {
+          "title": "Tratamiento, si está indicado",
+          "text": "Consejo sobre qué comprar en la farmacia y, si necesita un tratamiento con receta, una receta electrónica portuguesa."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Pez araña (peixe-aranha) — frecuente en las playas portuguesas",
+          "paragraphs": [
+            "El pez araña se esconde en la arena en aguas poco profundas, sobre todo en el Algarve y en la costa oeste. Pisarlo causa un dolor brusco e intenso en el pie.",
+            "Primeros auxilios: sumerja el pie en agua tan caliente como tolere sin quemarse (pruébela con la otra mano) durante 30 a 90 minutos. Los socorristas conocen el procedimiento. El paracetamol o el ibuprofeno ayudan. Si en los días siguientes la herida se pone roja, caliente e hinchada, consulte a un médico.",
+            "Usar escarpines en la orilla, sobre todo con marea baja, evita la mayoría de las picaduras."
+          ]
+        },
+        {
+          "h2": "Medusas y carabela portuguesa (caravela-portuguesa)",
+          "paragraphs": [
+            "Salga del agua. Aclare con agua de mar — no con agua dulce — y retire los tentáculos visibles con pinzas o con guantes, sin frotar. Después, el agua templada puede aliviar el dolor.",
+            "La picadura de carabela portuguesa es más dolorosa y puede dar síntomas generales. Siga las indicaciones de los socorristas y las banderas de la playa; si hay dolor en el pecho, dificultad para respirar o desmayo, llame al 112."
+          ]
+        },
+        {
+          "h2": "Quemadura solar y alergia al sol",
+          "items": [
+            {
+              "title": "Fresco, no frío",
+              "text": "Duchas frescas o paños húmedos, beber mucho, y aftersun o una crema hidratante ligera."
+            },
+            {
+              "title": "Para el dolor",
+              "text": "Paracetamol o ibuprofeno de la farmacia, si normalmente puede tomarlos."
+            },
+            {
+              "title": "No toque las ampollas",
+              "text": "No las reviente. Cubra las ampollas rotas con un apósito limpio y evite el sol."
+            },
+            {
+              "title": "Alergia al sol",
+              "text": "Una erupción con picor y granitos en la piel expuesta en los primeros días de vacaciones suele ser una erupción polimorfa lumínica. La sombra y un antihistamínico de farmacia suelen ayudar; los casos intensos o persistentes se pueden valorar por vídeo."
+            }
+          ]
+        },
+        {
+          "h2": "Mosquitos y garrapatas",
+          "paragraphs": [
+            "Las picaduras de mosquito en Portugal suelen dar solo picor: un antihistamínico en pastillas o crema de farmacia, e intente no rascarse. En Madeira hay mosquitos Aedes — use repelente.",
+            "Retire las garrapatas con pinzas finas, cerca de la piel, y anote la fecha. Fiebre, dolor de cabeza o erupción en las dos semanas siguientes requieren un médico: la fiebre botonosa mediterránea existe en Portugal y tiene tratamiento."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puede un médico valorar una erupción por vídeo?",
+          "a": "A menudo sí — con buena luz y un primer plano. Si la médica necesita explorarle en persona o pedir pruebas, se lo dirá."
+        },
+        {
+          "q": "¿Me pueden tratar una picadura infectada?",
+          "a": "Si la médica diagnostica una infección bacteriana de la piel, puede recetar el tratamiento por receta electrónica. Muchas picaduras rojas son solo inflamación y no necesitan antibiótico."
+        },
+        {
+          "q": "¿Qué pido en la farmacia?",
+          "a": "Para la quemadura: aftersun o un gel calmante, y analgésicos. Para picaduras con picor: un antihistamínico oral o una crema suave. Informe al farmacéutico de otros medicamentos y de un posible embarazo."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "39 € por la videoconsulta. La receta, si se emite, está incluida."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clínica turista"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consultas por motivo (en portugués)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "La médica"
+        }
+      ]
+    },
+    {
+      "slug": "intossicazione-alimentare-portogallo-cosa-fare",
+      "group": "food-poisoning-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Intossicazione alimentare in Portogallo",
+      "hubBlurb": "Reidratazione, farmacia, segnali d’allarme — mal di pancia in vacanza.",
+      "titleTag": "Intossicazione Alimentare o Diarrea in Portogallo: Cosa Fare (2026)",
+      "description": "Diarrea o vomito in vacanza in Portogallo? Reidratazione, cosa vende la farmacia senza ricetta, segnali d’allarme e videoconsulto medico a 39 €.",
+      "h1": "Intossicazione Alimentare o Diarrea in Portogallo — Cosa Faccio?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-food-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "39 €",
+      "priceNote": "Videoconsulto con un medico iscritto all’ordine portoghese, circa 30 minuti. Ricetta elettronica inclusa se indicata. Nessun costo extra al pagamento.",
+      "ctaTitle": "Non migliora?",
+      "ctaLead": "Prenoti un videoconsulto con Lon Clinic in inglese, spagnolo o portoghese — ovunque si trovi in Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La maggior parte delle intossicazioni alimentari e delle diarree del viaggiatore passa in uno-tre giorni. La priorità è bere: piccoli sorsi frequenti e sali di reidratazione orale, in qualsiasi farmacia (chieda «soro de reidratação oral»).",
+        "Consulti un medico se non migliora dopo 48 ore, se non trattiene i liquidi o se è preoccupato — il videoconsulto costa 39 €. Sangue nelle feci, febbre alta, dolore forte o segni di disidratazione: pronto soccorso o 112."
+      ],
+      "onlineTitle": "Quando un consulto online può aiutare",
+      "urgentTitle": "Vada subito al pronto soccorso",
+      "safeOnline": [
+        "Adulto con diarrea e/o vomito da uno a tre giorni, che riesce a bere",
+        "Niente sangue né feci nere, febbre sotto i 38,5 °C",
+        "Vuole sapere se servono farmaci — o un certificato per l’assicurazione",
+        "Può fare una videochiamata dal telefono o dal portatile"
+      ],
+      "goToUrgent": [
+        "Sangue nelle feci, o feci nere come catrame",
+        "Non trattiene alcun liquido da più di 6–8 ore, o urina pochissimo",
+        "Capogiri alzandosi, confusione o svenimento",
+        "Dolore addominale forte o continuo, o pancia dura e gonfia",
+        "Febbre sopra i 38,5 °C con forte malessere",
+        "Neonati e bambini piccoli, anziani fragili, gravidanza o difese immunitarie basse — cercate presto una visita di persona"
+      ],
+      "howTitle": "Come funziona il consulto online",
+      "howItWorks": [
+        {
+          "title": "Prenoti un orario",
+          "text": "Spesso ci sono appuntamenti in giornata, sette giorni su sette. 39 €, visibili prima di pagare. Consulti in inglese, spagnolo o portoghese."
+        },
+        {
+          "title": "Valutazione in video",
+          "text": "Il medico chiede dei sintomi, di quanto beve, di cosa ha mangiato e dei farmaci abituali, e cerca segni di disidratazione."
+        },
+        {
+          "title": "Un piano — e la ricetta se indicata",
+          "text": "Indicazioni chiare su liquidi e cibo e, se serve, una ricetta elettronica portoghese valida in qualsiasi farmacia. Un certificato quando è clinicamente giustificato."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Cosa fare nelle prime 24 ore",
+          "items": [
+            {
+              "title": "Prima di tutto, bere",
+              "text": "I sali di reidratazione orale (bustine da sciogliere in acqua) reintegrano sali e zuccheri meglio della sola acqua. Poco e spesso. Aiutano anche brodo e succo diluito; eviti l’alcol."
+            },
+            {
+              "title": "Mangi quando riesce",
+              "text": "Non serve digiunare. Cibi semplici — riso, pane, banane, minestra — appena ne ha voglia."
+            },
+            {
+              "title": "Si lavi le mani",
+              "text": "Acqua e sapone dopo il bagno e prima di mangiare. I virus intestinali si diffondono in fretta negli alloggi condivisi."
+            }
+          ]
+        },
+        {
+          "h2": "Cosa vendono le farmacie portoghesi senza ricetta",
+          "paragraphs": [
+            "Sali di reidratazione orale, paracetamolo e — negli adulti senza febbre né sangue nelle feci — loperamide per ridurre le scariche. Il farmacista farà qualche domanda; segnali altri farmaci e un’eventuale gravidanza.",
+            "Gli antibiotici e gli antiemetici più forti richiedono la ricetta in Portogallo. La maggior parte delle diarree del viaggiatore non ha bisogno di antibiotico — lo decide il medico."
+          ]
+        },
+        {
+          "h2": "Intossicazione, virus o altro?",
+          "paragraphs": [
+            "Nei primi giorni cambia poco: bere, riposare, controllare i segnali d’allarme. Il norovirus si trasmette da persona a persona e spesso inizia con vomito improvviso; l’intossicazione batterica segue di solito un pasto preciso, da poche ore a un paio di giorni dopo.",
+            "Una diarrea che dura più di una settimana, o che ritorna dopo il rientro a casa, va valutata bene — a volte con un esame delle feci."
+          ]
+        },
+        {
+          "h2": "Dove chiedere aiuto — farmacia, online o pronto soccorso",
+          "table": {
+            "headers": [
+              "Opzione",
+              "Quando",
+              "Costo"
+            ],
+            "rows": [
+              [
+                "Farmacia (farmácia)",
+                "Sintomi lievi, sali di reidratazione, consigli",
+                "I prodotti acquistati"
+              ],
+              [
+                "Lon Clinic online",
+                "Nessun miglioramento in 48 h, serve un piano, una ricetta o un certificato",
+                "39 €"
+              ],
+              [
+                "Pronto soccorso",
+                "Segnali d’allarme: sangue, disidratazione, dolore forte",
+                "Spesso a pagamento senza TEAM"
+              ]
+            ]
+          }
+        }
+      ],
+      "faq": [
+        {
+          "q": "Serve l’antibiotico per la diarrea del viaggiatore?",
+          "a": "Di solito no. La maggior parte dei casi guarisce da sola bevendo. Il medico può prescrivere un antibiotico nelle forme gravi — per esempio con febbre alta o moltissime scariche al giorno — dopo averla valutata."
+        },
+        {
+          "q": "Posso prendere la loperamide (Imodium)?",
+          "a": "Gli adulti senza febbre e senza sangue nelle feci in genere possono prenderla per breve tempo. Non nei bambini, né in caso di sangue, febbre alta o dolore addominale forte. Chieda al farmacista."
+        },
+        {
+          "q": "Posso avere un certificato per l’assicurazione viaggio?",
+          "a": "Se ha dovuto annullare un volo o un’escursione, il medico può rilasciare un certificato dopo il videoconsulto quando è clinicamente giustificato. Veda la nostra guida sul certificato medico per l’assicurazione viaggio."
+        },
+        {
+          "q": "L’acqua del rubinetto è potabile in Portogallo?",
+          "a": "Sì. In Portogallo l’acqua del rubinetto è trattata e in genere sicura. I disturbi intestinali in vacanza arrivano di solito dal cibo, da altre persone o dall’acqua di balneazione — non dal rubinetto."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta/diarreia-do-viajante",
+          "label": "Diarrea del viaggiatore (pagina in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
+      ]
+    },
+    {
+      "slug": "antibiotico-portogallo-senza-ricetta",
+      "group": "antibiotics-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Antibiotici in Portogallo",
+      "hubBlurb": "Solo con ricetta — come farsi valutare, e quando l’antibiotico è la risposta giusta.",
+      "titleTag": "Antibiotici Senza Ricetta in Portogallo? Cosa Fare (2026)",
+      "description": "No: in Portogallo gli antibiotici richiedono la ricetta. Come farsi valutare in fretta da turista: videoconsulto 39 €, ricetta elettronica valida in ogni farmacia se indicata.",
+      "h1": "Antibiotico Senza Ricetta in Portogallo? Cosa Può Fare un Turista",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-antibiotics-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "39 €",
+      "priceNote": "Videoconsulto con un medico iscritto all’ordine portoghese, circa 30 minuti. Ricetta elettronica inclusa se indicata. Nessun costo extra al pagamento.",
+      "ctaTitle": "Pensa di aver bisogno di un antibiotico?",
+      "ctaLead": "Prenoti un videoconsulto con Lon Clinic in inglese, spagnolo o portoghese — ovunque si trovi in Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Le farmacie in Portogallo non vendono antibiotici senza ricetta medica — nemmeno quelli più comuni.",
+        "La via legale più rapida per un’infezione non urgente è un videoconsulto (39 €). Se il medico ritiene indicato l’antibiotico, riceve una ricetta elettronica portoghese valida in qualsiasi farmacia. Se non lo è, riceve un piano che aiuta davvero."
+      ],
+      "onlineTitle": "Quando ha senso il consulto online",
+      "urgentTitle": "Vada subito al pronto soccorso",
+      "safeOnline": [
+        "Sintomi di un’infezione comune: cistite, mal di gola, sinusite, mal d’orecchio, una ferita o puntura infetta",
+        "È adulto, sta male ma parla e si muove normalmente",
+        "Vuole il parere di un medico su se l’antibiotico serva davvero",
+        "Può fare una videochiamata dal telefono o dal portatile"
+      ],
+      "goToUrgent": [
+        "Difficoltà a respirare, gonfiore di viso o lingua, o un’eruzione che si estende in fretta — chiami il 112",
+        "Febbre alta con confusione, rigidità del collo, o macchie violacee che non scompaiono premendo con un bicchiere",
+        "Pelle rossa e calda che si allarga in fretta, o strisce rosse da una ferita",
+        "Mal di denti con gonfiore del viso o difficoltà a deglutire",
+        "Febbre con dolore lombare, o vomito che non si ferma",
+        "Gravidanza con febbre"
+      ],
+      "howTitle": "Come funziona il consulto online",
+      "howItWorks": [
+        {
+          "title": "Prenoti un orario",
+          "text": "Spesso ci sono appuntamenti in giornata, sette giorni su sette. 39 €, visibili prima di pagare. Consulti in inglese, spagnolo o portoghese."
+        },
+        {
+          "title": "Valutazione in video",
+          "text": "Il medico chiede di sintomi, allergie e farmaci abituali, e osserva ciò che si vede in camera — gola, pelle, occhi."
+        },
+        {
+          "title": "Ricetta, se indicata",
+          "text": "Ricetta elettronica portoghese via SMS o email, valida in qualsiasi farmacia. Non un questionario, e nessun antibiotico «per sicurezza»."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Perché la farmacia dice di no",
+          "paragraphs": [
+            "In Portogallo gli antibiotici sono farmaci soggetti a prescrizione. I farmacisti applicano la regola in modo rigoroso, anche con i turisti che portano la scatola vuota.",
+            "Una ricetta di un altro Paese UE può in linea di principio essere spedita in Portogallo se contiene i dati richiesti, ma molte farmacie sono prudenti con le ricette cartacee straniere, e quelle extra-UE non sono accettate. Una ricetta elettronica portoghese evita il problema."
+          ]
+        },
+        {
+          "h2": "Quando l’antibiotico serve — e quando no",
+          "items": [
+            {
+              "title": "Spesso necessario",
+              "text": "Cistite non complicata nella donna, alcune infezioni della pelle, alcuni casi di tonsillite o sinusite che non migliorano."
+            },
+            {
+              "title": "Di solito inutile",
+              "text": "Raffreddore, influenza, COVID, la maggior parte dei mal di gola e delle tossi, e quasi tutte le diarree del viaggiatore. Sono virali o passano da sole — l’antibiotico aggiunge effetti collaterali senza accelerare la guarigione."
+            },
+            {
+              "title": "Serve un dentista",
+              "text": "Mal di denti e ascesso dentale richiedono un dentista. L’antibiotico da solo non cura il dente."
+            }
+          ]
+        },
+        {
+          "h2": "Ottenere una ricetta da visitatore — SNS, privato o online",
+          "table": {
+            "headers": [
+              "Opzione",
+              "Rapidità",
+              "Costo",
+              "Ideale per"
+            ],
+            "rows": [
+              [
+                "SNS (pubblico)",
+                "Lento per i visitatori",
+                "Spesso a pagamento senza TEAM",
+                "Emergenze"
+              ],
+              [
+                "Privato di persona",
+                "Rapido",
+                "Spesso caro senza assicurazione",
+                "Casi che richiedono visita o esami"
+              ],
+              [
+                "Lon Clinic online",
+                "Orari in giornata",
+                "39 €",
+                "Infezioni comuni senza segnali d’allarme"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "Ritirare il farmaco",
+          "paragraphs": [
+            "La ricetta elettronica arriva via SMS o email con un codice. Lo mostri in qualsiasi farmácia del Portogallo. I visitatori pagano il prezzo di farmacia, di solito contenuto per gli antibiotici comuni."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Posso comprare l’amoxicillina senza ricetta in Portogallo?",
+          "a": "No. L’amoxicillina, come ogni antibiotico, richiede la ricetta in Portogallo."
+        },
+        {
+          "q": "Il medico mi prescriverà l’antibiotico se lo chiedo?",
+          "a": "Solo se è clinicamente indicato dopo la valutazione. Altrimenti le spiega perché e cosa l’aiuterà. I 39 € pagano il consulto, non una ricetta garantita."
+        },
+        {
+          "q": "La mia ricetta italiana vale in Portogallo?",
+          "a": "Le ricette UE possono in linea di principio essere spedite se contengono i dati richiesti; quelle extra-UE non sono valide. Se la farmacia rifiuta, un videoconsulto può rilasciare una ricetta elettronica portoghese quando appropriato."
+        },
+        {
+          "q": "Quanto costa?",
+          "a": "39 € il videoconsulto, ricetta inclusa se rilasciata. Il farmaco si paga in farmacia."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consulti per disturbo (in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
+      ]
+    },
+    {
+      "slug": "certificato-medico-assicurazione-viaggio-portogallo",
+      "group": "insurance-note-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Certificato medico per l’assicurazione",
+      "hubBlurb": "Troppo malato per viaggiare — un certificato dopo una vera valutazione, se giustificato.",
+      "titleTag": "Certificato Medico per l’Assicurazione Viaggio in Portogallo (2026)",
+      "description": "Malato e impossibilitato a volare, o escursione annullata in Portogallo? Valutazione in video (39 €). Certificato medico se clinicamente giustificato, ricevuta inclusa.",
+      "h1": "Le Serve un Certificato Medico per l’Assicurazione Viaggio in Portogallo?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-insurance-note-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "39 €",
+      "priceNote": "Videoconsulto con un medico iscritto all’ordine portoghese, circa 30 minuti. Ricetta elettronica inclusa se indicata. Nessun costo extra al pagamento.",
+      "ctaTitle": "Sta male e deve documentarlo?",
+      "ctaLead": "Prenoti un videoconsulto con Lon Clinic in inglese, spagnolo o portoghese — ovunque si trovi in Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La maggior parte delle assicurazioni viaggio rimborsa un volo, un’escursione o notti extra in hotel solo se un medico conferma che lei era malato in quel momento. Quindi bisogna farsi vedere mentre si è malati — non dopo.",
+        "Un videoconsulto Lon Clinic costa 39 €. Se il medico lo ritiene clinicamente giustificato, rilascia un certificato con la malattia e le date, e lei riceve la ricevuta del consulto. Nessun certificato senza consulto, e nessuna retrodatazione."
+      ],
+      "onlineTitle": "Quando il consulto online va bene",
+      "urgentTitle": "Vada di persona o al pronto soccorso",
+      "safeOnline": [
+        "Sta male adesso — gastroenterite, febbre, un’infezione respiratoria — e questo cambia i suoi piani di viaggio",
+        "L’assicurazione chiede un certificato o una relazione medica",
+        "Può fare una videochiamata e descrivere o mostrare i sintomi",
+        "Nessun segnale d’allarme da pronto soccorso"
+      ],
+      "goToUrgent": [
+        "Dolore al petto, difficoltà a respirare, segni di ictus o svenimento — chiami il 112",
+        "Un trauma che potrebbe essere una frattura — serve una radiografia di persona",
+        "L’assicurazione richiede una visita di persona o un referto ospedaliero",
+        "Febbre molto alta, confusione, disidratazione o peggioramento rapido"
+      ],
+      "howTitle": "Come funziona",
+      "howItWorks": [
+        {
+          "title": "Prenoti mentre sta male",
+          "text": "Spesso ci sono orari in giornata. Nelle note della prenotazione indichi cosa chiede l’assicurazione (certificato, date, idoneità al viaggio)."
+        },
+        {
+          "title": "Valutazione in video",
+          "text": "Il medico raccoglie la storia, osserva ciò che si vede in camera e prima di tutto le dà un consiglio medico."
+        },
+        {
+          "title": "Certificato, se giustificato",
+          "text": "Quando è clinicamente giustificato, il certificato viene rilasciato dopo il consulto, insieme alla ricevuta. Se l’assicurazione ha un suo modulo, lo invii — il medico le dirà se può compilarlo su questa base."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Cosa chiedono di solito le assicurazioni",
+          "items": [
+            {
+              "title": "Diagnosi o sintomi principali",
+              "text": "Cosa aveva, in termini medici."
+            },
+            {
+              "title": "Date",
+              "text": "Quando è stato valutato e il periodo in cui non poteva viaggiare o partecipare all’attività."
+            },
+            {
+              "title": "Dati del medico",
+              "text": "Nome, numero di iscrizione all’Ordem dos Médicos e firma. Lon Clinic è registrata presso l’autorità sanitaria portoghese (ERS 45475)."
+            },
+            {
+              "title": "Ricevuta",
+              "text": "La prova di quanto ha pagato per il consulto, se ne chiede il rimborso."
+            }
+          ]
+        },
+        {
+          "h2": "Cosa non facciamo",
+          "paragraphs": [
+            "Non certifichiamo giorni in cui lei non è stato valutato e non scriviamo certificati su richiesta. Il medico registra ciò che riscontra.",
+            "Traumi che richiedono esami di imaging e moduli che richiedono una visita fisica si gestiscono meglio di persona."
+          ]
+        },
+        {
+          "h2": "La TEAM non è un’assicurazione viaggio",
+          "paragraphs": [
+            "La Tessera europea di assicurazione malattia copre le cure necessarie nel sistema pubblico. Non copre i consulti privati od online, né l’annullamento del viaggio.",
+            "Annullamento e interruzione del viaggio dipendono dall’assicurazione viaggio — controlli condizioni e scadenze della polizza e conservi tutte le ricevute."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Avrò sicuramente il certificato?",
+          "a": "No. Il consulto costa 39 € che il certificato venga rilasciato o meno. Il medico lo rilascia solo quando è clinicamente giustificato."
+        },
+        {
+          "q": "Potete farmi un certificato per ieri?",
+          "a": "Il medico può registrare la sua storia così come la racconta e certificare ciò che valuta. Non può certificare un giorno in cui non l’ha vista."
+        },
+        {
+          "q": "Il certificato ha un costo aggiuntivo?",
+          "a": "Nessun costo extra per il documento al pagamento. Paga il consulto."
+        },
+        {
+          "q": "La mia assicurazione accetta un certificato di telemedicina?",
+          "a": "La maggior parte delle assicurazioni accetta il certificato di un medico iscritto all’ordine, ma le polizze variano. Verifichi prima con l’assicurazione, soprattutto se ha un suo modulo o una rete di fornitori convenzionati."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta/atestado-medico",
+          "label": "Certificato medico (pagina in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
+      ]
+    },
+    {
+      "slug": "scottatura-punture-portogallo-cosa-fare",
+      "group": "skin-sun-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Scottature e punture",
+      "hubBlurb": "Scottature, allergia al sole, punture, tracina e meduse — cosa fare in vacanza.",
+      "titleTag": "Scottature, Punture e Meduse in Portogallo: Cosa Fare (2026)",
+      "description": "Brutta scottatura, allergia al sole, una puntura infetta o una tracina in Portogallo? Primo soccorso, farmacia, segnali d’allarme e videoconsulto a 39 €.",
+      "h1": "Scottatura, Puntura o Medusa in Portogallo — Cosa Faccio?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-skin-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "39 €",
+      "priceNote": "Videoconsulto con un medico iscritto all’ordine portoghese, circa 30 minuti. Ricetta elettronica inclusa se indicata. Nessun costo extra al pagamento.",
+      "ctaTitle": "Vuole che la veda un medico?",
+      "ctaLead": "Prenoti un videoconsulto con Lon Clinic in inglese, spagnolo o portoghese — ovunque si trovi in Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "La maggior parte dei problemi di pelle in vacanza — scottature, sudamina, punture di zanzara — si gestisce con il primo soccorso e un passaggio in farmacia.",
+        "Consulti un medico se dopo 48 ore la pelle è più rossa e calda, se ci sono vesciche su una zona ampia o se una puntura sembra infetta — il videoconsulto costa 39 €. Gonfiore del viso o difficoltà a respirare dopo una puntura: chiami il 112."
+      ],
+      "onlineTitle": "Quando un consulto online può aiutare",
+      "urgentTitle": "Chieda aiuto subito",
+      "safeOnline": [
+        "Scottatura dolorosa o con piccole vesciche, ma sta bene",
+        "Eruzione che prude dopo il sole, o molte punture d’insetto",
+        "Una puntura o un graffio rosso e dolente, senza febbre né strisce rosse",
+        "Può mostrare la pelle in camera con buona luce"
+      ],
+      "goToUrgent": [
+        "Gonfiore di labbra, lingua o gola, respiro sibilante o svenimento dopo una puntura — chiami il 112",
+        "Scottatura con vesciche estese e febbre, brividi, confusione o vomito (possibile colpo di calore)",
+        "Arrossamento che si allarga in fretta, strisce rosse, o febbre con una ferita",
+        "Puntura di caravella portoghese con dolore al petto, difficoltà a respirare o dolore forte",
+        "Febbre ed eruzione nei giorni dopo il morso di una zecca — veda un medico in giornata"
+      ],
+      "howTitle": "Come funziona il consulto online",
+      "howItWorks": [
+        {
+          "title": "Prenoti un orario",
+          "text": "Spesso ci sono appuntamenti in giornata, sette giorni su sette. 39 €, visibili prima di pagare. Consulti in inglese, spagnolo o portoghese."
+        },
+        {
+          "title": "Mostri la pelle in video",
+          "text": "Aiutano la luce naturale e un primo piano. Il medico chiede quando è iniziato, cosa stava facendo e quali farmaci prende."
+        },
+        {
+          "title": "Terapia, se indicata",
+          "text": "Consigli su cosa comprare in farmacia e, se serve una terapia con ricetta, una ricetta elettronica portoghese."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "La tracina (peixe-aranha) — frequente sulle spiagge portoghesi",
+          "paragraphs": [
+            "La tracina si nasconde nella sabbia in acqua bassa, soprattutto in Algarve e sulla costa occidentale. Pestarla provoca un dolore improvviso e intenso al piede.",
+            "Primo soccorso: immerga il piede in acqua calda quanto riesce a sopportare senza scottarsi (la provi con l’altra mano) per 30–90 minuti. I bagnini conoscono la procedura. Paracetamolo o ibuprofene aiutano. Se nei giorni successivi la ferita diventa rossa, calda e gonfia, consulti un medico.",
+            "Le scarpette da scoglio in acqua bassa, soprattutto con la bassa marea, evitano la maggior parte delle punture."
+          ]
+        },
+        {
+          "h2": "Meduse e caravella portoghese (caravela-portuguesa)",
+          "paragraphs": [
+            "Esca dall’acqua. Sciacqui con acqua di mare — non acqua dolce — e rimuova i filamenti visibili con una pinzetta o con i guanti, senza strofinare. Dopo, l’acqua calda può alleviare il dolore.",
+            "La puntura della caravella portoghese è più dolorosa e può dare sintomi generali. Segua i bagnini e le bandiere della spiaggia; in caso di dolore al petto, difficoltà a respirare o svenimento, chiami il 112."
+          ]
+        },
+        {
+          "h2": "Scottature e allergia al sole",
+          "items": [
+            {
+              "title": "Fresco, non freddo",
+              "text": "Docce fresche o panni umidi, bere molto, e doposole o una crema idratante leggera."
+            },
+            {
+              "title": "Contro il dolore",
+              "text": "Paracetamolo o ibuprofene dalla farmacia, se di solito li può prendere."
+            },
+            {
+              "title": "Non tocchi le vesciche",
+              "text": "Non le buchi. Copra le vesciche rotte con una medicazione pulita e stia all’ombra."
+            },
+            {
+              "title": "Allergia al sole",
+              "text": "Un’eruzione pruriginosa a puntini sulla pelle esposta nei primi giorni di vacanza è spesso un’eruzione polimorfa solare. Ombra e un antistaminico della farmacia di solito aiutano; i casi forti o persistenti si possono valutare in video."
+            }
+          ]
+        },
+        {
+          "h2": "Zanzare e zecche",
+          "paragraphs": [
+            "In Portogallo le punture di zanzara di solito danno solo prurito: un antistaminico in compresse o in crema, e cerchi di non grattarsi. A Madeira ci sono zanzare Aedes — usi un repellente.",
+            "Rimuova le zecche con una pinzetta sottile, vicino alla pelle, e annoti la data. Febbre, mal di testa o eruzione nelle due settimane successive richiedono un medico: la febbre bottonosa del Mediterraneo esiste in Portogallo e si cura."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un medico può valutare un’eruzione in video?",
+          "a": "Spesso sì — con buona luce e un primo piano. Se serve una visita di persona o degli esami, il medico glielo dirà."
+        },
+        {
+          "q": "Si può curare una puntura infetta?",
+          "a": "Se il medico diagnostica un’infezione batterica della pelle, può prescrivere la terapia con ricetta elettronica. Molte punture arrossate sono solo infiammazione e non richiedono antibiotico."
+        },
+        {
+          "q": "Cosa chiedo in farmacia?",
+          "a": "Per la scottatura: doposole o un gel lenitivo, e un antidolorifico. Per le punture che prudono: un antistaminico orale o una crema leggera. Segnali al farmacista altri farmaci e un’eventuale gravidanza."
+        },
+        {
+          "q": "Quanto costa?",
+          "a": "39 € il videoconsulto. La ricetta, se rilasciata, è inclusa."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consulti per disturbo (in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
+      ]
+    },
+    {
+      "slug": "medico-portogallo-turista",
+      "group": "see-doctor-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Medico in Portogallo da turista",
+      "hubBlurb": "Pubblico, privato o online — come farsi visitare senza SNS né medico di famiglia.",
+      "titleTag": "Come Vedere un Medico in Portogallo da Turista (Guida 2026)",
+      "description": "Niente medico di famiglia né accesso al SNS in Portogallo? Come i turisti possono farsi visitare in fretta — opzioni pubbliche, private e online a confronto.",
+      "h1": "Serve un Medico in Portogallo? Ecco Come Fanno i Turisti",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-see-doctor-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "39 €",
+      "priceNote": "Videoconsulto con un medico iscritto all’ordine portoghese, circa 30 minuti. Ricetta elettronica inclusa se indicata. Nessun costo extra al pagamento.",
+      "ctaTitle": "Le serve un medico oggi?",
+      "ctaLead": "Prenoti un videoconsulto con Lon Clinic in inglese, spagnolo o portoghese — ovunque si trovi in Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Da visitatore senza iscrizione al SNS, le opzioni più rapide sono una clinica privata o un consulto online — entrambe funzionano senza medico di famiglia portoghese.",
+        "Per i problemi non urgenti l’online è di solito più rapido ed economico. Vada al pronto soccorso di un ospedale pubblico (urgência) solo per vere emergenze — oppure chiami il 112."
+      ],
+      "onlineTitle": "Quando ha senso un consulto online",
+      "urgentTitle": "Quando andare al pronto soccorso",
+      "safeOnline": [
+        "Problemi comuni e non urgenti: cistite, reflusso, stitichezza, raffreddore, un’eruzione cutanea, diarrea del viaggiatore",
+        "Rinnovo della ricetta di un farmaco cronico che prende già a dose stabile",
+        "Può fare una videochiamata dal telefono o dal portatile",
+        "Niente febbre con malessere grave, niente dolore al petto, niente difficoltà a respirare"
+      ],
+      "goToUrgent": [
+        "Dolore al petto, difficoltà a respirare, segni di ictus, emorragia importante, svenimento",
+        "Febbre alta con dolore forte, confusione o vomito che non si ferma",
+        "Gravidanza con sintomi preoccupanti",
+        "Qualsiasi situazione in cui aspettare un appuntamento sarebbe pericoloso"
+      ],
+      "howTitle": "Prenotare un consulto online",
+      "howItWorks": [
+        {
+          "title": "Scelga la lingua",
+          "text": "I consulti Lon Clinic sono in inglese, spagnolo o portoghese. Molti italiani si trovano a proprio agio in spagnolo. La lingua si sceglie al momento della prenotazione."
+        },
+        {
+          "title": "Scelga l’orario",
+          "text": "Spesso ci sono orari in giornata, sette giorni su sette. Il prezzo (39 €) è visibile prima di pagare."
+        },
+        {
+          "title": "Entri nella videochiamata",
+          "text": "Un medico abilitato la visita in video — non un questionario che rilascia antibiotici da solo."
+        },
+        {
+          "title": "Consigli e, se serve, una ricetta",
+          "text": "Se indicato, riceve una ricetta elettronica portoghese, valida in qualsiasi farmacia del Paese, di solito via SMS o email."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "SNS, privato o online — cosa fa per lei?",
+          "items": [
+            {
+              "title": "SNS (sistema pubblico)",
+              "text": "Pensato per i residenti con un medico di famiglia. Da turista, l’accesso pubblico realistico è il pronto soccorso (urgência) — adatto alle vere emergenze, ma con lunghe attese per i problemi non urgenti."
+            },
+            {
+              "title": "Clinica o ospedale privato",
+              "text": "Rapidi e spesso con personale che parla inglese a Lisbona, Porto, in Algarve e nelle altre zone turistiche, ma costosi senza assicurazione, e bisogna arrivarci."
+            },
+            {
+              "title": "Consulto online (Lon Clinic)",
+              "text": "Ideale per problemi comuni e non urgenti. Un medico iscritto all’Ordem dos Médicos la visita in video. Se serve, la ricetta è elettronica e vale in qualsiasi farmacia del Portogallo. Consulti in inglese, spagnolo o portoghese. 39 €, visibili prima del pagamento."
+            }
+          ]
+        },
+        {
+          "h2": "Servono l’assicurazione viaggio o la TEAM?",
+          "paragraphs": [
+            "I cittadini UE/SEE con la Tessera europea di assicurazione malattia (TEAM) accedono alle cure pubbliche necessarie alle stesse condizioni dei residenti — la tessera non copre i consulti privati od online.",
+            "I visitatori extra-UE dovrebbero avere un’assicurazione viaggio. Lon Clinic può rilasciare una ricevuta per il rimborso se la polizza copre le cure ambulatoriali o la telemedicina.",
+            "Per un problema rapido e non urgente, un consulto online è spesso più semplice che districarsi tra le pratiche per le cure pubbliche."
+          ]
+        },
+        {
+          "h2": "E se non parlo inglese?",
+          "paragraphs": [
+            "Non offriamo consulti in italiano. Se l’inglese non le è comodo, lo spagnolo è spesso la scelta più naturale per chi parla italiano. Lo indichi al momento della prenotazione."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un turista può presentarsi in un ospedale portoghese?",
+          "a": "Sì, per le emergenze — i pronto soccorso pubblici curano tutti, qualunque sia la nazionalità. Ai non residenti può essere addebitato il costo, e non è pensato per i problemi minori."
+        },
+        {
+          "q": "Usare il SNS da turista ha un costo?",
+          "a": "Ai non residenti senza TEAM né iscrizione portoghese in genere vengono addebitate le cure, comprese le visite al pronto soccorso."
+        },
+        {
+          "q": "Quanto in fretta posso avere un consulto online?",
+          "a": "Spesso ci sono appuntamenti in giornata, sette giorni su sette. Sceglie l’orario al momento della prenotazione. Il consulto costa 39 €."
+        },
+        {
+          "q": "La ricetta funziona in qualsiasi farmacia?",
+          "a": "Quando viene rilasciata, è una ricetta elettronica portoghese. La ritira in qualsiasi farmacia del Paese con il codice ricevuto via SMS o email."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta",
+          "label": "Consulti per disturbo (in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
+      ]
+    },
+    {
+      "slug": "cistite-portogallo-cosa-fare",
+      "group": "uti-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Cistite in Portogallo",
+      "hubBlurb": "Farmacia, ricetta, segnali d’allarme — cosa fare con una cistite in viaggio.",
+      "titleTag": "Cistite in Vacanza in Portogallo: Cosa Fare (Guida Rapida)",
+      "description": "Cistite o infezione urinaria in vacanza in Portogallo? Farmacia, ricetta e videoconsulto. 39 €, video, ricetta elettronica se indicata.",
+      "h1": "Ho la Cistite in Portogallo — Cosa Devo Fare?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-uti-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "39 €",
+      "priceNote": "Videoconsulto con un medico iscritto all’ordine portoghese, circa 30 minuti. Ricetta elettronica inclusa se indicata. Nessun costo extra al pagamento.",
+      "ctaTitle": "Vuole farsi visitare?",
+      "ctaLead": "Prenoti un videoconsulto con Lon Clinic in inglese, spagnolo o portoghese — ovunque si trovi in Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Beva acqua. La farmacia può aiutare con i sintomi, ma in Portogallo l’antibiotico lo prescrive solo un medico — il farmacista no.",
+        "Per una cistite non complicata la via più rapida è spesso un videoconsulto (39 €). Febbre alta, dolore al fianco o alla schiena, vomito, gravidanza o forte malessere: pronto soccorso o 112."
+      ],
+      "onlineTitle": "Quando un consulto online può aiutare",
+      "urgentTitle": "Vada subito al pronto soccorso",
+      "safeOnline": [
+        "Donna, non in gravidanza, con cistite tipica (bruciore, urgenza, minzione frequente), senza febbre",
+        "Niente dolore al fianco o alla schiena, niente vomito, niente malessere grave",
+        "Può fare una videochiamata dal telefono o dal portatile",
+        "Sintomi da qualche giorno, non settimane di sangue nelle urine senza spiegazione"
+      ],
+      "goToUrgent": [
+        "Febbre sopra i 38,5 °C, brividi o forte malessere",
+        "Dolore nella parte bassa della schiena o al fianco (possibile infezione renale)",
+        "Nausea o vomito insieme ai sintomi urinari",
+        "Gravidanza, o possibile gravidanza",
+        "È un uomo, un bambino, o ha un catetere urinario",
+        "Molto sangue visibile nelle urine, confusione o svenimento"
+      ],
+      "howTitle": "Come funziona il consulto online per la cistite",
+      "howItWorks": [
+        {
+          "title": "Prenoti un orario",
+          "text": "Spesso ci sono appuntamenti in giornata, sette giorni su sette. 39 €, visibili prima di pagare. Consulti in inglese, spagnolo o portoghese."
+        },
+        {
+          "title": "Valutazione in video",
+          "text": "Un medico abilitato la visita in video — non un questionario che rilascia antibiotici da solo."
+        },
+        {
+          "title": "Ricetta, se indicata",
+          "text": "Se è una cistite non complicata, può ricevere una ricetta elettronica portoghese, valida in qualsiasi farmacia, di solito via SMS o email alla fine del consulto."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "La farmacia può aiutarmi senza ricetta?",
+          "paragraphs": [
+            "Le farmacie portoghesi (farmácias) sono ben preparate e possono consigliare prodotti da banco per alleviare i sintomi lievi.",
+            "Non possono dare antibiotici. In Portogallo l’antibiotico per la cistite richiede sempre un medico. Se i sintomi sono lievi, il farmacista resta un buon primo passo per capire cosa fare."
+          ]
+        },
+        {
+          "h2": "Come vedere un medico da turista",
+          "items": [
+            {
+              "title": "SNS (pubblico)",
+              "text": "Pensato per i residenti. Per un visitatore la porta pubblica realistica è il pronto soccorso — lento per una cistite semplice, adatto ai segnali d’allarme."
+            },
+            {
+              "title": "Clinica privata",
+              "text": "Spesso rapida in città e nelle zone turistiche, ma costosa senza assicurazione, e bisogna arrivarci."
+            },
+            {
+              "title": "Online (Lon Clinic)",
+              "text": "Video con un medico iscritto all’Ordem dos Médicos. Se indicato, ricetta elettronica per qualsiasi farmacia del Paese. 39 €. Inglese, spagnolo o portoghese."
+            }
+          ]
+        },
+        {
+          "h2": "Antibiotico — SNS, privato o online",
+          "table": {
+            "headers": [
+              "Opzione",
+              "Rapidità",
+              "Costo",
+              "Ideale per"
+            ],
+            "rows": [
+              [
+                "SNS (pubblico)",
+                "Lento per i visitatori",
+                "Spesso a pagamento senza TEAM",
+                "Emergenze, non una cistite semplice"
+              ],
+              [
+                "Privato di persona",
+                "Rapido",
+                "Spesso caro senza assicurazione",
+                "Casi complessi o con segnali d’allarme"
+              ],
+              [
+                "Lon Clinic online",
+                "Orari in giornata",
+                "39 €",
+                "Cistite non complicata, senza febbre"
+              ]
+            ]
+          }
+        },
+        {
+          "h2": "Farmacia di turno",
+          "paragraphs": [
+            "Quasi tutte le città hanno una farmácia de serviço (di turno) aperta 24 ore. L’elenco è affisso sulla porta delle farmacie, oppure cerchi «farmácia de serviço» più il nome della città."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Posso comprare un antibiotico per la cistite senza ricetta in Portogallo?",
+          "a": "No. Gli antibiotici richiedono sempre la ricetta, anche per una cistite comune. Il farmacista può aiutare con i sintomi e i passi successivi, non con l’antibiotico."
+        },
+        {
+          "q": "Quanto costa il consulto online?",
+          "a": "Da Lon Clinic il videoconsulto costa 39 €. La ricetta, se il medico la rilascia, è inclusa — nessun costo extra al pagamento."
+        },
+        {
+          "q": "La ricetta vale in qualsiasi farmacia?",
+          "a": "Sì. La ricetta elettronica portoghese si ritira in qualsiasi farmacia del Paese con il codice ricevuto via SMS o email."
+        },
+        {
+          "q": "Sono un uomo con questi sintomi. Posso prenotare online?",
+          "a": "L’infezione urinaria nell’uomo non si tratta come una cistite semplice. Non usi questa pagina come scorciatoia per l’antibiotico. Con febbre o dolore al fianco, pronto soccorso. Altrimenti prenoti un consulto generale e si aspetti una valutazione più attenta, spesso di persona."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta/infecao-urinaria",
+          "label": "Consulto per infezione urinaria (pagina in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
+      ]
+    },
+    {
+      "slug": "rinnovare-ricetta-vacanza-portogallo",
+      "group": "renew-prescription-tourist",
+      "lang": "it",
+      "hreflang": "it",
+      "status": "live",
+      "navLabel": "Rinnovare una ricetta",
+      "hubBlurb": "Farmaco cronico stabile in vacanza — videoconsulto a 19 €, non un modulo.",
+      "titleTag": "Rinnovare una Ricetta in Vacanza in Portogallo: Come Fare",
+      "description": "Farmaco finito o ricetta persa in Portogallo? Come rinnovarla in fretta — videoconsulto online a 19 €, ricetta elettronica se appropriata.",
+      "h1": "Deve Rinnovare la Ricetta in Portogallo? Ecco Come",
+      "bookingHref": "/marcar/renovacao?ref=tourist-renew-it&lang=en",
+      "bookingLabel": "Prenota consulto",
+      "price": "19 €",
+      "priceNote": "Videoconsulto breve per un farmaco cronico stabile. Ricetta elettronica inclusa se il medico può rinnovarla in sicurezza. Nessun costo extra di prescrizione.",
+      "ctaTitle": "Le serve la ricetta oggi?",
+      "ctaLead": "Prenoti un videoconsulto da 19 € con Lon Clinic in inglese, spagnolo o portoghese. Il codice, se rilasciato, vale in qualsiasi farmacia del Portogallo.",
+      "datePublished": "2026-09-29",
+      "dateModified": "2026-09-29",
+      "lead": [
+        "Se è un farmaco comune, non controllato, che prende già a dose stabile, spesso un medico può rinnovarlo in video — 19 € da Lon Clinic. Tenga a portata di mano la scatola o una foto della vecchia ricetta.",
+        "Non è un modulo che stampa qualsiasi farmaco. Antibiotici, farmaci per dimagrire, nuovi sonniferi od oppioidi non si rinnovano così. Sintomi nuovi o gravi: consulto completo o pronto soccorso — 112."
+      ],
+      "onlineTitle": "Quando il rinnovo in video ha senso",
+      "urgentTitle": "Non usi il rinnovo — pronto soccorso o consulto completo",
+      "safeOnline": [
+        "Un farmaco cronico che prende già (pressione, tiroide, colesterolo, inalatore, contraccezione e simili)",
+        "Dose stabile, nessun sintomo nuovo che metta in dubbio la terapia",
+        "Può mostrare la scatola, una foto o la vecchia ricetta",
+        "Non è un antibiotico, un farmaco GLP-1 per dimagrire, una nuova benzodiazepina o un oppioide"
+      ],
+      "goToUrgent": [
+        "Dolore al petto, difficoltà a respirare, segni di ictus o emorragia importante — 112",
+        "Una reazione grave a un farmaco (eruzione estesa, gonfiore, svenimento)",
+        "Non ha mai preso questo farmaco — è una prima prescrizione, non un rinnovo",
+        "Vuole un antibiotico, un sonnifero o un’iniezione per dimagrire senza una valutazione completa"
+      ],
+      "howTitle": "Rinnovare con un medico online",
+      "howItWorks": [
+        {
+          "title": "Prenoti il rinnovo",
+          "text": "19 €, visibili prima di pagare. Consulti in inglese, spagnolo o portoghese. Spesso ci sono orari in giornata."
+        },
+        {
+          "title": "Mostri il farmaco",
+          "text": "Confezione, foto o vecchia ricetta — nome, dose, quante volte al giorno. Passaporto o documento aiutano."
+        },
+        {
+          "title": "Decide il medico",
+          "text": "Se la storia basta e il farmaco si può rinnovare, riceve una ricetta elettronica portoghese via SMS o email, di solito alla fine della chiamata. Se no, glielo diciamo — non rinnoviamo alla cieca."
+        },
+        {
+          "title": "Qualsiasi farmacia in Portogallo",
+          "text": "Porti il codice in una farmácia. La maggior parte delle ricette elettroniche si ritira in giornata."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "La farmacia può rinnovare direttamente?",
+          "paragraphs": [
+            "In casi limitati — soprattutto farmaci cronici già su una ricetta elettronica portoghese — la farmacia può dare una piccola scorta senza nuova ricetta. Non è garantito e dipende dal farmaco. Non ci conti come piano."
+          ]
+        },
+        {
+          "h2": "Una ricetta italiana vale in Portogallo?",
+          "paragraphs": [
+            "Una ricetta di un altro Paese UE può in linea di principio essere spedita in Portogallo se contiene i dati richiesti (nome del farmaco o principio attivo, dose, dati del medico e firma). In pratica molte farmacie sono prudenti con le ricette straniere, soprattutto le ricette elettroniche che esistono solo nel sistema italiano.",
+            "La TEAM non paga un consulto privato o Lon Clinic. Possiamo rilasciare una ricevuta se la sua assicurazione viaggio copre le cure ambulatoriali o la telemedicina."
+          ]
+        },
+        {
+          "h2": "Cosa tenere pronto",
+          "items": [
+            {
+              "title": "La scatola o una foto",
+              "text": "Nome (commerciale o principio attivo), dose, quante volte lo prende."
+            },
+            {
+              "title": "La vecchia ricetta, se ce l’ha",
+              "text": "Carta o foto bastano."
+            },
+            {
+              "title": "Documento o passaporto",
+              "text": "Utile per la cartella. La TEAM solo se usa il sistema pubblico, non per questo consulto privato."
+            }
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Posso rinnovare qualsiasi farmaco così?",
+          "a": "La maggior parte dei farmaci cronici stabili — pressione, tiroide, colesterolo, contraccezione, molti inalatori — si può valutare così. Antibiotici, farmaci GLP-1 per dimagrire, nuovi farmaci psichiatrici o per il sonno e oppioidi non si rinnovano su questo percorso."
+        },
+        {
+          "q": "Quanto è rapida la nuova ricetta?",
+          "a": "Se il medico la rilascia alla fine della videochiamata, il codice arriva di solito via SMS o email subito o in pochi minuti — non è una promessa che tutto avvenga in meno di un’ora dalla prenotazione."
+        },
+        {
+          "q": "Quanto costa?",
+          "a": "19 € da Lon Clinic per il videoconsulto di rinnovo. Se il medico ritiene che sia un problema nuovo, glielo dirà — potrebbe servire un consulto generale completo da 39 €."
+        },
+        {
+          "q": "L’assicurazione viaggio lo copre?",
+          "a": "Alcune polizze coprono le cure ambulatoriali o la telemedicina. Controlli la sua. Lon Clinic può rilasciare una ricevuta. Molti visitatori pagano semplicemente i 19 €."
+        }
+      ],
+      "related": [
+        {
+          "href": "/tourist-clinic",
+          "label": "Clinica per turisti"
+        },
+        {
+          "href": "/consulta/renovacao-receita",
+          "label": "Rinnovo ricetta (pagina in portoghese)"
+        },
+        {
+          "href": "/equipa/rita-aguiar",
+          "label": "Il medico"
+        }
       ]
     }
   ]

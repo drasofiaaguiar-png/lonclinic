@@ -228,8 +228,73 @@ const UI = {
         slotCta: 'Termin buchen',
         slotPending: 'Zeiten ansehen',
         weekCta: 'Verfügbarkeit dieser Woche anzeigen'
+    },
+    it: {
+        htmlLang: 'it',
+        ogLocale: 'it_IT',
+        skip: 'Vai al contenuto',
+        navAria: 'Principale',
+        navConsulta: 'Vedere un medico',
+        navHub: 'Clinica per turisti',
+        navTravel: 'Clinica del viaggiatore',
+        navBook: 'Prenota consulto',
+        navLogin: 'Accedi',
+        openMenu: 'Apri menu',
+        breadcrumbHub: 'Clinica per turisti',
+        kicker: 'Clinica per turisti · Portogallo 2026',
+        languagesLine: 'Consultations strictly provided in English, Spanish or Portuguese',
+        languagesStrict:
+            'I consulti si svolgono esclusivamente in inglese, spagnolo o portoghese. Nessun consulto in italiano.',
+        clinician: 'Medico iscritto all’Ordem dos Médicos · ERS 45475',
+        faqTitle: 'Domande frequenti',
+        priceTitle: 'Prezzo',
+        relatedLangs: 'Questa guida in altre lingue',
+        relatedPages: 'Da leggere anche',
+        footerBrand: 'Consulto medico online in Portogallo — prezzo visibile, medico identificato, videochiamata.',
+        footerClinic: 'Clinica',
+        footerSupport: 'Assistenza',
+        footerDoctors: 'Il medico',
+        terms: 'Termini',
+        privacy: 'Privacy',
+        cookies: 'Cookie',
+        contact: 'Contatti',
+        disclaimer:
+            'Informazioni generali per chi visita il Portogallo. Non sostituiscono un consulto medico individuale. In caso di emergenza chiami il 112.',
+        reviewed: 'Rivisto dal team medico di Lon Clinic',
+        whatsapp: 'Contattaci su WhatsApp',
+        contactMenu: 'Contattaci',
+        whatsappTalk: 'Scrivici su WhatsApp',
+        callClinic: 'Chiama la clinica',
+        emergencyCta: 'Emergenze: 112',
+        urgentNote: 'In una vera emergenza chiami il 112 o vada al pronto soccorso (urgência) di un ospedale pubblico.',
+        bookAria: 'Prenota con Lon Clinic',
+        cardGpChip: 'Medicina generale',
+        cardGpTitle: 'Videoconsulto medico',
+        cardGpPrice: '39 € · ~30 min',
+        cardGpNote: 'Video · consultations strictly provided in English, Spanish or Portuguese',
+        cardGpCta: 'Prenota — 39 €',
+        cardRenewChip: 'Rinnovo',
+        cardRenewTitle: 'Rinnovo ricetta',
+        cardRenewPrice: '19 €',
+        cardRenewNote: 'Farmaco cronico stabile · video, non un modulo',
+        cardRenewCta: 'Rinnova — 19 €',
+        slotKicker: 'Prossimi orari',
+        slotCta: 'Prenota consulto',
+        slotPending: 'Vedi orari',
+        weekCta: 'Vedi la disponibilità della settimana'
     }
 };
+
+// Condition guides (not city pages): each links to the other guides in its own language.
+const TOPIC_GROUPS = [
+    'see-doctor-tourist',
+    'uti-tourist',
+    'food-poisoning-tourist',
+    'antibiotics-tourist',
+    'skin-sun-tourist',
+    'insurance-note-tourist',
+    'renew-prescription-tourist'
+];
 
 function escapeHtml(s) {
     return String(s)
@@ -246,7 +311,7 @@ function needsConsultLangPolicy(lang) {
     const l = String(lang || '')
         .toLowerCase()
         .replace('_', '-');
-    return l === 'fr' || l === 'de' || l.indexOf('fr-') === 0 || l.indexOf('de-') === 0;
+    return ['fr', 'de', 'it'].some((code) => l === code || l.indexOf(`${code}-`) === 0);
 }
 
 function applyConsultLangPolicy(href, lang) {
@@ -612,8 +677,8 @@ function ogLocaleAlts(current, siblings) {
 }
 
 function langSwitchHtml(current, siblings) {
-    const flags = { en: '🇬🇧', es: '🇪🇸', fr: '🇫🇷', de: '🇩🇪', pt: '🇵🇹' };
-    const labels = { en: 'EN', es: 'ES', fr: 'FR', de: 'DE', pt: 'PT' };
+    const flags = { en: '🇬🇧', es: '🇪🇸', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇵🇹' };
+    const labels = { en: 'EN', es: 'ES', fr: 'FR', de: 'DE', it: 'IT', pt: 'PT' };
     const items = siblings
         .map((p) => {
             const currentAttr = p.slug === current.slug ? ' aria-current="page"' : '';
@@ -641,10 +706,30 @@ function relatedHtml(current, siblings, ui) {
             return '';
         })
         .join('');
+    const linked = new Set(
+        (Array.isArray(current.related) ? current.related : []).map((item) => item && item.href)
+    );
+    const topicItems = TOPIC_GROUPS.includes(current.group)
+        ? livePages()
+              .filter(
+                  (p) =>
+                      p.lang === current.lang &&
+                      p.group !== current.group &&
+                      TOPIC_GROUPS.includes(p.group) &&
+                      !linked.has(`/${p.slug}`)
+              )
+              .sort((a, b) => TOPIC_GROUPS.indexOf(a.group) - TOPIC_GROUPS.indexOf(b.group))
+              .map(
+                  (p) =>
+                      `<li><a href="/${encodeURIComponent(p.slug)}">${escapeHtml(p.navLabel || p.h1)}</a></li>`
+              )
+              .join('')
+        : '';
     return `
         <nav class="cq-related" aria-label="${escapeHtml(ui.relatedPages)}">
             <h2>${escapeHtml(ui.relatedLangs)}</h2>
             <ul>${langItems}${extra}</ul>
+            ${topicItems ? `<h2>${escapeHtml(ui.relatedPages)}</h2>\n            <ul>${topicItems}</ul>` : ''}
         </nav>`;
 }
 
@@ -1084,7 +1169,7 @@ function renderPage(origin, slug) {
 }
 
 function hubGuideCards() {
-    const labels = { en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch' };
+    const labels = { en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch', it: 'Italiano' };
     const clusterMeta = {
         'see-doctor-tourist': {
             h2: 'How to see a doctor',
@@ -1113,10 +1198,26 @@ function hubGuideCards() {
         'renew-prescription-tourist': {
             h2: 'Renew a prescription on holiday',
             p: 'Stable chronic medication — 19 € video consult, electronic prescription if appropriate.'
+        },
+        'food-poisoning-tourist': {
+            h2: 'Food poisoning or diarrhoea',
+            p: 'Rehydration, what the pharmacy sells, red flags, and when to see a doctor.'
+        },
+        'antibiotics-tourist': {
+            h2: 'Antibiotics without a prescription?',
+            p: 'Why pharmacies say no, when an antibiotic helps, and how to get assessed.'
+        },
+        'skin-sun-tourist': {
+            h2: 'Sunburn, bites and stings',
+            p: 'Sunburn, sun rash, weever fish, jellyfish, mosquitoes and ticks.'
+        },
+        'insurance-note-tourist': {
+            h2: 'Doctor’s note for travel insurance',
+            p: 'Too ill to travel — a medical certificate after a real assessment, when justified.'
         }
     };
     const pages = livePages();
-    const order = ['see-doctor-tourist', 'uti-tourist', 'renew-prescription-tourist'];
+    const order = TOPIC_GROUPS;
     const groups = [...new Set(pages.map((p) => p.group).filter(Boolean))];
     const sorted = order.filter((id) => groups.includes(id)).concat(groups.filter((id) => !order.includes(id)));
     return sorted
