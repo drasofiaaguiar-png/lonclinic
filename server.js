@@ -1088,6 +1088,22 @@ function establishStaffSession(req, res, sessionFields, payload) {
 const TOTP_PENDING_TTL_MS = 10 * 60 * 1000;
 const staffTotpMemory = new Map();
 
+// A TOTP code stays valid for ~90s (±1 step). Accept each one once per account
+// so a code seen over someone's shoulder or in a proxy log cannot be replayed.
+const TOTP_REPLAY_TTL_MS = 2 * 60 * 1000;
+const usedTotpCodes = new Map();
+
+function claimTotpCode(username, code) {
+    const now = Date.now();
+    for (const [k, exp] of usedTotpCodes) {
+        if (exp <= now) usedTotpCodes.delete(k);
+    }
+    const key = `${totpUsernameKey(username)}:${code}`;
+    if (usedTotpCodes.has(key)) return false;
+    usedTotpCodes.set(key, now + TOTP_REPLAY_TTL_MS);
+    return true;
+}
+
 function totpUsernameKey(username) {
     return String(username || '').trim().toLowerCase();
 }
@@ -10188,6 +10204,18 @@ app.get('/llms-full.txt', (req, res) => {
     agentSeo.sendPlainUtf8(res, agentSeo.buildLlmsFullTxt(), 'text/plain');
 });
 
+// Root .js files the browser also loads. Every other root module the server has
+// required is source code (and may reveal endpoints, env names, or logic).
+const BROWSER_SHARED_MODULES = new Set(['clinical-quiz-score.js']);
+
+/** True for any module under the repo root that Node has loaded (or will load lazily). */
+function isServerOnlyModule(base) {
+    if (!base.endsWith('.js') || BROWSER_SHARED_MODULES.has(base)) return false;
+    if (base === 'ireland-therapy.js') return true; // required on first request
+    const fp = path.join(__dirname, base);
+    return Object.prototype.hasOwnProperty.call(require.cache, fp);
+}
+
 // Block source, data, scripts, and other non-public artifacts from static serving.
 app.use((req, res, next) => {
     const p = (req.path || '').split('?')[0].toLowerCase();
@@ -10211,7 +10239,7 @@ app.use((req, res, next) => {
         'env_setup.txt', 'tailwind-src.css', 'dockerfile',
         'clinic.html', 'clinic.js'
     ]);
-    if (deniedFiles.has(base)) {
+    if (deniedFiles.has(base) || isServerOnlyModule(base)) {
         return res.status(404).type('text').send('Not found');
     }
     if (/\.(md|sql|yml|yaml|env|crt|pem|key|map|gitignore|log|bak)$/i.test(base) && base !== 'robots.txt') {
@@ -14014,12 +14042,25 @@ app.post('/api/patient/otp/verify', rateLimitPatientOtp, async (req, res) => {
             }
             patientOtpMemory.delete(email);
         }
-        req.session.patientAuthenticated = true;
-        req.session.patientEmail = email;
-        req.session.patientBookingId = true;
-        req.session.lastActivity = Date.now();
-        req.session.cookie.maxAge = 20 * 60 * 1000;
-        return res.json({ ok: true, email });
+        // New session id on login so a pre-set cookie cannot ride the patient's auth.
+        return req.session.regenerate((regenErr) => {
+            if (regenErr) {
+                console.error('session.regenerate:', regenErr.message);
+                return res.status(500).json({ error: 'Could not verify code' });
+            }
+            req.session.patientAuthenticated = true;
+            req.session.patientEmail = email;
+            req.session.patientBookingId = true;
+            req.session.lastActivity = Date.now();
+            req.session.cookie.maxAge = 20 * 60 * 1000;
+            req.session.save((saveErr) => {
+                if (saveErr) {
+                    console.error('session.save:', saveErr.message);
+                    return res.status(500).json({ error: 'Could not verify code' });
+                }
+                res.json({ ok: true, email });
+            });
+        });
     } catch (err) {
         console.error('POST /api/patient/otp/verify:', err.message);
         return res.status(500).json({ error: 'Could not verify code' });
@@ -14591,6 +14632,9 @@ app.post('/api/clinic/login/totp', rateLimitClinicTotp, async (req, res) => {
         const rec = await getStaffTotpRecord(pending.username);
         if (!rec || !rec.secret || !totp.verifyTotp(rec.secret, code)) {
             return res.status(401).json({ error: 'Código 2FA inválido ou expirado.' });
+        }
+        if (!claimTotpCode(pending.username, code)) {
+            return res.status(401).json({ error: 'Este código 2FA já foi usado. Aguarde o próximo.' });
         }
         const identity = {
             username: pending.username,
