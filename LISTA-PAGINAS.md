@@ -175,27 +175,18 @@
 - `/uti-portugal-what-to-do` - ITU Portugal
 - `/renew-prescription-holiday-portugal` - Renovar receita
 - `/food-poisoning-portugal-what-to-do` - Intoxicação alimentar / diarreia
-- `/antibiotics-portugal-without-prescription` - Antibióticos sem receita
-- `/sunburn-insect-bites-portugal-what-to-do` - Escaldão, picadas, peixe-aranha
-- `/doctors-note-travel-insurance-portugal` - Atestado para seguro de viagem
 
 ### Espanhol
 - `/ver-medico-portugal-turista`
 - `/infeccion-urinaria-portugal-que-hacer`
 - `/renovar-receta-vacaciones-portugal`
 - `/intoxicacion-alimentaria-portugal-que-hacer`
-- `/antibiotico-portugal-sin-receta`
-- `/quemadura-solar-picaduras-portugal-que-hacer`
-- `/certificado-medico-seguro-viaje-portugal`
 
 ### Francês
 - `/consulter-medecin-portugal-touriste`
 - `/infection-urinaire-portugal-que-faire`
 - `/renouveler-ordonnance-vacances-portugal`
 - `/intoxication-alimentaire-portugal-que-faire`
-- `/antibiotique-portugal-sans-ordonnance`
-- `/coup-de-soleil-piqures-portugal-que-faire`
-- `/certificat-medical-assurance-voyage-portugal`
 
 ### Alemão
 - `/arzt-portugal-tourist-finden`
@@ -207,9 +198,6 @@
 - `/cistite-portogallo-cosa-fare`
 - `/rinnovare-ricetta-vacanza-portogallo`
 - `/intossicazione-alimentare-portogallo-cosa-fare`
-- `/antibiotico-portogallo-senza-ricetta`
-- `/scottatura-punture-portogallo-cosa-fare`
-- `/certificato-medico-assicurazione-viaggio-portogallo`
 
 ---
 

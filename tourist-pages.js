@@ -290,9 +290,6 @@ const TOPIC_GROUPS = [
     'see-doctor-tourist',
     'uti-tourist',
     'food-poisoning-tourist',
-    'antibiotics-tourist',
-    'skin-sun-tourist',
-    'insurance-note-tourist',
     'renew-prescription-tourist'
 ];
 
@@ -1202,18 +1199,6 @@ function hubGuideCards() {
         'food-poisoning-tourist': {
             h2: 'Food poisoning or diarrhoea',
             p: 'Rehydration, what the pharmacy sells, red flags, and when to see a doctor.'
-        },
-        'antibiotics-tourist': {
-            h2: 'Antibiotics without a prescription?',
-            p: 'Why pharmacies say no, when an antibiotic helps, and how to get assessed.'
-        },
-        'skin-sun-tourist': {
-            h2: 'Sunburn, bites and stings',
-            p: 'Sunburn, sun rash, weever fish, jellyfish, mosquitoes and ticks.'
-        },
-        'insurance-note-tourist': {
-            h2: 'Doctor’s note for travel insurance',
-            p: 'Too ill to travel — a medical certificate after a real assessment, when justified.'
         }
     };
     const pages = livePages();
