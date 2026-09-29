@@ -1524,6 +1524,12 @@
                 if (n === travellerCount) return;
                 travellerCount = n;
                 renderTravellerPicker();
+                // A longer call can rule out the time already picked: pick again.
+                if (state.date) {
+                    state.time = null;
+                    if (btnNext) btnNext.disabled = true;
+                    renderTimeslots();
+                }
                 shellRefresh();
             });
             grid.appendChild(btn);
@@ -2246,7 +2252,8 @@
 
         var dateStr = formatDateLocal(state.date);
         var url = '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
-            '&service=' + encodeURIComponent(bookingService()) + staffCalendarQuery();
+            '&service=' + encodeURIComponent(bookingService()) + staffCalendarQuery() +
+            (tipo === 'travel' ? '&travellers=' + travellerCount : '');
 
         return fetch(url)
             .then(function (r) { return r.json(); })
@@ -2649,7 +2656,17 @@
         });
     }
 
+    /** Price stays in view on the calendar step, not only in step 1. */
+    function renderSchedulePrice() {
+        var label = document.getElementById('marcarSchedulePriceLabel');
+        var value = document.getElementById('marcarSchedulePriceValue');
+        if (!label || !value) return;
+        label.textContent = localizedConsultaLabel() + ' · ' + localizedConsultaDuration();
+        value.textContent = consulta.price + (consulta.priceNote || '');
+    }
+
     function shellRefresh() {
+        renderSchedulePrice();
         if (!shell || !shell.booted) return;
         var steps = shellSteps();
         if (shell.step > steps.length - 1) shell.step = steps.length - 1;
