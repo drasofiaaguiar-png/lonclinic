@@ -6,6 +6,7 @@ O site **não pede dados de saúde** (medicação, alergias, SNS, sintomas) no c
 
 - Autenticação de administração: `/admin` (sessão httpOnly + bcrypt + 2FA TOTP + papéis)
 - Autenticação de profissionais: `/profissional` (email + código OTP)
+- Dispositivos de confiança (profissionais): cada navegador fica de confiança durante 7 dias, renovados a cada login. Um login a partir de um dispositivo novo (ou sem uso há mais de 7 dias) envia um alerta ao profissional e à clínica, com um link "Não fui eu" que suspende a conta e termina todas as sessões até o admin a reativar
 - Autenticação de paciente: OTP por email; sessão httpOnly (20 min) com timeout de inactividade de 30 min
 - Persistência: PostgreSQL obrigatória em produção (`DATABASE_URL`)
 - Encriptação ao nível do campo: notas clínicas, IBAN, cartão de cidadão, intake legado e **respostas/resultados de quizzes** (AES-256-GCM). Preferir `CLINICAL_ENCRYPTION_KEY` dedicada; `SESSION_SECRET` só como fallback de leitura/escrita se a chave dedicada ainda não existir
