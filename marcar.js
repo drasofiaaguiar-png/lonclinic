@@ -1857,9 +1857,12 @@
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         if (dateObj < today) return false;
-        if (tipo !== 'burnout_orientacao' && tipo !== 'nutricao_orientacao' && dateObj.getTime() === today.getTime()) return false;
 
         var dateStr = formatDateLocal(dateObj);
+        // Same-day booking is decided by the server (medicine only).
+        if (dateObj.getTime() === today.getTime()) {
+            return (state.bookableDates || []).indexOf(dateStr) >= 0;
+        }
         if (usesStaffSlotCalendar()) {
             return (state.bookableDates || []).indexOf(dateStr) >= 0;
         }

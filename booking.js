@@ -1471,10 +1471,14 @@ async function initBookingFlow() {
         // Check if date is in the past
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        if (dateObj <= today) return false;
+        if (dateObj < today) return false;
 
         // Check if date is blocked
         const dateStr = formatDateLocal(dateObj);
+        // Same-day booking is decided by the server (medicine only).
+        if (dateObj.getTime() === today.getTime()) {
+            return (state.bookableDates || []).includes(dateStr);
+        }
         if (isPsychStaffService(state.service || '') || state.slotMode === 'staff') {
             return (state.bookableDates || []).includes(dateStr);
         }

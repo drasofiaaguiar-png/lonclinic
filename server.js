@@ -7776,7 +7776,26 @@ async function ticksHeldForProfessional(dateIso, professionalId, excludeHoldId, 
     return blocked;
 }
 
+/** Earliest public booking day: today for medicine, tomorrow for psychology and nutrition. */
+function firstBookableDateIso(service) {
+    const today = lisbonNowParts().dateIso;
+    return staffBooking.allowsSameDayBooking(service) ? today : addDaysIso(today, 1);
+}
+
+/** Drops times a patient can no longer book: days before the first bookable day, and today's past starts. */
+function publicBookableTimes(service, dateIso, times, leadMinutes) {
+    const now = lisbonNowParts();
+    if (dateIso < firstBookableDateIso(service)) return [];
+    if (dateIso !== now.dateIso) return times;
+    const cutoff = now.minutes + (leadMinutes || 0);
+    return times.filter((t) => {
+        const mins = timeToMinutes(t);
+        return mins != null && mins > cutoff;
+    });
+}
+
 async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef, forceGoogleRefresh) {
+    if (dateIso < firstBookableDateIso(service)) return [];
     const step = scheduleStore.slotDuration || 30;
     const duration = appointmentDurationMinutes({ service });
     const orientation = staffBooking.isOrientationService(service);
@@ -7872,14 +7891,16 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
     return { available, professionalsByTime };
 }
 
-function listClinicBookableDates(maxDays) {
+function listClinicBookableDates(maxDays, service) {
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 60, 1), 90);
     const today = lisbonNowParts().dateIso;
     const dates = [];
-    for (let i = 1; i <= days; i += 1) {
+    for (let i = 0; i <= days; i += 1) {
         const dateIso = addDaysIso(today, i);
         const daySchedule = getEffectiveDaySchedule(dateIso);
-        if (daySchedule && daySchedule.enabled) dates.push(dateIso);
+        if (!daySchedule || !daySchedule.enabled) continue;
+        if (i === 0 && !publicBookableTimes(service, dateIso, slotsForDateIso(dateIso), 15).length) continue;
+        dates.push(dateIso);
     }
     return dates;
 }
@@ -7898,6 +7919,7 @@ async function listStaffBookableDates(service, specialty, maxDays, professionalI
         for (let i = 0; i < days; i++) {
             const dateIso = addDaysIso(now.dateIso, i);
             if ((scheduleStore.blockedDates || []).includes(dateIso)) continue;
+            if (i === 0 && !staffBooking.allowsSameDayBooking(service)) continue;
             if (i === 0) {
                 const stillOpen = staffBooking.ORIENTATION_STARTS.some((t) => {
                     const mins = staffBooking.timeToMinutes(t);
@@ -7916,9 +7938,11 @@ async function listStaffBookableDates(service, specialty, maxDays, professionalI
     const dates = [];
     for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(today, i);
-        const hasStart = people.some((person) => staffBooking.bookableStartsFromRanges(
-            hoursForStaffOnDate(person, dateIso),
-            { step, duration, hourly }
+        const hasStart = people.some((person) => publicBookableTimes(
+            service,
+            dateIso,
+            staffBooking.bookableStartsFromRanges(hoursForStaffOnDate(person, dateIso), { step, duration, hourly }),
+            15
         ).length);
         if (hasStart) dates.push(dateIso);
     }
@@ -8039,7 +8063,7 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
             if (!daySchedule || !daySchedule.enabled) {
                 return { i, dateIso, available: [], professionalsByTime: {} };
             }
-            available = await getBookableSlotsForDateIso(dateIso, null, null, false);
+            available = publicBookableTimes(service, dateIso, await getBookableSlotsForDateIso(dateIso, null, null, false));
         }
         if (i === 0) {
             const cutoff = now.minutes + 15;
@@ -13556,7 +13580,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                     false,
                     holdMatches ? checkoutHold.id : null
                 );
-                slotOk = allowed.includes(normTimeCheckout);
+                slotOk = publicBookableTimes(service, isoCheckout, allowed).includes(normTimeCheckout);
             }
             if (!slotOk) {
                 if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
@@ -18943,7 +18967,7 @@ app.get('/api/bookable-days', async (req, res) => {
                 return res.json({ dates, service, specialty, mode: 'staff' });
             }
         }
-        return res.json({ dates: listClinicBookableDates(60), service, mode: 'clinic' });
+        return res.json({ dates: listClinicBookableDates(60, service), service, mode: 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-days:', err.message);
         res.status(500).json({ error: 'Failed to load days', dates: [] });
@@ -18968,9 +18992,12 @@ app.get('/api/bookable-slots', async (req, res) => {
                 specialty,
                 professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
             });
+            const available = publicBookableTimes(service, dateIso, packed.available, 15);
+            const professionalsByTime = {};
+            for (const t of available) professionalsByTime[t] = packed.professionalsByTime[t] || [];
             return res.json({
-                available: packed.available,
-                professionalsByTime: packed.professionalsByTime,
+                available,
+                professionalsByTime,
                 date: dateIso,
                 service,
                 specialty,
@@ -18987,7 +19014,12 @@ app.get('/api/bookable-slots', async (req, res) => {
                 mode: 'staff'
             });
         }
-        const available = await getBookableSlotsForDateIso(dateIso, null, null, false);
+        const available = publicBookableTimes(
+            service,
+            dateIso,
+            await getBookableSlotsForDateIso(dateIso, null, null, false),
+            15
+        );
         return res.json({ available, professionalsByTime: {}, date: dateIso, service, mode: 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-slots:', err.message);
@@ -19081,7 +19113,7 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
         if (staffMode) {
             allowed = await slotsForStaffPersonOnDate(resolved.person, dateIso, service, null, null, true);
         } else {
-            allowed = await getBookableSlotsForDateIso(dateIso, null, null, false);
+            allowed = publicBookableTimes(service, dateIso, await getBookableSlotsForDateIso(dateIso, null, null, false));
         }
         const holderToken = readCookieValue(req, 'lon_hold') || crypto.randomBytes(16).toString('hex');
 
