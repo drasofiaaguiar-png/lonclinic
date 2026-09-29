@@ -7517,7 +7517,13 @@ async function releaseHoldsForSlot(dateIso, time) {
  * so the admin's custom hours are surfaced as the full set of bookable slots.
  * Pass `bypassSmartGrouping=true` (admin tools) to return the full grid regardless of grouping.
  */
-async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId, bypassSmartGrouping, excludeHoldId) {
+/** Travellers on a travel booking (1–4); anything else counts as one patient. */
+function clampTravellerCount(raw) {
+    const n = parseInt(raw, 10);
+    return Number.isInteger(n) && n >= 1 && n <= 4 ? n : 1;
+}
+
+async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId, bypassSmartGrouping, excludeHoldId, durationMinutes) {
     const base = slotsForDateIso(dateIso);
     if (!base.length) return [];
     const slotDuration = scheduleStore.slotDuration || 30;
@@ -7556,7 +7562,36 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInv
             free.push(t);
         }
     }
-    return free;
+    // A booking longer than one slot (e.g. travel for 3–4 people, 40 min) also covers the next start,
+    // and a long new appointment must not run into the next booking, hold, invitation or the end of the day.
+    const span = Math.max(slotDuration, Number(durationMinutes) || slotDuration);
+    const dayEnd = timeToMinutes(effective && effective.end);
+    const holdIntervals = span > slotDuration ? await listHeldIntervalsForDate(dateIso, excludeHoldId || null) : [];
+    return free.filter((t) => {
+        const overlapsBooking = bookings.some((b) => b && !b.cancelled && intervalBlocksStart(
+            t,
+            span,
+            normalizeTimeString(b) || String(b.time || '').slice(0, 5),
+            appointmentDurationMinutes(b)
+        ));
+        if (overlapsBooking) return false;
+        if (span <= slotDuration) return true;
+        const start = timeToMinutes(t);
+        if (start != null && dayEnd != null && start + span > dayEnd) return false;
+        if ((scheduleStore.blockedTimeSlots || []).some((item) => item && item.date === dateIso
+            && intervalBlocksStart(t, span, String(item.time || '').slice(0, 5), slotDuration))) {
+            return false;
+        }
+        for (const locked of invitationLocked) {
+            if (intervalBlocksStart(t, span, locked, slotDuration)) return false;
+        }
+        return !holdIntervals.some((hold) => intervalBlocksStart(
+            t,
+            span,
+            hold.time,
+            appointmentDurationMinutes({ service: hold.service })
+        ));
+    });
 }
 
 function teamPhotoWhoForPerson(person) {
@@ -7776,9 +7811,28 @@ async function ticksHeldForProfessional(dateIso, professionalId, excludeHoldId, 
     return blocked;
 }
 
-async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef, forceGoogleRefresh) {
+/** Earliest public booking day: today for medicine, tomorrow for psychology and nutrition. */
+function firstBookableDateIso(service) {
+    const today = lisbonNowParts().dateIso;
+    return staffBooking.allowsSameDayBooking(service) ? today : addDaysIso(today, 1);
+}
+
+/** Drops times a patient can no longer book: days before the first bookable day, and today's past starts. */
+function publicBookableTimes(service, dateIso, times, leadMinutes) {
+    const now = lisbonNowParts();
+    if (dateIso < firstBookableDateIso(service)) return [];
+    if (dateIso !== now.dateIso) return times;
+    const cutoff = now.minutes + (leadMinutes || 0);
+    return times.filter((t) => {
+        const mins = timeToMinutes(t);
+        return mins != null && mins > cutoff;
+    });
+}
+
+async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef, forceGoogleRefresh, travellerCount) {
+    if (dateIso < firstBookableDateIso(service)) return [];
     const step = scheduleStore.slotDuration || 30;
-    const duration = appointmentDurationMinutes({ service });
+    const duration = appointmentDurationMinutes({ service, travellerCount: clampTravellerCount(travellerCount) });
     const orientation = staffBooking.isOrientationService(service);
     let starts;
     if (orientation) {
@@ -7857,7 +7911,9 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
             dateIso,
             service,
             opts && opts.excludeHoldId,
-            opts && opts.excludeBookingRef
+            opts && opts.excludeBookingRef,
+            false,
+            opts && opts.travellerCount
         )
     })));
     for (const row of perPerson) {
@@ -7872,14 +7928,16 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
     return { available, professionalsByTime };
 }
 
-function listClinicBookableDates(maxDays) {
+function listClinicBookableDates(maxDays, service) {
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 60, 1), 90);
     const today = lisbonNowParts().dateIso;
     const dates = [];
-    for (let i = 1; i <= days; i += 1) {
+    for (let i = 0; i <= days; i += 1) {
         const dateIso = addDaysIso(today, i);
         const daySchedule = getEffectiveDaySchedule(dateIso);
-        if (daySchedule && daySchedule.enabled) dates.push(dateIso);
+        if (!daySchedule || !daySchedule.enabled) continue;
+        if (i === 0 && !publicBookableTimes(service, dateIso, slotsForDateIso(dateIso), 15).length) continue;
+        dates.push(dateIso);
     }
     return dates;
 }
@@ -7898,6 +7956,7 @@ async function listStaffBookableDates(service, specialty, maxDays, professionalI
         for (let i = 0; i < days; i++) {
             const dateIso = addDaysIso(now.dateIso, i);
             if ((scheduleStore.blockedDates || []).includes(dateIso)) continue;
+            if (i === 0 && !staffBooking.allowsSameDayBooking(service)) continue;
             if (i === 0) {
                 const stillOpen = staffBooking.ORIENTATION_STARTS.some((t) => {
                     const mins = staffBooking.timeToMinutes(t);
@@ -7916,9 +7975,11 @@ async function listStaffBookableDates(service, specialty, maxDays, professionalI
     const dates = [];
     for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(today, i);
-        const hasStart = people.some((person) => staffBooking.bookableStartsFromRanges(
-            hoursForStaffOnDate(person, dateIso),
-            { step, duration, hourly }
+        const hasStart = people.some((person) => publicBookableTimes(
+            service,
+            dateIso,
+            staffBooking.bookableStartsFromRanges(hoursForStaffOnDate(person, dateIso), { step, duration, hourly }),
+            15
         ).length);
         if (hasStart) dates.push(dateIso);
     }
@@ -7931,7 +7992,7 @@ async function staffPersonById(professionalId, service, specialty) {
     return people.find((p) => p.id === id) || null;
 }
 
-async function resolveBookableProfessional({ service, specialty, dateIso, time, professionalId }) {
+async function resolveBookableProfessional({ service, specialty, dateIso, time, professionalId, travellerCount }) {
     const spec = staffBooking.specialtyForService(service, specialty);
     const people = await listStaffBookablePeople(service, spec);
     if (!people.length) return { mode: 'clinic', person: null, people };
@@ -7940,7 +8001,7 @@ async function resolveBookableProfessional({ service, specialty, dateIso, time, 
     if (Number.isInteger(want) && want > 0) {
         person = people.find((p) => p.id === want) || null;
         if (person) {
-            const times = await slotsForStaffPersonOnDate(person, dateIso, service, null, null, true);
+            const times = await slotsForStaffPersonOnDate(person, dateIso, service, null, null, true, travellerCount);
             if (!times.includes(time)) person = null;
         }
     }
@@ -7948,7 +8009,7 @@ async function resolveBookableProfessional({ service, specialty, dateIso, time, 
         return { mode: 'staff', person: null, people, error: 'choose' };
     }
     if (!person) {
-        const packed = await getStaffBookableSlotsForDate(dateIso, { service, specialty: spec });
+        const packed = await getStaffBookableSlotsForDate(dateIso, { service, specialty: spec, travellerCount });
         const list = packed.professionalsByTime[time] || [];
         if (list.length) person = people.find((p) => p.id === list[0].id) || null;
     }
@@ -8039,7 +8100,7 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
             if (!daySchedule || !daySchedule.enabled) {
                 return { i, dateIso, available: [], professionalsByTime: {} };
             }
-            available = await getBookableSlotsForDateIso(dateIso, null, null, false);
+            available = publicBookableTimes(service, dateIso, await getBookableSlotsForDateIso(dateIso, null, null, false));
         }
         if (i === 0) {
             const cutoff = now.minutes + 15;
@@ -13473,7 +13534,8 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                 specialty,
                 dateIso: isoCheckoutEarly,
                 time: normTimeEarly,
-                professionalId
+                professionalId,
+                travellerCount: Array.isArray(passengers) ? passengers.length : 1
             });
             if (resolved.mode === 'staff') {
                 if (!resolved.person) {
@@ -13544,7 +13606,8 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                         service,
                         holdMatches ? checkoutHold.id : null,
                         null,
-                        true
+                        true,
+                        Array.isArray(passengers) ? passengers.length : 1
                     )
                     : [];
                 slotOk = allowedStaff.includes(normTimeCheckout);
@@ -13554,9 +13617,13 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                     null,
                     null,
                     false,
-                    holdMatches ? checkoutHold.id : null
+                    holdMatches ? checkoutHold.id : null,
+                    appointmentDurationMinutes({
+                        service,
+                        travellerCount: clampTravellerCount(Array.isArray(passengers) ? passengers.length : 1)
+                    })
                 );
-                slotOk = allowed.includes(normTimeCheckout);
+                slotOk = publicBookableTimes(service, isoCheckout, allowed).includes(normTimeCheckout);
             }
             if (!slotOk) {
                 if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
@@ -18943,7 +19010,7 @@ app.get('/api/bookable-days', async (req, res) => {
                 return res.json({ dates, service, specialty, mode: 'staff' });
             }
         }
-        return res.json({ dates: listClinicBookableDates(60), service, mode: 'clinic' });
+        return res.json({ dates: listClinicBookableDates(60, service), service, mode: 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-days:', err.message);
         res.status(500).json({ error: 'Failed to load days', dates: [] });
@@ -18956,6 +19023,7 @@ app.get('/api/bookable-slots', async (req, res) => {
         const service = bookingServiceTag(req.query.service || '');
         const specialty = staffBooking.specialtyForService(service, req.query.specialty);
         const professionalId = Number(req.query.professionalId);
+        const travellerCount = clampTravellerCount(req.query.travellers);
         if (!/^\d{4}-\d{2}-\d{2}$/.test(dateIso)) {
             return res.status(400).json({ error: 'Invalid date' });
         }
@@ -18966,11 +19034,15 @@ app.get('/api/bookable-slots', async (req, res) => {
             const packed = await getStaffBookableSlotsForDate(dateIso, {
                 service,
                 specialty,
-                professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
+                professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null,
+                travellerCount
             });
+            const available = publicBookableTimes(service, dateIso, packed.available, 15);
+            const professionalsByTime = {};
+            for (const t of available) professionalsByTime[t] = packed.professionalsByTime[t] || [];
             return res.json({
-                available: packed.available,
-                professionalsByTime: packed.professionalsByTime,
+                available,
+                professionalsByTime,
                 date: dateIso,
                 service,
                 specialty,
@@ -18987,7 +19059,19 @@ app.get('/api/bookable-slots', async (req, res) => {
                 mode: 'staff'
             });
         }
-        const available = await getBookableSlotsForDateIso(dateIso, null, null, false);
+        const available = publicBookableTimes(
+            service,
+            dateIso,
+            await getBookableSlotsForDateIso(
+                dateIso,
+                null,
+                null,
+                false,
+                null,
+                appointmentDurationMinutes({ service, travellerCount })
+            ),
+            15
+        );
         return res.json({ available, professionalsByTime: {}, date: dateIso, service, mode: 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-slots:', err.message);
@@ -19062,12 +19146,14 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
         const service = bookingServiceTag((req.body && req.body.service) || 'clinica_geral');
         const specialty = String((req.body && req.body.specialty) || '').trim().toLowerCase();
         const professionalId = Number((req.body && req.body.professionalId) || 0);
+        const travellerCount = clampTravellerCount(req.body && req.body.travellerCount);
         const resolved = await resolveBookableProfessional({
             service,
             specialty,
             dateIso,
             time,
-            professionalId
+            professionalId,
+            travellerCount
         });
         const staffMode = resolved.mode === 'staff';
         if (staffMode && !resolved.person) {
@@ -19079,9 +19165,13 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
         const assignedId = staffMode ? resolved.person.id : null;
         let allowed = [];
         if (staffMode) {
-            allowed = await slotsForStaffPersonOnDate(resolved.person, dateIso, service, null, null, true);
+            allowed = await slotsForStaffPersonOnDate(resolved.person, dateIso, service, null, null, true, travellerCount);
         } else {
-            allowed = await getBookableSlotsForDateIso(dateIso, null, null, false);
+            allowed = publicBookableTimes(
+                service,
+                dateIso,
+                await getBookableSlotsForDateIso(dateIso, null, null, false, null, appointmentDurationMinutes({ service, travellerCount }))
+            );
         }
         const holderToken = readCookieValue(req, 'lon_hold') || crypto.randomBytes(16).toString('hex');
 

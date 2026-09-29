@@ -1039,6 +1039,7 @@ const ANALYTICS_FUNNEL_NAMES = [
     'page_engaged',
     'cta_click',
     'whatsapp_click',
+    'whatsapp_booking_assist',
     'date_select',
     'slot_select',
     'checkout_start',

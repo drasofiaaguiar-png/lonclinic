@@ -3230,3 +3230,18 @@ body.is-psych-checkout .lon-buy-trust li::before {
     cursor: pointer;
     color: var(--text-muted);
 }
+
+/* Discreet WhatsApp assist under the details form */
+.checkout-wa-assist {
+    margin: 20px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-secondary, #425045);
+}
+
+.checkout-wa-assist a {
+    color: var(--accent, #255235);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}

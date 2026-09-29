@@ -193,6 +193,12 @@ function serviceProfession(service) {
     return null;
 }
 
+/** Psychology and nutrition are never booked for the same day; medicine can be. */
+function allowsSameDayBooking(service) {
+    const profession = serviceProfession(service);
+    return profession !== 'psicologo' && profession !== 'nutricionista';
+}
+
 function usesStaffCalendars(service) {
     return !!serviceProfession(service);
 }
@@ -571,6 +577,7 @@ module.exports = {
     PROFESSION_CONSULT_HINT,
     serviceProfession,
     usesStaffCalendars,
+    allowsSameDayBooking,
     isCoupleTherapyService,
     isIndividualPsychologyService,
     isPsychologyStaffService,

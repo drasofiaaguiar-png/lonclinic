@@ -11,6 +11,7 @@ const ALLOWED_NAMES = new Set([
     'cta_click',
     'outbound_click',
     'whatsapp_click',
+    'whatsapp_booking_assist',
     'form_start',
     'form_submit',
     'form_error',

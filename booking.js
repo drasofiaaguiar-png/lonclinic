@@ -220,6 +220,16 @@ async function initBookingFlow() {
         }
     };
 
+    const PASSENGER_COPY = {
+        pt: { traveller: 'Viajante', patient: 'Paciente', patientDetails: 'Os seus dados', name: 'Nome', one: 'pessoa', many: 'pessoas', video: 'Videochamada', first: 'Nome', last: 'Apelido', firstErr: 'Indique o nome', lastErr: 'Indique o apelido' },
+        en: { traveller: 'Traveller', patient: 'Patient', patientDetails: 'Patient details', name: 'Name', one: 'person', many: 'people', video: 'Video call', first: 'First name', last: 'Last name', firstErr: 'Please enter first name', lastErr: 'Please enter last name' },
+        es: { traveller: 'Viajero', patient: 'Paciente', patientDetails: 'Sus datos', name: 'Nombre', one: 'persona', many: 'personas', video: 'Videollamada', first: 'Nombre', last: 'Apellido', firstErr: 'Indique el nombre', lastErr: 'Indique el apellido' }
+    };
+    function passengerCopy() {
+        const lang = window.CLINIC_I18N ? window.CLINIC_I18N.getLang() : 'pt';
+        return PASSENGER_COPY[lang] || PASSENGER_COPY.pt;
+    }
+
     function getTravelTier() {
         return state.hasInsurance ? travelPricing.medicare : travelPricing.standard;
     }
@@ -733,6 +743,58 @@ async function initBookingFlow() {
     }
 
     // ─── Step Navigation ───
+    const WA_ASSIST_NUMBER = '351928372775';
+    const WA_ASSIST_COPY = {
+        pt: { lead: 'Prefere que marquemos por si?', link: 'Fale connosco no WhatsApp' },
+        en: { lead: 'Would you rather we book it for you?', link: 'Message us on WhatsApp' },
+        es: { lead: '¿Prefiere que reservemos por usted?', link: 'Escríbanos por WhatsApp' }
+    };
+
+    /** WhatsApp message with what the patient already chose, so the team doesn't ask again. */
+    function waAssistMessage(lang) {
+        const label = state.serviceLabel || i18nServiceLabel(state.service || 'clinica_geral');
+        const d = state.date;
+        const day = d ? `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}` : '';
+        const time = String(state.time || '');
+        const people = state.service === 'travel' && state.travellerCount > 1 ? state.travellerCount : 0;
+        if (lang === 'en') {
+            return `Hi, I'd like to book ${label}` + (day ? ` on ${day}` : '') + (time ? ` at ${time}` : '')
+                + (people ? ` for ${people} people` : '') + '.';
+        }
+        if (lang === 'es') {
+            return `Hola, quería reservar ${label}` + (day ? ` para el ${day}` : '') + (time ? ` a las ${time}` : '')
+                + (people ? ` para ${people} personas` : '') + '.';
+        }
+        return `Olá, queria marcar ${label}` + (day ? ` para ${day}` : '') + (time ? ` às ${time.replace(':', 'h')}` : '')
+            + (people ? ` para ${people} pessoas` : '') + '.';
+    }
+
+    function updateWaAssist() {
+        const link = document.getElementById('checkoutWaAssistLink');
+        const lead = document.getElementById('checkoutWaAssistLead');
+        if (!link) return;
+        const lang = window.CLINIC_I18N ? window.CLINIC_I18N.getLang() : 'pt';
+        const copy = WA_ASSIST_COPY[lang] || WA_ASSIST_COPY.pt;
+        if (lead) lead.textContent = copy.lead;
+        link.textContent = copy.link;
+        link.href = `https://wa.me/${WA_ASSIST_NUMBER}?text=${encodeURIComponent(waAssistMessage(lang))}`;
+    }
+
+    const waAssistLink = document.getElementById('checkoutWaAssistLink');
+    if (waAssistLink) {
+        waAssistLink.addEventListener('click', () => {
+            updateWaAssist();
+            if (window.LonAnalytics) {
+                window.LonAnalytics.track('whatsapp_booking_assist', {
+                    surface: 'booking',
+                    funnel: 'patient_booking',
+                    service: state.service || '',
+                    step: 'details'
+                });
+            }
+        });
+    }
+
     function goToStep(step) {
         document.querySelector('.booking-step.active').classList.remove('active');
         document.getElementById(`step-${step}`).classList.add('active');
@@ -759,6 +821,7 @@ async function initBookingFlow() {
         if (step === 1) renderCalendar();
         if (step === 2) {
             initDetailsForm();
+            updateWaAssist();
             restoreCheckoutDraft();
             updateSlotSummary();
             bindCheckoutTypeSelect();
@@ -1061,7 +1124,8 @@ async function initBookingFlow() {
             const res = await fetch(
                 '/api/bookable-slots?date=' + encodeURIComponent(formatDateLocal(state.date)) +
                 '&service=' + encodeURIComponent(state.service) +
-                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '') +
+                (state.service === 'travel' ? '&travellers=' + (state.travellerCount || 1) : '')
             );
             if (!res.ok) return;
             const data = await res.json();
@@ -1374,14 +1438,18 @@ async function initBookingFlow() {
 
     function updateTravellerPriceNote() {
         const tp = getCurrentTravelPrice();
+        document.querySelectorAll('.tc-card').forEach((b) => {
+            b.classList.toggle('selected', parseInt(b.dataset.count, 10) === state.travellerCount);
+        });
         // Sync state price for downstream (review, Stripe)
         state.servicePrice = tp.price;
         state.servicePriceCents = tp.cents;
-        const personLabel = state.travellerCount === 1 ? '1 person' : `${state.travellerCount} persons`;
+        const pc = passengerCopy();
+        const personLabel = `${state.travellerCount} ${state.travellerCount === 1 ? pc.one : pc.many}`;
         const insuranceTag = state.hasInsurance ? ' · Medicare' : '';
         document.getElementById('travellerPriceTotal').textContent = tp.price;
         document.getElementById('travellerPriceBreakdown').textContent =
-            `${personLabel} · ${tp.duration} · Video call${insuranceTag}`;
+            `${personLabel} · ${tp.duration} · ${pc.video}${insuranceTag}`;
     }
 
     // Traveller count buttons
@@ -1391,6 +1459,8 @@ async function initBookingFlow() {
             btn.classList.add('selected');
             state.travellerCount = parseInt(btn.dataset.count);
             updateTravellerPriceNote();
+            // A longer call can rule out times already shown for the chosen day.
+            if (state.date && !state.fromMarcar) renderTimeslots();
         });
     });
 
@@ -1471,10 +1541,14 @@ async function initBookingFlow() {
         // Check if date is in the past
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        if (dateObj <= today) return false;
+        if (dateObj < today) return false;
 
         // Check if date is blocked
         const dateStr = formatDateLocal(dateObj);
+        // Same-day booking is decided by the server (medicine only).
+        if (dateObj.getTime() === today.getTime()) {
+            return (state.bookableDates || []).includes(dateStr);
+        }
         if (isPsychStaffService(state.service || '') || state.slotMode === 'staff') {
             return (state.bookableDates || []).includes(dateStr);
         }
@@ -1650,7 +1724,8 @@ async function initBookingFlow() {
                 '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
                 '&service=' + encodeURIComponent(state.service || 'clinica_geral') +
                 (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '') +
-                (state.professionalId ? '&professionalId=' + encodeURIComponent(state.professionalId) : '')
+                (state.professionalId ? '&professionalId=' + encodeURIComponent(state.professionalId) : '') +
+                (state.service === 'travel' ? '&travellers=' + (state.travellerCount || 1) : '')
             );
             const data = await res.json();
 
@@ -1817,19 +1892,20 @@ async function initBookingFlow() {
 
     // Passenger panel HTML template
     function createPassengerPanelHTML(index) {
+        const pc = passengerCopy();
         return `
         <div class="passenger-panel" data-passenger="${index}">
-            <h3 class="form-section-title passenger-panel-title">Traveller ${index}</h3>
+            <h3 class="form-section-title passenger-panel-title">${pc.traveller} ${index}</h3>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>First name *</label>
-                    <input type="text" class="p-firstName" required placeholder="First name">
-                    <span class="form-error">Please enter first name</span>
+                    <label>${pc.first} *</label>
+                    <input type="text" class="p-firstName" required placeholder="${pc.first}">
+                    <span class="form-error">${pc.firstErr}</span>
                 </div>
                 <div class="form-group">
-                    <label>Last name *</label>
-                    <input type="text" class="p-lastName" required placeholder="Last name">
-                    <span class="form-error">Please enter last name</span>
+                    <label>${pc.last} *</label>
+                    <input type="text" class="p-lastName" required placeholder="${pc.last}">
+                    <span class="form-error">${pc.lastErr}</span>
                 </div>
             </div>
         </div>`;
@@ -1848,7 +1924,7 @@ async function initBookingFlow() {
         const panel1Title = panelsContainer.querySelector('.passenger-panel[data-passenger="1"] .passenger-panel-title');
         if (panel1Title) {
             panel1Title.hidden = count <= 1;
-            panel1Title.textContent = count > 1 ? 'Traveller 1' : 'Patient details';
+            panel1Title.textContent = count > 1 ? `${passengerCopy().traveller} 1` : passengerCopy().patientDetails;
         }
 
         // Single-patient checkout asks for contact details only; multi-passenger needs a name per traveller
@@ -1881,7 +1957,7 @@ async function initBookingFlow() {
                 tab.dataset.passenger = i;
                 tab.innerHTML = `<span class="passenger-tab-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </span>Traveller ${i}`;
+                </span>${passengerCopy().traveller} ${i}`;
                 tab.addEventListener('click', () => switchPassengerTab(i));
                 tabsContainer.appendChild(tab);
             }
@@ -1905,11 +1981,6 @@ async function initBookingFlow() {
     }
 
     function initDetailsForm() {
-        const isTravel = state.service === 'travel';
-
-        // Show/hide shared travel section
-        const sharedTravelSection = document.getElementById('sharedTravelSection');
-        if (sharedTravelSection) sharedTravelSection.style.display = isTravel ? 'block' : 'none';
 
         // Build passenger panels / tabs
         buildPassengerTabs();
@@ -2049,24 +2120,6 @@ async function initBookingFlow() {
         if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
             email.closest('.form-group').classList.add('invalid');
             valid = false;
-        }
-
-        // Shared travel fields
-        if (state.service === 'travel') {
-            const dest = document.getElementById('travelDest');
-            if (dest && !dest.value.trim()) {
-                dest.closest('.form-group').classList.add('invalid');
-                valid = false;
-            } else if (dest) {
-                dest.closest('.form-group').classList.remove('invalid');
-            }
-            const dates = document.getElementById('travelDates');
-            if (dates && !dates.value.trim()) {
-                dates.closest('.form-group').classList.add('invalid');
-                valid = false;
-            } else if (dates) {
-                dates.closest('.form-group').classList.remove('invalid');
-            }
         }
 
         // Per-passenger validation
@@ -2243,16 +2296,6 @@ async function initBookingFlow() {
         document.getElementById('reviewDate').textContent = state.dateLabel;
         document.getElementById('reviewTime').textContent = state.time;
 
-        // Travel card
-        const travelCard = document.getElementById('reviewTravelCard');
-        if (isTravel) {
-            travelCard.style.display = 'block';
-            document.getElementById('reviewDest').textContent = document.getElementById('travelDest')?.value || '—';
-            document.getElementById('reviewTravelDates').textContent = document.getElementById('travelDates')?.value || '—';
-        } else {
-            travelCard.style.display = 'none';
-        }
-
         // Patient(s) review cards
         const container = document.getElementById('reviewPatientsContainer');
         container.innerHTML = '';
@@ -2260,11 +2303,11 @@ async function initBookingFlow() {
         passengers.forEach((p, i) => {
             const card = document.createElement('div');
             card.className = 'review-card';
-            const title = count > 1 ? `Traveller ${i + 1}` : 'Patient';
+            const title = count > 1 ? `${passengerCopy().traveller} ${i + 1}` : passengerCopy().patient;
             card.innerHTML = `
                 <h3 class="review-card-title">${title}</h3>
                 <div class="review-row">
-                    <span class="review-label">Name</span>
+                    <span class="review-label">${passengerCopy().name}</span>
                     <span class="review-value">${`${p.firstName} ${p.lastName}`.trim() || emailVal}</span>
                 </div>
                 ${i === 0 ? `<div class="review-row"><span class="review-label">Email</span><span class="review-value">${emailVal}</span></div>` : ''}
@@ -2290,7 +2333,7 @@ async function initBookingFlow() {
             if (isTravel) {
                 // Flat tiered price, no per-person breakdown
                 subtotalRow.style.display = 'flex';
-                const personLabel = count === 1 ? '1 person' : `${count} persons`;
+                const personLabel = `${count} ${count === 1 ? passengerCopy().one : passengerCopy().many}`;
                 const insuranceNote = state.hasInsurance ? ' (Medicare)' : '';
                 document.getElementById('summarySubtotalLabel').textContent = `${personLabel}${insuranceNote}`;
                 document.getElementById('summarySubtotal').textContent = totalFormatted;
@@ -2745,6 +2788,7 @@ async function initBookingFlow() {
         }
 
         updateSlotSummary();
+        updateWaAssist();
 
         if (state.date && state.currentStep === 1) {
             applyUrgentContactHint();
@@ -2816,6 +2860,8 @@ async function initBookingFlow() {
         const holdQ = urlParams.get('hold');
         const proQ = urlParams.get('professionalId');
         const specQ = urlParams.get('specialty');
+        const travellersQ = parseInt(urlParams.get('travellers'), 10);
+        if (travellersQ >= 1 && travellersQ <= 4) state.travellerCount = travellersQ;
         if (serviceQ) applyServiceKey(resolveIncomingService(serviceQ));
         if (renewQ) state.renewToken = renewQ;
         if (holdQ) state.holdId = holdQ;
@@ -2901,7 +2947,8 @@ async function initBookingFlow() {
                     slot,
                     service: state.service || 'clinica_geral',
                     professionalId: state.professionalId || null,
-                    specialty: state.specialty || null
+                    specialty: state.specialty || null,
+                    travellerCount: state.service === 'travel' ? (state.travellerCount || 1) : 1
                 })
             });
             if (res.status === 409) {
