@@ -2616,7 +2616,7 @@ function staffEmailsMatch(a, b) {
 const KNOWN_PROFESSIONAL_EMAILS = [
     {
         email: 'drasofiaaguiar@gmail.com',
-        aliases: ['ritaaguiarfonseca@gmail.com'],
+        aliases: ['ritaaguiarfonseca@gmail.com', 'rita.meded@gmail.com'],
         names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
         usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca']
     }
