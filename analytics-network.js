@@ -384,6 +384,20 @@ function dedupePageviews(rows) {
     return out;
 }
 
+/** Like groupCount, but counts distinct ids (e.g. visitors) per key instead of rows. */
+function uniqueGroupCount(rows, key, idKey, limit) {
+    const map = new Map();
+    for (const r of rows) {
+        const k = r[key] || '(none)';
+        if (!map.has(k)) map.set(k, new Set());
+        map.get(k).add(String(r[idKey] || r.sessionId || r.eventId || ''));
+    }
+    return [...map.entries()]
+        .map(([k, ids]) => ({ key: k, count: ids.size }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, limit || 12);
+}
+
 function groupCount(rows, key, limit) {
     const map = new Map();
     for (const r of rows) {
@@ -591,30 +605,49 @@ function hourlySeries(rows, fromIso, days) {
     return arr;
 }
 
-function weeklySeries(rows) {
+function weekKeyOf(iso) {
+    const at = new Date(iso);
+    if (!Number.isFinite(at.getTime())) return '';
+    const start = new Date(Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate()));
+    start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
+    return start.toISOString().slice(0, 10);
+}
+
+/** The server also emits quiz_complete when a lead is submitted; count only the client one. */
+function isQuizCompletion(r) {
+    return r.name === 'quiz_complete' && r.source !== 'server';
+}
+
+/**
+ * @param rows events in view (used for sessions, quizzes, fallback bookings)
+ * @param views deduped page_view rows (same set as the KPI header)
+ * @param ledgerWeeks optional [{ week, count }] from the bookings table; replaces event-based bookings
+ */
+function weeklySeries(rows, views, ledgerWeeks) {
     const buckets = new Map();
-    for (const r of rows || []) {
-        if (r.name !== 'page_view') continue;
-        const at = new Date(r.occurredAt);
-        if (!Number.isFinite(at.getTime())) continue;
-        const start = new Date(Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate()));
-        start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
-        const key = start.toISOString().slice(0, 10);
+    const bucket = (key) => {
         if (!buckets.has(key)) buckets.set(key, { key, pageviews: 0, visitors: new Set(), sessions: new Set(), quizzes: 0, bookings: 0 });
-        const week = buckets.get(key);
+        return buckets.get(key);
+    };
+    for (const r of views || []) {
+        const key = weekKeyOf(r.occurredAt);
+        if (!key) continue;
+        const week = bucket(key);
         week.pageviews += 1;
         if (r.visitorId) week.visitors.add(String(r.visitorId));
-        if (r.sessionId) week.sessions.add(String(r.sessionId));
     }
     for (const r of rows || []) {
-        const at = new Date(r.occurredAt);
-        if (!Number.isFinite(at.getTime())) continue;
-        const start = new Date(Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate()));
-        start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
-        const week = buckets.get(start.toISOString().slice(0, 10));
-        if (!week) continue;
-        if (r.name === 'quiz_complete') week.quizzes += 1;
-        if (r.name === 'booking_confirmed' || r.name === 'payment_succeeded' || r.name === 'invite_paid') week.bookings += 1;
+        const key = weekKeyOf(r.occurredAt);
+        if (!key) continue;
+        if (r.sessionId && buckets.has(key)) buckets.get(key).sessions.add(String(r.sessionId));
+        if (isQuizCompletion(r)) bucket(key).quizzes += 1;
+        if (!ledgerWeeks && (r.name === 'booking_confirmed' || r.name === 'payment_succeeded' || r.name === 'invite_paid')) {
+            bucket(key).bookings += 1;
+        }
+    }
+    for (const w of ledgerWeeks || []) {
+        const key = weekKeyOf(w.week);
+        if (key) bucket(key).bookings += Number(w.count) || 0;
     }
     return [...buckets.values()].sort((a, b) => a.key.localeCompare(b.key)).map((w) => ({
         key: w.key, pageviews: w.pageviews, visitors: w.visitors.size, sessions: w.sessions.size, quizzes: w.quizzes, bookings: w.bookings
@@ -655,7 +688,7 @@ function topicSummary(rows) {
             }
         }
         if (r.name === 'quiz_start') item.quizStarts += 1;
-        if (r.name === 'quiz_complete') item.quizCompletions += 1;
+        if (isQuizCompletion(r)) item.quizCompletions += 1;
     }
     return [...topics.values()].map((t) => ({
         key: t.key, pageviews: t.pageviews, visitors: t.visitors.size, sessions: t.sessions.size,
@@ -819,7 +852,7 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
         channels: groupCount(firstTouchViews(views), 'channel', 10),
         pages: groupCount(views, 'pagePath', 12),
         landings: sessionLandings(views, 8),
-        devices: groupCount(views, 'device', 5),
+        devices: uniqueGroupCount(views, 'device', 'visitorId', 5),
         browsers: groupCount(views, 'browser', 6),
         countries: groupCount(views.filter((r) => r.country), 'country', 8),
         campaigns: rankCampaigns(used, views),
@@ -832,7 +865,13 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
             ? serviceFromBookings.map((s) => ({ key: s.service || 'unspecified', count: s.count }))
             : serviceFromEvents,
         hourly: hourlySeries(views, range.from, range.days),
-        weekly: weeklySeries(used),
+        weekly: weeklySeries(
+            used,
+            views,
+            overlayBookings && bookingStats && bookingStats.count && Array.isArray(bookingStats.weekly)
+                ? bookingStats.weekly
+                : null
+        ),
         topics: topicSummary(used),
         recent: used
             .filter((r) => r.name !== 'heartbeat')

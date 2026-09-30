@@ -1147,10 +1147,22 @@ async function analyticsBookingStats(fromIso, toIso, { funnel } = {}) {
          LIMIT 10`,
         [fromIso, toIso]
     );
+    // Monday-start UTC weeks, matching the analytics weekly table.
+    const w = await p.query(
+        `SELECT to_char(date_trunc('week', created_at AT TIME ZONE 'UTC'), 'YYYY-MM-DD') AS week, COUNT(*)::int AS c
+         FROM bookings
+         WHERE cancelled = FALSE
+           AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz
+           ${serviceFilter}
+         GROUP BY 1
+         ORDER BY 1`,
+        [fromIso, toIso]
+    );
     return {
         count: r.rows[0] ? r.rows[0].c : 0,
         revenueCents: isJobs ? 0 : (r.rows[0] ? r.rows[0].revenue : 0),
-        services: s.rows.map((row) => ({ service: row.service, count: row.c }))
+        services: s.rows.map((row) => ({ service: row.service, count: row.c })),
+        weekly: w.rows.map((row) => ({ week: row.week, count: row.c }))
     };
 }
 
