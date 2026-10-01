@@ -198,7 +198,7 @@ async function initBookingFlow() {
         nutricao_programa: { label: 'Programa de perda de peso · 6 meses (acompanhamento médico + nutrição)', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
-        psicologia: { label: 'Sessão de Psicologia', price: '60 €', cents: 6000 },
+        psicologia: { label: 'Primeira sessão de Psicologia', price: '35 €', cents: 3500 },
         psicologia_mensal: { label: 'Subscrição de Psicologia', price: '224 €/mês', cents: 22400 },
         terapia_casal: { label: 'Terapia de casal', price: '75 €', cents: 7500 },
         terapia_casal_mensal: { label: 'Subscrição de terapia de casal', price: '260 €/mês', cents: 26000 }
@@ -809,8 +809,8 @@ async function initBookingFlow() {
                 perSession: 'por sessão',
                 subTitle: 'Acompanhamento semanal',
                 subNote: '4 sessões/mês · cobrado mensalmente (224 €/mês)',
-                oneTitle: 'Sessão pontual',
-                oneNote: '50 min · sem compromisso',
+                oneTitle: 'Primeira sessão',
+                oneNote: '1.ª sessão (preço normal 60 €) · 50 min · sem compromisso',
                 casalSubTitle: 'Subscrição de casal',
                 casalSubNote: '65 €/semana · cobrado mensalmente',
                 casalOneTitle: 'Sessão de casal',
@@ -847,8 +847,8 @@ async function initBookingFlow() {
                 perSession: 'per session',
                 subTitle: 'Psychology subscription',
                 subNote: '4 sessions/month · billed monthly (€224/month)',
-                oneTitle: 'Single session',
-                oneNote: '50 min · no commitment',
+                oneTitle: 'First session',
+                oneNote: 'First session (normally €60) · 50 min · no commitment',
                 casalSubTitle: 'Couples subscription',
                 casalSubNote: '€65/week · billed monthly',
                 casalOneTitle: 'Couples session',
@@ -885,8 +885,8 @@ async function initBookingFlow() {
                 perSession: 'por sesión',
                 subTitle: 'Suscripción de psicología',
                 subNote: '4 sesiones/mes · cobrado mensualmente (224 €/mes)',
-                oneTitle: 'Sesión única',
-                oneNote: '50 min · sin compromiso',
+                oneTitle: 'Primera sesión',
+                oneNote: '1.ª sesión (precio normal 60 €) · 50 min · sin compromiso',
                 casalSubTitle: 'Suscripción de pareja',
                 casalSubNote: '65 €/semana · cobrado mensualmente',
                 casalOneTitle: 'Sesión de pareja',
@@ -965,7 +965,7 @@ async function initBookingFlow() {
         // Entry: weekly subscription pre-selected; one-off remains available.
         return [
             { key: 'psicologia_mensal', badge: c.recommended, title: c.subTitle, price: '56 €', unit: c.perWeek, note: c.subNote, featured: state.service !== 'psicologia' },
-            { key: 'psicologia', badge: c.oneOff, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: state.service === 'psicologia' }
+            { key: 'psicologia', badge: c.oneOff, title: c.oneTitle, price: '35 €', unit: c.perSession, note: c.oneNote, featured: state.service === 'psicologia' }
         ];
     }
 

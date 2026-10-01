@@ -62,9 +62,10 @@
                 ]
             },
             psicologia: {
-                label: 'Psychology session',
+                label: 'First psychology session',
                 duration: '50 minutes',
                 bullets: [
+                    'First session €35 (normally €60). Then €56/week with regular follow-up, or €60 per one-off session.',
                     'Video session with a Lon Clinic psychologist.',
                     'Choose the area of support first; the calendar only shows who treats that specialty.',
                     'If two psychologists are free at the same time, you see both and choose.'
@@ -251,9 +252,10 @@
                 ]
             },
             psicologia: {
-                label: 'Sesión de psicología',
+                label: 'Primera sesión de psicología',
                 duration: '50 minutos',
                 bullets: [
+                    'Primera sesión a 35 € (precio normal 60 €). Después: 56 €/semana en seguimiento, o 60 € por sesión suelta.',
                     'Sesión por videollamada con un psicólogo de LON Clinic.',
                     'Elija primero el área de apoyo; el calendario solo muestra a quien trata esa especialidad.',
                     'Si dos psicólogos tienen la misma hora, ve ambos y elige.'
@@ -681,12 +683,13 @@
             ]
         },
         psicologia: {
-            label: 'Sessão de Psicologia',
-            price: '€60',
-            cents: 6000,
+            label: 'Primeira sessão de Psicologia',
+            price: '€35',
+            cents: 3500,
             duration: '50 minutos',
             serviceKey: 'psicologia',
             bullets: [
+                'Primeira sessão a 35 € (preço normal 60 €). Depois: 56 €/semana em acompanhamento, ou 60 € por sessão avulsa.',
                 'Sessão por videochamada com um psicólogo da LON Clinic.',
                 'Escolha primeiro a área de apoio; o calendário mostra só quem trata essa especialidade.',
                 'Se dois psicólogos tiverem a mesma hora, vê ambos e escolhe.'

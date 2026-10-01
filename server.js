@@ -37,6 +37,26 @@ const metaCapi = require('./meta-capi');
 const metaLeads = require('./meta-leads');
 const { computeCheckoutTotalCents, isStripeSubscriptionService, stripeRecurringForService, normalizeServiceKey, discountsAllowedForService, providerPayoutCents } = require('./pricing');
 
+/**
+ * True when this email has no earlier non-cancelled psychology booking (one-off or subscription).
+ * If the lookup fails we give the patient the first-session price rather than block checkout.
+ */
+async function isFirstPsychologySession(email) {
+    const e = String(email || '').trim().toLowerCase();
+    if (!e) return true;
+    try {
+        const rows = await db.findBookingsByEmail(e, 100);
+        return !rows.some((b) => {
+            if (!b || b.cancelled || b.refunded) return false;
+            const svc = String(b.service || '').toLowerCase();
+            return svc === 'psicologia' || svc === 'psicologia_mensal';
+        });
+    } catch (err) {
+        console.warn('isFirstPsychologySession lookup failed:', err && err.message);
+        return true;
+    }
+}
+
 function bookingServiceTag(raw) {
     const key = normalizeServiceKey(raw);
     if (key) return key;
@@ -13606,11 +13626,17 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
 
         // H7: never trust client hasInsurance for price (Medicare self-select).
         hasInsurance = false;
+        // Psychology one-off: 35 € on the patient's first psychology session, 60 € afterwards.
+        let firstPsychSession = false;
+        if (normalizeServiceKey(service) === 'psicologia') {
+            firstPsychSession = await isFirstPsychologySession(patientEmail);
+        }
         const pricing = computeCheckoutTotalCents({
             service,
             passengers,
             hasInsurance: false,
-            discountPercent
+            discountPercent,
+            firstPsychSession
         });
         if (!pricing.ok) {
             if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});

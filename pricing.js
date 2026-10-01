@@ -37,6 +37,12 @@ const SERVICE_CENTS = {
     nutricao_completo_reforcado: 32200
 };
 
+/**
+ * Psychology one-off session: list price 60 € (SERVICE_CENTS.psicologia), first session
+ * for a new patient discounted to 35 €. Follow-up is the 56 €/week subscription.
+ */
+const PSICOLOGIA_FIRST_SESSION_CENTS = 3500;
+
 const TRAVEL_TIER_CENTS = {
     standard: {
         1: 3900,
@@ -111,10 +117,11 @@ function normalizeServiceKey(service) {
  * @param {Array} opts.passengers
  * @param {boolean} opts.hasInsurance - Medicare tier for travel only
  * @param {number|null|undefined} opts.discountPercent — server-resolved percent off; never trust a client table
+ * @param {boolean} [opts.firstPsychSession] - server-resolved: patient has no previous psychology booking
  * @returns {{ ok: true, subtotalCents: number, discountCents: number, totalCents: number } | { ok: false, error: string }}
  */
 function computeCheckoutTotalCents(opts) {
-    const { service, passengers, hasInsurance, discountPercent: discountPercentRaw } = opts;
+    const { service, passengers, hasInsurance, discountPercent: discountPercentRaw, firstPsychSession } = opts;
     const key = normalizeServiceKey(service);
     if (!key) {
         return { ok: false, error: 'Invalid service' };
@@ -144,6 +151,9 @@ function computeCheckoutTotalCents(opts) {
         subtotalCents = SERVICE_CENTS[key];
         if (subtotalCents === undefined) {
             return { ok: false, error: 'Unknown service price' };
+        }
+        if (key === 'psicologia' && firstPsychSession === true) {
+            subtotalCents = PSICOLOGIA_FIRST_SESSION_CENTS;
         }
     }
 
@@ -233,5 +243,6 @@ module.exports = {
     PROVIDER_PAYOUT_CENTS,
     B2B_CORPORATE_BONUS_CENTS,
     CONTINUITY_CLINIC_TAX,
-    STRIPE_MIN_CENTS
+    STRIPE_MIN_CENTS,
+    PSICOLOGIA_FIRST_SESSION_CENTS
 };
