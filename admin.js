@@ -3438,8 +3438,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const SERVICE_BASE_CENTS = {
         clinica_geral: 3900,
-        urgente: 3500,
-        infeccao_urinaria: 3500,
+        urgente: 3900,
+        infeccao_urinaria: 3900,
         saude_mental: 6000,
         psicologia: 6000,
         terapia_casal: 7500,

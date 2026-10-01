@@ -610,8 +610,8 @@
     var CONSULTATION_TYPES = {
         urgente: {
             label: 'Consulta Médica Urgente (Adultos)',
-            price: '€35',
-            cents: 3500,
+            price: '€39',
+            cents: 3900,
             duration: '20–30 min',
             serviceKey: 'urgente',
             bullets: [
@@ -622,8 +622,8 @@
         },
         infeccao_urinaria: {
             label: 'Consulta de Infeção Urinária',
-            price: '€35',
-            cents: 3500,
+            price: '€39',
+            cents: 3900,
             duration: '20–30 min',
             serviceKey: 'infeccao_urinaria',
             bullets: [

@@ -158,7 +158,7 @@ function renderPage(origin) {
 </head>
 <body class="lon-landing cq-body">
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
-    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: BOOK, ctaLabel: 'Book a session', ctaAttrs: ' data-cta="book" data-booking-source="ie-therapy"', current: null })}
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: BOOK, ctaLabel: 'Book a session', ctaAttrs: ' data-cta="book" data-booking-source="ie-therapy"', current: null, lang: 'en' })}
     ${__lonHeader.renderHeaderScripts(false)}
     <main id="conteudo-principal" class="ie-main">
         <article class="lon-container">

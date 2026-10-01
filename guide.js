@@ -792,6 +792,7 @@ function articleCluster(meta) {
     if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
     if (/^(figado-gordo|analises-figado|esteatose-hepatica|masld|dieta-figado-gordo|figado-gordo-peso-normal|tensao-alta|pre-diabetes|colesterol-alto|analises-alteradas|precisa-de-suplementos|magnesio|vitamina-d|creatina|proteina-por-dia|cortisol-alto|intestino-irritavel)$/.test(slug)) return 'metabolico';
     if (/autismo|adhd/.test(slug) || /autismo|adhd/.test(about)) return 'mental';
+    if (/psicolog/.test(about) || /psicolog|terapia/.test(slug)) return 'psicologia';
     return 'general';
 }
 
@@ -799,7 +800,7 @@ function defaultCtaKind(meta) {
     if (meta && meta.ctaKind) return String(meta.ctaKind);
     const cluster = articleCluster(meta);
     if (cluster === 'travel') return 'travel';
-    if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento' || cluster === 'bestsellers-psicologia') return 'mental';
+    if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento' || cluster === 'bestsellers-psicologia' || cluster === 'psicologia') return 'mental';
     if (cluster === 'burnout') return 'burnout';
     if (cluster === 'perda-de-peso' || cluster === 'livros-saude' || cluster === 'bestsellers-saude-intestinal') return 'nutrition';
     return 'general';
@@ -1185,6 +1186,7 @@ function clusterMapRelatedHtml(slug) {
 }
 
 const CLUSTER_CROSS = {
+    psicologia: ['ansiedade', 'depressao', 'burnout'],
     depressao: ['ansiedade', 'burnout', 'mental'],
     ansiedade: ['depressao', 'autoconhecimento', 'burnout'],
     burnout: ['depressao', 'ansiedade', 'autoconhecimento'],
@@ -1782,7 +1784,12 @@ function pickClusterArticles(current, articles, cluster, limit) {
     const lang = articleLangCode(current);
     const all = listedGuideArticles(articles).filter((a) => a.slug !== current.slug);
     const sameLang = all.filter((a) => articleCluster(a) === cluster && articleLangCode(a) === lang);
-    const pool = sameLang.length ? sameLang : all.filter((a) => articleCluster(a) === cluster);
+    let pool = sameLang.length ? sameLang : all.filter((a) => articleCluster(a) === cluster);
+    if (cluster === 'psicologia') {
+        // City landing pages (consultas-psicologia-<cidade>) go last so the series shows the guides first.
+        const isCity = (a) => /^consultas-psicologia-(?!gratuitas)/.test(a.slug);
+        pool = pool.filter((a) => !isCity(a)).concat(pool.filter(isCity));
+    }
     return pool.slice(0, limit);
 }
 
@@ -2583,7 +2590,8 @@ function renderBlogArticle(origin, slug) {
         extraCssAfter: ['/guide.css?v=20260927a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260926a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
-            talk: talkCta.resolve({ kind: ctaKind, slug, lang })
+            talk: talkCta.resolve({ kind: ctaKind, slug, lang }),
+            lang
         })
     });
 
@@ -3828,7 +3836,7 @@ function magLonNavHtml(opts) {
     const talkHref = escapeHtml(talk.href);
     const talkLabel = escapeHtml(talk.label);
     const talkRole = escapeHtml(talk.role);
-    return `${__lonHeader.renderHeader({ rawCta: true, ctaHref: `${talkHref}`, ctaLabel: `${talkLabel}`, ctaAttrs: ` data-talk-cta="${talkRole}"`, current: 'magazine' })}
+    return `${__lonHeader.renderHeader({ rawCta: true, ctaHref: `${talkHref}`, ctaLabel: `${talkLabel}`, ctaAttrs: ` data-talk-cta="${talkRole}"`, current: 'magazine', lang: (opts && opts.lang) || 'pt' })}
 ${__lonHeader.renderHeaderScripts(false)}`;
 }
 

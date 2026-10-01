@@ -536,10 +536,10 @@
         return lang === 'fr' || lang === 'de' || hrefNeedsLangPolicy(fallbackHref);
     }
 
-    var CONSULT_LANG_NOTICE_EN = 'Consultations strictly provided in English and Portuguese';
+    var CONSULT_LANG_NOTICE_EN = 'Consultations strictly provided in English, Spanish or Portuguese';
     var CONSULT_LANG_NOTICE_LOCAL = {
-        fr: 'Les consultations se d\u00e9roulent exclusivement en anglais ou en portugais. Pas de consultation en fran\u00e7ais.',
-        de: 'Sprechstunden ausschlie\u00dflich auf Englisch oder Portugiesisch. Keine Beratung auf Deutsch.'
+        fr: 'Les consultations se d\u00e9roulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en fran\u00e7ais.',
+        de: 'Sprechstunden ausschlie\u00dflich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.'
     };
 
     function injectLangPolicyStyles() {

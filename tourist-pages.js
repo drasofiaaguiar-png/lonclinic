@@ -858,7 +858,7 @@ function layoutPage(opts) {
 </head>
 <body class="lon-landing cq-body tourist-body">
     <a class="lon-skip" href="#conteudo-principal">${escapeHtml(ui.skip)}</a>
-    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `${book}`, ctaLabel: `${escapeHtml(ui.navBook)}`, ctaAttrs: ` data-cta="book"`, current: null })}
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `${book}`, ctaLabel: `${escapeHtml(ui.navBook)}`, ctaAttrs: ` data-cta="book"`, current: null, lang: ui.htmlLang })}
 ${__lonHeader.renderHeaderScripts(false)}
     ${languageBannerHtml(ui)}
     ${mainHtml}

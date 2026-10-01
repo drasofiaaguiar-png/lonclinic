@@ -16,7 +16,7 @@ const SERVICE_ALIAS = {
 /** Base per-service prices (EUR cents). Travel uses tier tables below. */
 const SERVICE_CENTS = {
     clinica_geral: 3900,
-    urgente: 3500,
+    urgente: 3900,
     travel: 3900,
     saude_mental: 6000,
     burnout: 6000,

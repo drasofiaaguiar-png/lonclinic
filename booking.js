@@ -183,7 +183,7 @@ async function initBookingFlow() {
 
     const services = {
         clinica_geral: { label: 'Consulta Clínica Geral / Check Up', price: '39 €', cents: 3900 },
-        urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '35 €', cents: 3500 },
+        urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '39 €', cents: 3900 },
         travel: { label: 'Consulta do Viajante', price: '39 €', cents: 3900 },
         saude_mental: { label: 'Consulta Médica de Saúde Mental', price: '60 €', cents: 6000 },
         burnout: { label: 'Consulta Especializada em Burnout', price: '60 €', cents: 6000 },

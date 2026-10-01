@@ -205,8 +205,8 @@
         { s: '#lon-service-nutricao-acompanhamento .lon-service-desc', en: 'Billed every 15 days — first payment is €45', pt: 'Paga de 15 em 15 dias — o primeiro valor é 45 €', es: 'Paga cada 15 días — el primer importe es 45 €' },
         { s: '#lon-service-nutricao-acompanhamento .lon-btn', en: 'Book — 45 €', pt: 'Marcar — 45 €', es: 'Reservar — 45 €' },
         { s: '#lon-offer-urgente h4', en: 'Urgent Medical Consultation', pt: 'Consulta Médica Urgente', es: 'Consulta Médica Urgente' },
-        { s: '#lon-offer-urgente .lon-need-offer-price', en: '35 € · 20–30 min', pt: '35 € · 20–30 min', es: '35 € · 20–30 min' },
-        { s: '#lon-offer-urgente .lon-btn', en: 'Book — 35 €', pt: 'Marcar — 35 €', es: 'Reservar — 35 €' },
+        { s: '#lon-offer-urgente .lon-need-offer-price', en: '39 € · 20–30 min', pt: '39 € · 20–30 min', es: '39 € · 20–30 min' },
+        { s: '#lon-offer-urgente .lon-btn', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Service tabs ── */
         { s: '.lon-tab[data-tab="urgencias"]', en: 'General Medicine', pt: 'Medicina Geral', es: 'Medicina General' },
@@ -239,7 +239,7 @@
 
         /* ── Book buttons ── */
         { s: '#lon-service-clinica-geral .lon-btn-soft', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
-        { s: '#lon-service-urgente .lon-btn-soft', en: 'Book — 35 €', pt: 'Marcar — 35 €', es: 'Reservar — 35 €' },
+        { s: '#lon-service-urgente .lon-btn-soft', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '#lon-service-psicologia .lon-service-chip', en: 'Psychology', pt: 'Psicologia', es: 'Psicología' },
         { s: '#lon-service-psicologia h3', en: 'Psychology Session', pt: 'Sessão de Psicologia', es: 'Sesión de Psicología' },
         { s: '#lon-service-psicologia .lon-service-price', en: '60 € · 50 min · no commitment', pt: '60 € · 50 min · sem compromisso', es: '60 € · 50 min · sin compromiso' },
@@ -744,7 +744,7 @@
         { s: '#marcarBookingBack', en: '\u2190 Back', pt: '\u2190 Voltar', es: '\u2190 Volver' },
         { s: '#marcarPageTitle', en: 'Let\'s book your appointment', pt: 'Vamos marcar a sua consulta', es: 'Vamos a reservar su consulta' },
         { s: '#marcarTypeLabel', en: 'Consultation type', pt: 'Tipo de consulta', es: 'Tipo de consulta' },
-        { s: '.lon-lang-banner-en', en: 'Consultations are provided in English and Portuguese', pt: 'As consultas são em inglês e português.', es: 'Las consultas se prestan en inglés y portugués.' },
+        { s: '.lon-lang-banner-en', en: 'Consultations are provided in English, Spanish or Portuguese', pt: 'As consultas são em inglês, espanhol ou português.', es: 'Las consultas se prestan en inglés, español o portugués.' },
 
         /* ── Service meta ── */
         { s: '.marcar-meta span:nth-child(2)', en: 'Video call', pt: 'Videochamada', es: 'Videollamada' },
